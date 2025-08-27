@@ -1,0 +1,1168 @@
+{
+	"info": {
+		"_postman_id": "0721cc57-fef4-439e-8750-db2103048abf",
+		"name": "product(new)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36187915",
+		"_collection_link": "https://orange-crescent-976565.postman.co/workspace/c3033af4-b2e0-4757-8c5c-c55c92944906/collection/37260719-0721cc57-fef4-439e-8750-db2103048abf?action=share&source=collection_link&creator=36187915"
+	},
+	"item": [
+		{
+			"name": "Attributes",
+			"item": [
+				{
+					"name": "get attributes",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/attributes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"attributes"
+							]
+						},
+						"description": "## Get Product Attributes\n\nThis endpoint retrieves a list of product attributes available in the system. It provides details about each attribute, including its type, whether it can have multiple values, and if it has associated units.\n\n### Request\n\n- **Method:** GET\n    \n- **Endpoint:** `{{base_url}}/products/attributes`\n    \n\n### Response\n\nThe response is returned in JSON format and contains the following structure:\n\n- **count**: An integer indicating the total number of attributes available.\n    \n- **next**: A URL for the next page of results, if applicable.\n    \n- **previous**: A URL for the previous page of results, if applicable.\n    \n- **results**: An array of attribute objects, each containing:\n    - **id**: A unique identifier for the attribute.\n        \n    - **attribute**: The name of the attribute.\n        \n    - **attribute_type**: The type of the attribute (e.g., text, number).\n        \n    - **is_multivalue**: A boolean indicating if the attribute can have multiple values.\n        \n    - **is_categorical**: A boolean indicating if the attribute is categorical.\n        \n    - **has_unit**: A boolean indicating if the attribute has associated units.\n        \n    - **units**: An array of units associated with the attribute (if applicable).\n        \n\n### Notes\n\n- The `count` field will indicate the number of attributes returned, which may vary based on the dataset.\n    \n- If there are no attributes available, the `results` array will be empty, and `count` will be 0.\n    \n- Pagination may be implemented in future versions of the API, indicated by the `next` and `previous` fields.\n    \n\nThis endpoint is useful for fetching the schema of product attributes, which can be utilized for product management and categorization."
+					},
+					"response": []
+				},
+				{
+					"name": "add attribute",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"attribute\": \"storage\",\r\n    \"attribute_type\": \"number\",\r\n    \"is_multivalue\":false,\r\n    \"is_categorical\":false,\r\n    \"has_unit\":true,\r\n    \"units\" : [\r\n      1\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/attributes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"attributes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update attribute",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"attribute\": \"color\",\r\n    \"attribute_type\": \"string\",\r\n    \"is_multivalue\":false,\r\n    \"is_categorical\":true,\r\n    \"has_unit\":false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/attributes/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"attributes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete attribute",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/attributes/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"attributes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Units",
+			"item": [
+				{
+					"name": "get units",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/units",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"units"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add unit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"unit\": \"mA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/units",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"units"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update unit",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"unit\": \"GB\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/units/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"units",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete unit",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"unit\": \"GB\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/units/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"units",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Variant",
+			"item": [
+				{
+					"name": "add Variant",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "product",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "wholesale_price",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "selling_price",
+									"value": "101",
+									"type": "text"
+								},
+								{
+									"key": "options[0]attribute",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "options[0]option",
+									"value": "64",
+									"type": "text"
+								},
+								{
+									"key": "options[0]unit",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "options[1]attribute",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "options[1]option",
+									"value": "5000",
+									"type": "text"
+								},
+								{
+									"key": "options[1]unit",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/C:/Users/oudiq/Pictures/Screenshots/Screenshot 2025-05-14 214703.png"
+								},
+								{
+									"key": "options",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/products/variants",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"variants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update Variant",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "product",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "quantity",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "wholesale_price",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "selling_price",
+									"value": "101",
+									"type": "text"
+								},
+								{
+									"key": "options[0]attribute",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "options[0]option",
+									"value": "64",
+									"type": "text"
+								},
+								{
+									"key": "options[0]unit",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "options[1]attribute",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "options[1]option",
+									"value": "5000",
+									"type": "text"
+								},
+								{
+									"key": "options[1]unit",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/C:/Users/oudiq/Pictures/Screenshots/Screenshot 2025-06-11 171944.png"
+								},
+								{
+									"key": "options",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/products/variants/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"variants",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Variants",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product\": 1,\r\n    \"quantity\": \"100\",\r\n    \"wholesale_price\":\"100\",\r\n    \"selling_price\":\"101\",\r\n    \"options\": [\r\n{\r\n    \r\n}\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/variants?storage=128&category=phone&battery=6000,5000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"variants"
+							],
+							"query": [
+								{
+									"key": "storage",
+									"value": "128"
+								},
+								{
+									"key": "ordering",
+									"value": "options__option",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "poco",
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": "phone"
+								},
+								{
+									"key": "product",
+									"value": "poco",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "selling_price_min",
+									"value": "76567",
+									"disabled": true
+								},
+								{
+									"key": "selling_price_max",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "battery",
+									"value": "6000,5000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete Variants",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product\": 1,\r\n    \"quantity\": \"100\",\r\n    \"wholesale_price\":\"100\",\r\n    \"selling_price\":\"101\",\r\n    \"options\": [\r\n{\r\n    \"attribute\":1,\r\n    \"option\":\"50\",\r\n    \"unit\":1   \r\n},\r\n{\r\n    \"attribute\":2,\r\n    \"option\":\"red\",\r\n    \"unit\":null   \r\n},\r\n{\r\n    \"attribute\":4,\r\n    \"option\":\"6000\",\r\n    \"unit\":2   \r\n}\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/variants/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"variants",
+								"11"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "category",
+			"item": [
+				{
+					"name": "get categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category\": \"smart watch\",\r\n    \"attributes\":[\r\n     1,3\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update category",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category\": \"phone\",\r\n    \"attributes\":[\r\n        1,2,3,4\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/categories/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"categories",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "options",
+			"item": [
+				{
+					"name": "get options",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/options?attribute=storage",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"options"
+							],
+							"query": [
+								{
+									"key": "attribute",
+									"value": "storage"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add options",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"option\": \"100\",\r\n    \"attribute\": 1,\r\n    \"unit\":4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/options",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"options"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update options",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"option\": \"100\",\r\n    \"attribute\": 1,\r\n    \"unit\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/options/10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"options",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transportations",
+			"item": [
+				{
+					"name": "Transportation processing",
+					"item": [
+						{
+							"name": "Transport products",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/products/transportations/2/transport",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"products",
+										"transportations",
+										"2",
+										"transport"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Recive Transportation",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"code\" : \"54cf9f65\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/products/transportations/2/receive",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"products",
+										"transportations",
+										"2",
+										"receive"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm transportation",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"received_products\" : [\r\n        {\r\n            \"product\":2,\r\n            \"quantity\":10\r\n\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/products/transportations/2/confirm",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"products",
+										"transportations",
+										"2",
+										"confirm"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "get transportations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/transportations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"transportations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add transportation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // \"source\":1, \r\n    \"destination\": 1 ,\r\n    \"transported_products\": [\r\n        {\r\n            \"product\":2,\r\n                \"quantity\":10\r\n        }\r\n        ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/transportations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"transportations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update transportation",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n//   \"destination\": 1 ,\r\n  \"transported_products\": [\r\n     {\r\n         \"product\":1,\r\n            \"quantity\":10\r\n     }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/transportations/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"transportations",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete transportation",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"destination\": 1 ,\r\n  \"transported_products\": [\r\n     {\r\n         \"product\":1,\r\n            \"quantity\":10\r\n     }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/transportations/3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"transportations",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transportation Requests",
+			"item": [
+				{
+					"name": "Transportation Request Processing",
+					"item": [
+						{
+							"name": "process Transport Reqest",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"transported_products\":[\r\n        {\r\n            \"product\":1,\r\n            \"quantity\":9\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/products/requests/3/process",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"products",
+										"requests",
+										"3",
+										"process"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "reject Transport Request",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/products/requests/2/reject-all",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"products",
+										"requests",
+										"2",
+										"reject-all"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "get Transportation Requests",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/requests",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add Transportation Requests",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"branch\": 1,\r\n    \"requested_products\": \r\n    [\r\n        {\r\n            \"product\": 1,\r\n            \"quantity\": 10\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/requests",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update Transportation Requests",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"branch\": 1,\r\n    \"requested_products\": \r\n    [\r\n        {\r\n            \"product\": 1,\r\n            \"quantity\": 10\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/requests/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"requests",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete Transportation Requests",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"branch\": 1,\r\n    \"requested_products\": \r\n    [\r\n        {\r\n            \"product\": 1,\r\n            \"quantity\": 10\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/requests/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"requests",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "get products",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/products/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n        {\r\n            \"product_name\": \"asus\",\r\n            \"category\":1\r\n            // \"linked_products\":[\r\n\r\n            // ]\r\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/products/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update product",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n        {\r\n            \"product_name\": \"apple watch\",\r\n            \"category\":2,\r\n            \"linked_products\":[\r\n                2\r\n            ]\r\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/products/1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

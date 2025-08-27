@@ -1,0 +1,15 @@
+export const cities = [
+  { id: 1, name: "دمشق", value: "Damascus" },
+  { id: 2, name: "حلب", value: "Aleppo" },
+  { id: 3, name: "حمص", value: "Homs" },
+  { id: 4, name: "اللاذقية", value: "Latakia" },
+  { id: 5, name: "حماة", value: "Hama" },
+  { id: 6, name: "دير الزور", value: "Deir ez-Zor" },
+  { id: 7, name: "الرقة", value: "Raqqa" },
+  { id: 8, name: "إدلب", value: "Idlib" },
+  { id: 9, name: "السويداء", value: "Sweida" },
+  { id: 10, name: "طرطوس", value: "Tartus" },
+  { id: 11, name: "القنيطرة", value: "Quneitra" },
+  { id: 12, name: "الحسكة", value: "Hasakah" },
+  { id: 13, name: "درعا", value: "Daraa" },
+];

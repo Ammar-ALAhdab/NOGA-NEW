@@ -1,0 +1,542 @@
+{
+  "branches": [
+    {
+      "id": 1,
+      "city": "دمشق",
+      "street": "شارع الأمل",
+      "area": "حي النور",
+      "branchNumber": 1,
+      "branchManager": "محمد أحمد الحسيني"
+    },
+    {
+      "id": 2,
+      "city": "حلب",
+      "street": "شارع الفتح",
+      "area": "حي القصور",
+      "branchNumber": 1,
+      "branchManager": "عبد الرحمن بن سعود الفيصل"
+    },
+    {
+      "id": 3,
+      "city": "حمص",
+      "street": "شارع الوفاء",
+      "area": "حي المهندسين",
+      "branchNumber": 1,
+      "branchManager": "فاطمة الزهراء منصوري"
+    },
+    {
+      "id": 4,
+      "city": "حماة",
+      "street": "شارع الريحان",
+      "area": "حي العمارة",
+      "branchNumber": 1,
+      "branchManager": "أمينة خالد النجار"
+    },
+    {
+      "id": 5,
+      "city": "اللاذقية",
+      "street": "شارع السلام",
+      "area": "حي الشرق",
+      "branchNumber": 1,
+      "branchManager": "يوسف مازن العبدالله"
+    },
+    {
+      "id": 6,
+      "city": "حلب",
+      "street": "شارع النصر",
+      "area": "حي الباسل",
+      "branchNumber": 2,
+      "branchManager": "سميرة علي المولى"
+    },
+    {
+      "id": 7,
+      "city": "حمص",
+      "street": "شارع الجزيرة",
+      "area": "حي الثقافة",
+      "branchNumber": 2,
+      "branchManager": "إبراهيم مروان الصالح"
+    },
+    {
+      "id": 8,
+      "city": "دمشق",
+      "street": "شارع الأقحوان",
+      "area": "حي الأمان",
+      "branchNumber": 2,
+      "branchManager": "نورة حسين المهدي"
+    },
+    {
+      "id": 9,
+      "city": "دمشق",
+      "street": "شارع الغد",
+      "area": "حي الربيع",
+      "branchNumber": 3,
+      "branchManager": "حسام عبد العزيز القحطاني"
+    },
+    {
+      "id": 10,
+      "city": "طرطوس",
+      "street": "شارع البحر",
+      "area": "حي الزيتون",
+      "branchNumber": 1,
+      "branchManager": "ليلى عبد اللطيف الخالدي"
+    }
+  ],
+  "branchesManagers": [
+    { "id": 1, "name": "علي مصطفى مغربي" },
+    { "id": 2, "name": "فراس حامد الخطيب" },
+    { "id": 3, "name": "سها مروان الأحمد" },
+    { "id": 4, "name": "مريم نبيل فتوح" },
+    { "id": 5, "name": "باسم معاذ الرفاعي" },
+    { "id": 6, "name": "ربى باسل سلوم" },
+    { "id": 7, "name": "لمى حسان عبود" },
+    { "id": 8, "name": "هاني مروان الحلبي" },
+    { "id": 9, "name": "ناديا جمال الدين" },
+    { "id": 10, "name": "غسان معتز الشيخ" }
+  ],
+  "cities": [
+    { "id": 1, "name": "دمشق", "value": "Damascus" },
+    { "id": 2, "name": "حلب", "value": "Aleppo" },
+    { "id": 3, "name": "حمص", "value": "Homs" },
+    { "id": 4, "name": "اللاذقية", "value": "Latakia" },
+    { "id": 5, "name": "حماة", "value": "Hama" },
+    { "id": 6, "name": "دير الزور", "value": "Deir ez-Zor" },
+    { "id": 7, "name": "الرقة", "value": "Raqqa" },
+    { "id": 8, "name": "إدلب", "value": "Idlib" },
+    { "id": 9, "name": "السويداء", "value": "Sweida" },
+    { "id": 10, "name": "طرطوس", "value": "Tartus" },
+    { "id": 11, "name": "القنيطرة", "value": "Quneitra" },
+    { "id": 12, "name": "الحسكة", "value": "Hasakah" },
+    { "id": 13, "name": "درعا", "value": "Daraa" }
+  ],
+  "mangerAccount": {
+    "fullName": "علي هلال",
+    "username": "alihelal",
+    "password": "123456",
+    "profilePhoto": "/src/assets/demo/man_1.jpg"
+  },
+  "salesAccounts": [
+    {
+      "id": 1,
+      "fullName": "مها حماد",
+      "username": "mahabaykal",
+      "password": "123456",
+      "profilePhoto": "/src/assets/demo/girl_1.jpg"
+    },
+    {
+      "id": 2,
+      "fullName": "فراس أحمد",
+      "username": "ferasahmad12",
+      "password": "123456",
+      "profilePhoto": "/src/assets/demo/man_2.jpg"
+    },
+    {
+      "id": 3,
+      "fullName": "ناديا عيسى",
+      "username": "nadia@90",
+      "password": "123456",
+      "profilePhoto": "/src/assets/demo/girl_2.jpg"
+    },
+    {
+      "id": 4,
+      "fullName": "أحمد أبو الريم",
+      "username": "ahmadaboreem",
+      "password": "123456",
+      "profilePhoto": "/src/assets/demo/man_3.jpg"
+    },
+    {
+      "id": 5,
+      "fullName": "يارا عثمان",
+      "username": "yarahosman",
+      "password": "123456",
+      "profilePhoto": "/src/assets/demo/girl_3.jpg"
+    }
+  ],
+  "admin": {
+    "fname": "عمار",
+    "lname": "نار",
+    "role": "admin",
+    "username": "ammarh@44",
+    "password": "ammar123",
+    "profilePhoto": "/src/assets/demo/man_1.jpg"
+  },
+  "warehouse": {
+    "fname": "لارا",
+    "lname": "برق",
+    "role": "warehouse administrator",
+    "username": "lara@90",
+    "password": "lara1234",
+    "profilePhoto": "/src/assets/demo/girl_1.jpg"
+  },
+  "hr": {
+    "fname": "يارا",
+    "lname": "رعد",
+    "role": "hr",
+    "username": "yara@2000",
+    "password": "yara50",
+    "profilePhoto": "/src/assets/demo/girl_2.jpg"
+  },
+  "employees": [
+    {
+      "id": 1,
+      "first_name": "علي",
+      "father_name": "محمد",
+      "last_name": "النجار",
+      "national_id": "123456789012",
+      "sex": "ذكر",
+      "birth_date": "1985-04-23",
+      "residence_address": "123 شارع النيل، القاهرة",
+      "phone_number": "+201234567890",
+      "email": "ali.najjar@example.com",
+      "jop_title": "مدير الفرع",
+      "branch": "دمشق 1",
+      "salary": "4000000",
+      "profilePhoto": "/src/assets/demo/man_1.jpg"
+    },
+    {
+      "id": 2,
+      "first_name": "فاطمة",
+      "father_name": "أحمد",
+      "last_name": "السيد",
+      "national_id": "234567890123",
+      "sex": "أنثى",
+      "birth_date": "1990-06-15",
+      "residence_address": "456 شارع الهرم، الجيزة",
+      "phone_number": "+201987654321",
+      "email": "fatima.sayed@example.com",
+      "jop_title": "مدير الفرع",
+      "branch": "دمشق 2",
+      "salary": "4000000",
+      "profilePhoto": "/src/assets/demo/girl_1.jpg"
+    },
+    {
+      "id": 3,
+      "first_name": "يوسف",
+      "father_name": "علي",
+      "last_name": "العطار",
+      "national_id": "345678901234",
+      "sex": "ذكر",
+      "birth_date": "1978-12-03",
+      "residence_address": "789 شارع صلاح الدين، الإسكندرية",
+      "phone_number": "+203123456789",
+      "email": "yousef.attar@example.com",
+      "jop_title": "موظف الاستقبال",
+      "branch": "دمشق 1",
+      "salary": "3000000",
+      "profilePhoto": "/src/assets/demo/man_2.jpg"
+    },
+    {
+      "id": 4,
+      "first_name": "سارة",
+      "father_name": "عبد الله",
+      "last_name": "الحسن",
+      "national_id": "456789012345",
+      "sex": "أنثى",
+      "birth_date": "1982-08-21",
+      "residence_address": "321 شارع فلسطين، جدة",
+      "phone_number": "+966123456789",
+      "email": "sara.hassan@example.com",
+      "jop_title": "موظف الاستقبال",
+      "branch": "دمشق 2",
+      "salary": "3000000",
+      "profilePhoto": "/src/assets/demo/girl_2.jpg"
+    },
+    {
+      "id": 5,
+      "first_name": "خالد",
+      "father_name": "سعيد",
+      "last_name": "الدوسري",
+      "national_id": "567890123456",
+      "sex": "ذكر",
+      "birth_date": "1995-11-30",
+      "residence_address": "654 شارع الرياض، الرياض",
+      "phone_number": "+966987654321",
+      "email": "khaled.dosari@example.com",
+      "jop_title": "موظف المبيعات",
+      "branch": "دمشق 1",
+      "salary": "3500000",
+      "profilePhoto": "/src/assets/demo/man_3.jpg"
+    },
+    {
+      "id": 6,
+      "first_name": "ليلى",
+      "father_name": "إبراهيم",
+      "last_name": "الهاشمي",
+      "national_id": "678901234567",
+      "sex": "أنثى",
+      "birth_date": "1989-07-18",
+      "residence_address": "987 شارع الأمير، الدمام",
+      "phone_number": "+966543210987",
+      "email": "layla.hashimi@example.com",
+      "jop_title": "موظف المبيعات",
+      "branch": "دمشق 2",
+      "salary": "3500000",
+      "profilePhoto": "/src/assets/demo/girl_3.jpg"
+    },
+    {
+      "id": 7,
+      "first_name": "حسن",
+      "father_name": "محمود",
+      "last_name": "الجابري",
+      "national_id": "789012345678",
+      "sex": "ذكر",
+      "birth_date": "1976-05-09",
+      "residence_address": "159 شارع الزهور، المنامة",
+      "phone_number": "+973123456789",
+      "email": "hassan.jabari@example.com",
+      "jop_title": "موظف المبيعات",
+      "branch": "دمشق 1",
+      "salary": "3500000",
+      "profilePhoto": "/src/assets/demo/man_4.jpg"
+    },
+    {
+      "id": 8,
+      "first_name": "مريم",
+      "father_name": "خالد",
+      "last_name": "العتيبي",
+      "national_id": "890123456789",
+      "sex": "أنثى",
+      "birth_date": "1992-03-25",
+      "residence_address": "753 شارع الحمراء، الكويت",
+      "phone_number": "+965123456789",
+      "email": "maryam.otaibi@example.com",
+      "jop_title": "موظف المبيعات",
+      "branch": "دمشق 2",
+      "salary": "3500000",
+      "profilePhoto": "/src/assets/demo/girl_4.jpg"
+    },
+    {
+      "id": 9,
+      "first_name": "عبد الرحمن",
+      "father_name": "عمر",
+      "last_name": "الشريف",
+      "national_id": "901234567890",
+      "sex": "ذكر",
+      "birth_date": "1980-10-11",
+      "residence_address": "258 شارع الزيتون، عمان",
+      "phone_number": "+962123456789",
+      "email": "abdurrahman.shareef@example.com",
+      "jop_title": "مهندس تقني",
+      "branch": "دمشق 1",
+      "salary": "3500000",
+      "profilePhoto": "/src/assets/demo/man_1.jpg"
+    },
+    {
+      "id": 10,
+      "first_name": "نورا",
+      "father_name": "حسن",
+      "last_name": "القرشي",
+      "national_id": "012345678901",
+      "sex": "أنثى",
+      "birth_date": "1984-09-05",
+      "residence_address": "357 شارع الملك، الدوحة",
+      "phone_number": "+974123456789",
+      "email": "nora.qurashi@example.com",
+      "jop_title": "مهندس تقني",
+      "branch": "دمشق 2",
+      "salary": "3500000",
+      "profilePhoto": "/src/assets/demo/girl_1.jpg"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "barcode": "AA121091",
+      "productName": "Galaxy A53",
+      "capitalPrice": 2000000,
+      "sellingPrice": 2100000,
+      "quantity": 100,
+      "type": "phone",
+      "manufacture": "samsung",
+      "dateOfRelease": "2023/1/1",
+      "cpuManufacture": "MediaTek",
+      "cpuType": "Helio G90",
+      "ram": 8,
+      "storage": 128,
+      "sdCard": true,
+      "frontCamera": 16,
+      "backCamera": 108,
+      "screenSize": 6.7,
+      "screenType": "LCD",
+      "battery": 5200,
+      "simCard": 2,
+      "color": "blue",
+      "description": "ممتاز بالنسبة للفئة المتوسطة"
+    },
+    {
+      "id": 2,
+      "barcode": "BB009212",
+      "productName": "Galaxy A53 cover",
+      "capitalPrice": 200000,
+      "sellingPrice": 250000,
+      "quantity": 200,
+      "type": "accessor",
+      "description": ""
+    }
+  ],
+  "productsLog": [
+    {
+      "id": 1,
+      "date": "2024-07-01",
+      "time": "09:00:00",
+      "productCount": 5,
+      "status": "Accepted",
+      "productsOrder": [
+        {
+          "id": 1,
+          "productName": "Galaxy A53 cover",
+          "type": "accessor",
+          "barcode": "AA121091",
+          "wantedQuantity": 50,
+          "sentQuantity": 50
+        },
+        {
+          "id": 2,
+          "productName": "Galaxy A53",
+          "type": "phone",
+          "barcode": "BB009212",
+          "wantedQuantity": 5,
+          "sentQuantity": 5
+        },
+        {
+          "id": 3,
+          "productName": "Galaxy A12 cover",
+          "type": "accessor",
+          "barcode": "AAD2121",
+          "wantedQuantity": 10,
+          "sentQuantity": 10
+        },
+        {
+          "id": 4,
+          "productName": "Galaxy A12",
+          "type": "phone",
+          "barcode": "BBVXASA1",
+          "wantedQuantity": 20,
+          "sentQuantity": 20
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "date": "2024-07-02",
+      "time": "10:30:15",
+      "productCount": 10,
+      "status": "Partially Accepted",
+      "productsOrder": [
+        {
+          "id": 1,
+          "productName": "Galaxy A53 cover",
+          "type": "accessor",
+          "barcode": "AA121091",
+          "wantedQuantity": 50,
+          "sentQuantity": 50
+        },
+        {
+          "id": 2,
+          "productName": "Galaxy A53",
+          "type": "phone",
+          "barcode": "BB009212",
+          "wantedQuantity": 5,
+          "sentQuantity": 5
+        },
+        {
+          "id": 3,
+          "productName": "Galaxy A12 cover",
+          "type": "accessor",
+          "barcode": "AAD2121",
+          "wantedQuantity": 10,
+          "sentQuantity": 10
+        },
+        {
+          "id": 4,
+          "productName": "Galaxy A12",
+          "type": "phone",
+          "barcode": "BBVXASA1",
+          "wantedQuantity": 20,
+          "sentQuantity": 20
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "date": "2024-07-03",
+      "time": "14:45:30",
+      "productCount": 3,
+      "status": "Rejected",
+      "productsOrder": [
+        {
+          "id": 1,
+          "productName": "Galaxy A53 cover",
+          "type": "accessor",
+          "barcode": "AA121091",
+          "wantedQuantity": 50,
+          "sentQuantity": 50
+        },
+        {
+          "id": 2,
+          "productName": "Galaxy A53",
+          "type": "phone",
+          "barcode": "BB009212",
+          "wantedQuantity": 5,
+          "sentQuantity": 5
+        },
+        {
+          "id": 3,
+          "productName": "Galaxy A12 cover",
+          "type": "accessor",
+          "barcode": "AAD2121",
+          "wantedQuantity": 10,
+          "sentQuantity": 10
+        },
+        {
+          "id": 4,
+          "productName": "Galaxy A12",
+          "type": "phone",
+          "barcode": "BBVXASA1",
+          "wantedQuantity": 20,
+          "sentQuantity": 20
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "date": "2024-07-04",
+      "time": "16:20:45",
+      "productCount": 8,
+      "status": "Accepted",
+      "productsOrder": [
+        {
+          "id": 1,
+          "productName": "Galaxy A53 cover",
+          "type": "accessor",
+          "barcode": "AA121091",
+          "wantedQuantity": 50,
+          "sentQuantity": 50
+        },
+        {
+          "id": 2,
+          "productName": "Galaxy A53",
+          "type": "phone",
+          "barcode": "BB009212",
+          "wantedQuantity": 5,
+          "sentQuantity": 5
+        },
+        {
+          "id": 3,
+          "productName": "Galaxy A12 cover",
+          "type": "accessor",
+          "barcode": "AAD2121",
+          "wantedQuantity": 10,
+          "sentQuantity": 10
+        },
+        {
+          "id": 4,
+          "productName": "Galaxy A12",
+          "type": "phone",
+          "barcode": "BBVXASA1",
+          "wantedQuantity": 20,
+          "sentQuantity": 20
+        }
+      ]
+    }
+  ]
+}

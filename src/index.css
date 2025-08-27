@@ -1,0 +1,219 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .ar-txt {
+    direction: rtl;
+  }
+}
+
+* {
+  font-family: "Cairo", sans-serif !important;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "slnt" 0;
+}
+
+.rectangle::before {
+  content: "";
+  position: absolute;
+  left: -20%;
+  z-index: 1;
+  width: 125%;
+  height: 160%;
+  background: rgb(0, 229, 255);
+  background: linear-gradient(
+    125deg,
+    rgba(0, 229, 255, 1) 35%,
+    rgba(52, 87, 213, 1) 100%
+  );
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+  transform: scale(0.8);
+}
+
+.errBg {
+  background-image: url("./assets/general/pattern20.png");
+}
+
+.my-height {
+  height: calc(100vh - 54px);
+}
+
+.my-height-sidbar {
+  height: calc(100vh - 86px);
+}
+
+.my-parent-hover:hover .my-child-block {
+  display: block;
+}
+
+.my-parent-hover:hover .my-child-none {
+  display: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.my-box-shadow {
+  @apply shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px];
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+li a.active {
+  @apply text-yellow-400;
+}
+
+li a.active .my-child-block {
+  display: block;
+}
+
+li a.active .my-child-none {
+  display: none;
+}
+
+/* Start  HTML: <div class="loader"></div> */
+.loader {
+  width: 100px;
+  aspect-ratio: 1;
+  display: grid;
+  border: 4px solid #0000;
+  border-radius: 50%;
+  border-right-color: rgba(52, 87, 213, 1);
+  animation: l15 1s infinite linear;
+}
+.loader::before,
+.loader::after {
+  content: "";
+  grid-area: 1/1;
+  margin: 2px;
+  border: inherit;
+  border-radius: 50%;
+  animation: l15 2s infinite;
+}
+.loader::after {
+  margin: 8px;
+  animation-duration: 3s;
+}
+@keyframes l15 {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+/* End HTML: <div class="loader"></div> */
+
+/* Start Sweetalret2 CSS */
+
+.colored-toast {
+  display: flex !important;
+  justify-content: space-between !important;
+}
+
+.colored-toast.swal2-icon-success {
+  background-color: #a5dc86 !important;
+}
+
+.colored-toast.swal2-icon-error {
+  background-color: #f27474 !important;
+}
+
+.colored-toast.swal2-icon-warning {
+  background-color: #f8bb86 !important;
+}
+
+.colored-toast.swal2-icon-info {
+  background-color: #3fc3ee !important;
+}
+
+.colored-toast.swal2-icon-question {
+  background-color: #87adbd !important;
+}
+
+.colored-toast .swal2-title {
+  color: white;
+  font-size: 16px !important;
+  text-align: right;
+}
+
+.colored-toast .swal2-close {
+  color: white;
+}
+
+.colored-toast .swal2-html-container {
+  color: white;
+}
+
+/* End Sweetalret2 CSS */
+
+/* Start Custom DropDown  */
+.custom-select {
+  width: 250px;
+  position: relative;
+}
+
+.custom-select select {
+  appearance: none;
+  outline: none;
+  width: 100%;
+  font-size: 16px;
+  padding: 0.675em 1em 0.675em 1em;
+  background-color: #3457d5;
+  color: white;
+  border-radius: 25px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.custom-select select option {
+  color: white;
+}
+
+.custom-select::before,
+.custom-select::after {
+  --size: 0.3rem;
+  content: "";
+  position: absolute;
+  right: 1rem;
+  pointer-events: none;
+}
+
+.custom-select::before {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-bottom: var(--size) solid #fff;
+  top: 40%;
+}
+
+.custom-select::after {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-top: var(--size) solid #fff;
+  top: 55%;
+}
+/* End Custom DropDown  */
+
+.my-filter-box {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.MuiDataGrid-rowCount {
+  display: none !important;
+}
