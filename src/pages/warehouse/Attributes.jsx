@@ -372,7 +372,16 @@ function Attributes() {
           <div className="flex flex-col items-end justify-center gap-2 w-full">
             <SectionTitle text={"الوحدات:"} />
             {unitsDraft.map((u, i) => (
-              <div key={`unit-${i}`} className="flex items-center gap-2 w-full">
+              <div
+                key={`unit-${i}`}
+                className="flex items-center justify-end gap-2 w-full"
+              >
+                
+                <ButtonComponent
+                  variant={"delete"}
+                  small={true}
+                  onClick={() => handleRemoveUnitDraft(i)}
+                />
                 <div className="w-[500px]">
                   <TextInputComponent
                     label={`وحدة #${i + 1}`}
@@ -380,20 +389,19 @@ function Attributes() {
                     onChange={(val) => handleUnitDraftChange(i, val)}
                   />
                 </div>
-                <ButtonComponent
-                  variant={"delete"}
-                  small={true}
-                  onClick={() => handleRemoveUnitDraft(i)}
-                />
               </div>
             ))}
             <div className="flex items-center gap-2">
-              <ButtonComponent variant={"add"} onClick={handleAddUnitDraft} />
+              <ButtonComponent
+                variant={"add"}
+                onClick={handleAddUnitDraft}
+                text={"إضافة وحدة"}
+              />
             </div>
           </div>
         )}
         <div className="flex items-center justify-end w-full">
-          <ButtonComponent variant={"add"} onClick={handleAddAttribute} />
+          <ButtonComponent variant={"add"} onClick={handleAddAttribute}  />
         </div>
       </section>
 

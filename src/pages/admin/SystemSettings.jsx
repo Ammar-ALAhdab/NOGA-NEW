@@ -185,7 +185,7 @@ function SystemSettings() {
   const addJob = async (addedJob) => {
     try {
       await axiosPrivate.post(
-        `/employees/job_types`,
+        `/employees/job_types/`,
         JSON.stringify({ job_type: addedJob })
       );
       getJobsTypes();

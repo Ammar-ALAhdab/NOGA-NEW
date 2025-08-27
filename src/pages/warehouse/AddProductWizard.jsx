@@ -656,7 +656,7 @@ function AddProductWizard() {
         {step === 2 && (
           <div className="w-full">
             <SectionTitle text={"معلومات المنتج:"} />
-            <div className="grid grid-cols-2 gap-4 w-full">
+            <div className="grid grid-cols-1 gap-4 w-full">
               <div className="flex flex-col items-start justify-center gap-4">
                 <TextInputComponent
                   label={"اسم المنتج:"}
@@ -676,7 +676,7 @@ function AddProductWizard() {
         {step === 3 && (
           <div className="w-full">
             <SectionTitle text={"إنشاء نسخة المنتج:"} />
-            <div className="grid grid-cols-2 gap-4 w-full">
+            <div className="grid grid-cols-1 gap-4 w-full">
               <div className="flex flex-col items-end justify-start gap-4">
                 <NumberInputComponent
                   label={"الكمية:"}
@@ -700,13 +700,13 @@ function AddProductWizard() {
                   onChange={setSellingPrice}
                 />
                 <div className="flex items-center justify-between gap-8 w-[500px]">
-                  <label className="text-base">الصور:</label>
                   <input
                     type="file"
                     multiple
                     onChange={(e) => setImages(e.target.files)}
                     className="w-[250px] h-[40px]"
                   />
+                  <label className="text-base">:الصور</label>
                 </div>
               </div>
               <div className="flex flex-col items-start justify-start gap-4">

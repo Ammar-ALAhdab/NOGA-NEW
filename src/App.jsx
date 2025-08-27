@@ -37,6 +37,7 @@ import SalesOfficer from "./pages/sales/SalesOfficer.jsx";
 import WareHouseSettings from "./pages/warehouse/WareHouseSettings.jsx";
 import PhoneProductDetails from "./pages/warehouse/PhoneProductDetails.jsx";
 import AccessoryProductDetails from "./pages/warehouse/AccessoryProductDetails.jsx";
+import VariantDetails from "./pages/warehouse/VariantDetails.jsx";
 import EditProducts from "./pages/warehouse/EditProducts.jsx";
 import RequestsLog from "./pages/warehouse/RequestsLog.jsx";
 import OrderProducts from "./pages/manager/OrderProducts.jsx";
@@ -173,6 +174,10 @@ export default function App() {
                 element={<AddProductWizard />}
               />
               <Route path="products/editProducts" element={<EditProducts />} />
+              <Route
+                path="products/variant/:VariantId"
+                element={<VariantDetails />}
+              />
               <Route
                 path="products/phone/:ProductId"
                 element={<PhoneProductDetails />}
