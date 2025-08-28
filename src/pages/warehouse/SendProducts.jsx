@@ -24,10 +24,11 @@ const formatting = (unFormattedData) => {
     profilePhoto: isPhone ? phone : accessor,
     barcode: unFormattedData.qr_code ? unFormattedData.qr_code : "لايوجد",
     productName: unFormattedData.product_name || unFormattedData.product,
-    type: isPhone ? "موبايل" : "إكسسوار",
+    type: rawCategory,
     sellingPrice: currencyFormatting(unFormattedData.selling_price),
     wholesalePrice: currencyFormatting(unFormattedData.wholesale_price),
     totalQuantity: unFormattedData.quantity,
+    sku:unFormattedData.sku,
     sendQuantity: 0,
     options: <ButtonComponent />,
   };
@@ -48,37 +49,64 @@ function SendProducts() {
   const [errorProducts, setErrorProducts] = useState(null);
   const axiosPrivate = useAxiosPrivate();
   const [branches, setBranches] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState("");
+  const [selectedSource, setSelectedSource] = useState("");
+  const [selectedDestination, setSelectedDestination] = useState("");
   const [rowSelectionID, setRowSelectionID] = useState([]);
 
   const handleSelectProduct = (newRowSelectionModel) => {
     setRowSelectionID(newRowSelectionModel);
   };
 
-  const handleBranchSelect = (e) => {
+  const handleSourceSelect = (e) => {
     const { value } = e;
-    setSelectedBranch(value);
+    setSelectedSource(value);
+  };
+
+  const handleDestinationSelect = (e) => {
+    const { value } = e;
+    setSelectedDestination(value);
   };
 
   const handleClickBack = useGoToBack();
 
   const getSelectedProducts = async () => {
-    try {
-      setLoadingProducts(true);
-      setErrorProducts(null);
-
-      for (let i = 0; i < rowSelectionID.length; i++) {
-        const response = await axiosPrivate.get(
-          `/products/variants/${rowSelectionID[i]}`
-        );
-        const formattedProduct = formatting(response?.data);
-        setSelectedProducts((prev) => [...prev, formattedProduct]);
+    if(!selectedSource){
+      try {
+        setLoadingProducts(true);
+        setErrorProducts(null);
+  
+        for (let i = 0; i < rowSelectionID.length; i++) {
+          const response = await axiosPrivate.get(
+            `/products/variants/${rowSelectionID[i]}`
+          );
+          const formattedProduct = formatting(response?.data);
+          setSelectedProducts((prev) => [...prev, formattedProduct]);
+        }
+      } catch (error) {
+        console.log(error);
+        setErrorProducts(error);
+      } finally {
+        setLoadingProducts(false);
       }
-    } catch (error) {
-      console.log(error);
-      setErrorProducts(error);
-    } finally {
-      setLoadingProducts(false);
+    }
+    else{
+      try {
+        setLoadingProducts(true);
+        setErrorProducts(null);
+  
+        for (let i = 0; i < rowSelectionID.length; i++) {
+          const response = await axiosPrivate.get(
+            `/products/variants/${rowSelectionID[i]}`
+          );
+          const formattedProduct = formatting(response?.data);
+          setSelectedProducts((prev) => [...prev, formattedProduct]);
+        }
+      } catch (error) {
+        console.log(error);
+        setErrorProducts(error);
+      } finally {
+        setLoadingProducts(false);
+      }
     }
   };
 
@@ -113,9 +141,9 @@ function SendProducts() {
 
   const handleSendProducts = () => {
     const sendProducts = {
-      branch: selectedBranch,
-      movement_type: true,
-      transported_product: [
+      source: selectedSource,
+      destination : selectedDestination,
+      transported_products: [
         ...selectedProducts.map((p) => {
           return {
             product: p.id,
@@ -134,9 +162,11 @@ function SendProducts() {
         cancelButtonColor: "#3457D5",
         confirmButtonText: "نعم",
       }).then((result) => {
+        console.log(sendProducts);
+        
         if (result.isConfirmed) {
           axiosPrivate
-            .post("/products/transport", JSON.stringify(sendProducts))
+            .post("/products/transportations", sendProducts)
             .then(() => {
               Swal.fire({
                 title: "تمت عملية الإرسال بنجاح",
@@ -145,7 +175,7 @@ function SendProducts() {
               setSelectedProducts([]);
             })
             .catch((error) => {
-              console.error(error);
+              console.error(error , error.message);
               Swal.fire({
                 title: "خطأ",
                 text: "حدث خطأ ما في إرسال المنتجات",
@@ -184,6 +214,11 @@ function SendProducts() {
     {
       field: "productName",
       headerName: "اسم المنتج",
+      width: 150,
+    },
+    {
+      field: "sku",
+      headerName: "المعرف",
       width: 150,
     },
     {
@@ -243,6 +278,11 @@ function SendProducts() {
       width: 150,
     },
     {
+      field: "sku",
+      headerName: "المعرف",
+      width: 150,
+    },
+    {
       field: "type",
       headerName: "النوع",
       flex: 1,
@@ -275,7 +315,18 @@ function SendProducts() {
       <section className="flex items-center justify-center flex-col gap-4 w-full bg-white rounded-[30px] pb-8 px-4 my-box-shadow">
         <div className="w-full">
           <SectionTitle text={"اختر الفرع:"} />
-          <div className="flex items-start justify-center">
+          <div className="flex items-start justify-center py-5">
+            <DropDownComponent
+              data={branches}
+              label={"إرسال من فرع:"}
+              ButtonText={"الفرع"}
+              id={"product"}
+              dataValue="id"
+              dataTitle="title"
+              onSelectEvent={handleSourceSelect}
+            />
+          </div>
+          <div className="flex items-start justify-center py-5">
             <DropDownComponent
               data={branches}
               label={"إرسال إلى فرع:"}
@@ -283,7 +334,7 @@ function SendProducts() {
               id={"product"}
               dataValue="id"
               dataTitle="title"
-              onSelectEvent={handleBranchSelect}
+              onSelectEvent={handleDestinationSelect}
             />
           </div>
         </div>

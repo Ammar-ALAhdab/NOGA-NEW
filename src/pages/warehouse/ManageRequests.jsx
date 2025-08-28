@@ -14,13 +14,14 @@ import SectionTitle from "../../components/titles/SectionTitle";
 import FilterDropDown from "../../components/inputs/FilterDropDown";
 
 const formatting = (unFormattedData) => {
+  console.log(unFormattedData);
+
   const rowsData = unFormattedData.map((row) => ({
     id: row.id,
     branchName: row.branch_name,
-    address: row?.address,
-    date: row.date_of_request,
-    note: row.note,
-    productsRequest: row.requests,
+    date: row.created_at,
+    productsRequest: row.requested_products,
+    status: row.request_status,
     options: <ButtonComponent />,
   }));
   return rowsData;
@@ -37,11 +38,12 @@ const formatBranches = (unFormattedData) => {
 const initialFilterState = {
   filter: false,
   branch: "",
+  status: "",
   ordering: "",
   orderingType: "",
 };
 
-const ORDERING_FIELDS = [{ id: "date_of_request", title: "تاريخ الطلب" }];
+const ORDERING_FIELDS = [{ id: "created_at", title: "تاريخ الطلب" }];
 
 const ORDERING_TYPE = [
   { id: 1, title: "تصاعدي" },
@@ -68,7 +70,24 @@ function ManageRequests() {
   const [filterShow, setFilterShow] = useState(false);
   const [filterTerms, setFilterTerms] = useState("");
   const [branches, setBranches] = useState([]);
-
+  const STATUSES = [
+    {
+      id:'fully-approved',
+      title:'fully-approved'
+    },
+    {
+      id:'partially-approved',
+      title:'partially-approved'
+    },
+    {
+      id:'waiting',
+      title:'waiting'
+    },
+    {
+      id:'rejected',
+      title:'rejected'
+    },
+  ]
   const [scrollTop, setScrollTop] = useState(0);
   const [page, setPage] = useState(1);
 
@@ -83,25 +102,25 @@ function ManageRequests() {
   };
 
   const handleFilterClick = () => {
-    let branchFilter = state.branch ? `&branch_id=${state.branch}` : "";
+    let branchFilter = state.branch ? `&branch=${state.branch}` : "";
+    let statusFilter = state.status ? `&request_status=${state.status}` : "";
     let orderingTypeFilter =
       state.orderingType == 1 || state.orderingType == "" ? "" : "-";
     let orderingFilter = state.ordering
       ? `&ordering=${orderingTypeFilter}${state.ordering}`
       : "";
-    let filter = branchFilter + orderingFilter;
+    let filter = branchFilter + orderingFilter + statusFilter;
     setFilterTerms(filter);
     setPage(1);
 
-    getRequests(`/products/request?&processed=false${filter}`);
+    getRequests(`/products/requests?${filter}`);
     handleCloseFilter();
   };
 
   const handleChangePage = (event, value) => {
     setPage(value);
     getRequests(
-      `/products/request?&processed=false&page=${value}${
-        searchQuery ? `&search=${searchQuery}` : ""
+      `/products/requests?&page=${value}${searchQuery ? `&search=${searchQuery}` : ""
       }${state.filter ? `${filterTerms}` : ""}`
     );
   };
@@ -116,7 +135,7 @@ function ManageRequests() {
   const handleSearchClick = () => {
     setPage(1);
 
-    getRequests(`/products/request?&processed=false&search=${searchQuery}`);
+    getRequests(`/products/requests?&search=${searchQuery}`);
   };
 
   const handleCloseFilter = () => {
@@ -127,7 +146,7 @@ function ManageRequests() {
     }, 300);
   };
 
-  const getRequests = async (link = "/products/request?processed=false") => {
+  const getRequests = async (link = "/products/requests") => {
     try {
       setLoading(true);
       setError(null);
@@ -161,8 +180,10 @@ function ManageRequests() {
   };
 
   const handleGoToBranchRequests = (request) => {
+    console.log(request.row.productsRequest);
+    
     navigate(`${request.row.id}`, {
-      state: { products: request.row.productsRequest, note: request.row.note },
+      state: { products: request.row.productsRequest, status: request.row.status },
     });
   };
 
@@ -174,8 +195,8 @@ function ManageRequests() {
       flex: 1,
     },
     {
-      field: "address",
-      headerName: "العنوان",
+      field: "status",
+      headerName: "حالة الطلب",
       flex: 1,
     },
     {
@@ -242,6 +263,16 @@ function ManageRequests() {
                   value={state.branch}
                   label={"فلترة حسب الفرع"}
                   name={"branch"}
+                  onChange={handleFilterTerms}
+                />
+              </div>
+              <div className="flex flex-row-reverse items-center justify-center gap-2 w-full">
+                <FilterDropDown
+                  data={STATUSES}
+                  dataTitle={"title"}
+                  value={state.status}
+                  label={"فلترة حسب الحالة"}
+                  name={"status"}
                   onChange={handleFilterTerms}
                 />
               </div>

@@ -53,6 +53,7 @@ import ManagerStatistics from "./pages/manager/ManagerStatistics.jsx";
 import ProductsRequestLog from "./pages/manager/ProductsRequestLog.jsx";
 import SoldProductsLog from "./pages/sales/SoldProductsLog.jsx";
 import Attributes from "./pages/warehouse/Attributes.jsx";
+import ManageTransportation from "./pages/warehouse/ManageTransportation.jsx";
 
 export default function App() {
   return (
@@ -189,6 +190,7 @@ export default function App() {
               <Route path="sendProducts" element={<SendProducts />} />
               <Route path="returnProducts" element={<ReturnProducts />} />
               <Route path="productsLog" element={<ProductsLog />} />
+              <Route path="productsLog/:transportationId" element={<ManageTransportation />} />
               <Route path="manageRequests" element={<ManageRequests />} />
               <Route path="manageRequests/:RequestId" element={<Request />} />
               <Route path="requestsLog" element={<RequestsLog />} />

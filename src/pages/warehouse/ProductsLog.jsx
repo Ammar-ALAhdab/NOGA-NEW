@@ -11,87 +11,140 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import SectionTitle from "../../components/titles/SectionTitle";
 import SearchComponent from "../../components/inputs/SearchComponent";
-
-const columns = [
-  { field: "id", headerName: "", width: 50 },
-  {
-    field: "idOfOrder",
-    headerName: "معرف المناقلة",
-    width: 200,
-    valueGetter: (value, row) => `#${row.id}`,
-  },
-  { field: "date", headerName: "التاريخ", flex: 1 },
-  { field: "branch", headerName: "الفرع", flex: 1 },
-  { field: "productCount", headerName: "عدد المنتجات", flex: 1 },
-  {
-    field: "status",
-    headerName: "الحالة",
-    flex: 1,
-    renderCell: (params) => {
-      return (
-        <span
-          className="font-bold"
-          style={{
-            color: params.row.status == "إرسال" ? "#2DBDA8" : "#E76D3B",
-          }}
-        >
-          {params.row.status}
-        </span>
-      );
-    },
-  },
-];
-
-const detailColumns = [
-  { field: "id", headerName: "#", width: 50 },
-  { field: "product_name", headerName: "اسم المنتج", flex: 1 },
-  {
-    field: "category_name",
-    headerName: "النوع",
-    align: "center",
-    flex: 1,
-  },
-  {
-    field: "quantity",
-    headerName: "الكمية",
-    flex: 1,
-  },
-];
-
-const initialFilterState = {
-  filter: false,
-  branch: "",
-  ordering: "",
-  orderingType: "",
-};
-
-const formatBranches = (unFormattedData) => {
-  const data = unFormattedData.map((d) => ({
-    id: d.id,
-    title: `${d.number} ${d.city_name}`,
-  }));
-  return data;
-};
-
-const ORDERING_FIELDS = [{ id: "date_of_process", title: "التاريخ" }];
-
-const ORDERING_TYPE = [
-  { id: 1, title: "تصاعدي" },
-  { id: 2, title: "تنازلي" },
-];
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "SET_FIELD":
-      return { ...state, [action.field]: action.value, filter: true };
-    case "RESET":
-      return initialFilterState;
-    default:
-      return state;
-  }
-};
+import { useNavigate } from "react-router-dom";
 
 function ProductsLog() {
+  const navigate = useNavigate();
+  const handleClickGotoTransportationById = (transportationId) => {
+    const toTransportation = `${transportationId}`
+    navigate(toTransportation, {
+      state: { transportation: transportationId },
+    });
+  };
+
+  const columns = [
+    { field: "id", headerName: "", width: 50 },
+    {
+      field: "idOfOrder",
+      headerName: "معرف المناقلة",
+      width: 200,
+      valueGetter: (value, row) => `#${row.id}`,
+    },
+    { field: "date", headerName: "التاريخ", flex: 1 },
+    {
+      field: "source", headerName: "من", flex: 1,
+      valueGetter: (value, row) => {
+        if (row.source) {
+          return row.source
+        }
+        else {
+          return "المستودع الرئيسي"
+        }
+      },
+    },
+    {
+      field: "destination", headerName: "الى", flex: 1,
+      valueGetter: (value, row) => {
+        if (row.destination) {
+          return row.destination
+        }
+        else {
+          return "المستودع الرئيسي"
+        }
+      },
+    },
+    { field: "productCount", headerName: "عدد المنتجات", flex: 1 },
+    {
+      field: "status",
+      headerName: "الحالة",
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <span
+            className="font-bold"
+            style={{
+              color: params.row.status == "إرسال" ? "#2DBDA8" : "#E76D3B",
+            }}
+          >
+            {params.row.status}
+          </span>
+        );
+      },
+    },
+    {
+      field: "options",
+      headerName: "خيارات",
+      width: 150,
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <ButtonComponent
+            variant={"show"}
+            small={true}
+            onClick={() =>
+              handleClickGotoTransportationById(params.id)
+            }
+          />
+        );
+      },
+    },
+  ];
+
+  const detailColumns = [
+    { field: "id", headerName: "#", width: 50 },
+    { field: "product", headerName: "اسم المنتج", flex: 1 },
+    { field: "sku", headerName: "المعرف", flex: 1 },
+    {
+      field: "category",
+      headerName: "النوع",
+      align: "center",
+      flex: 1,
+    },
+    {
+      field: "quantity",
+      headerName: "الكمية",
+      flex: 1,
+    },
+  ];
+
+  const initialFilterState = {
+    filter: false,
+    source: "",
+    destination: "",
+    ordering: "",
+    orderingType: "",
+  };
+
+  const formatBranches = (unFormattedData) => {
+    const data = unFormattedData.map((d) => ({
+      id: d.id,
+      title: `${d.number} ${d.city_name}`,
+    }));
+    return data;
+  };
+
+  const ORDERING_FIELDS = [
+    { id: "created_at", title: "تاريخ الانشاء", },
+    { id: "transported_at", title: "تاريخ النقل", },
+    { id: "received_at", title: "تاريخ التلقي", },
+  ];
+
+  const ORDERING_TYPE = [
+    { id: 1, title: "تصاعدي" },
+    { id: 2, title: "تنازلي" },
+  ];
+
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "SET_FIELD":
+        return { ...state, [action.field]: action.value, filter: true };
+      case "RESET":
+        return initialFilterState;
+      default:
+        return state;
+    }
+  };
+
   const [productsTransportLog, setProductsTransportLog] = useState([]);
   const [paginationSettings, setPaginationSettings] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -111,24 +164,24 @@ function ProductsLog() {
   };
 
   const handleFilterClick = () => {
-    let branchFilter = state.branch ? `&branch__id=${state.branch}` : "";
+    let sourceFilter = state.source ? `&source=${state.source}` : "";
+    let destinationFilter = state.destination ? `&=${state.destination}` : "";
     let orderingTypeFilter =
       state.orderingType == 1 || state.orderingType == "" ? "" : "-";
     let orderingFilter = state.ordering
       ? `&ordering=${orderingTypeFilter}${state.ordering}`
       : "";
-    let filter = branchFilter + orderingFilter;
+    let filter = sourceFilter + destinationFilter + orderingFilter;
     setFilterTerms(filter);
     setPage(1);
-    getProductsLog(`/products/transport?${filter}`);
+    getProductsLog(`/products/transportations?${filter}`);
     handleCloseFilter();
   };
 
   const handleChangePage = (event, value) => {
     setPage(value);
     getProductsLog(
-      `/products/transport?page=${value}${
-        searchQuery ? `&search=${searchQuery}` : ""
+      `/products/transportations?page=${value}${searchQuery ? `&search=${searchQuery}` : ""
       }${state.filter ? `${filterTerms}` : ""}`
     );
   };
@@ -143,7 +196,7 @@ function ProductsLog() {
   const handleSearchClick = () => {
     setPage(1);
 
-    getProductsLog(`/products/transport?search=${searchQuery}`);
+    getProductsLog(`/products/transportations?search=${searchQuery}`);
   };
 
   const formatting = (unFormattedData) => {
@@ -151,12 +204,14 @@ function ProductsLog() {
       return {
         id: row.id,
         idOfOrder: row.id,
-        date: row.date_of_process,
-        branch: row.branch_name,
-        productCount: row?.transported_product?.length,
-        status: row.movement_type == true ? "إرسال" : "إستعادة",
-        productsOrder: row.productsOrder,
-        transportedProduct: row.transported_product?.map((tp) => {
+        date: row.created_at,
+        transported_at: row.transported_at,
+        source: row.source,
+        destination: row.destination,
+        productCount: row?.transported_products?.length,
+        status: row.transportation_status,
+        // productsOrder: row.productsOrder,
+        transportedProduct: row.transported_products?.map((tp) => {
           delete tp.product.quantity;
           tp.product.quantity = tp.quantity;
           return tp.product;
@@ -187,13 +242,15 @@ function ProductsLog() {
     }
   };
 
-  const getProductsLog = async (link = "/products/transport") => {
+  const getProductsLog = async (link = "/products/transportations") => {
     try {
       setLoading(true);
       setError(null);
       const response = await axiosPrivate.get(link);
       const data = formatting(response?.data?.results);
       setProductsTransportLog(data);
+      console.log(response?.data?.results);
+
       setPaginationSettings({
         count: response?.data?.count,
         next: response?.data?.next,
@@ -247,9 +304,19 @@ function ProductsLog() {
                 <FilterDropDown
                   data={branches}
                   dataTitle={"title"}
-                  value={state.branch}
-                  label={"فلترة حسب الفرع"}
-                  name={"branch"}
+                  value={state.source}
+                  label={"فلترة حسب المصدر"}
+                  name={"source"}
+                  onChange={handleFilterTerms}
+                />
+              </div>
+              <div className="flex flex-row-reverse items-center justify-center gap-2 w-full">
+                <FilterDropDown
+                  data={branches}
+                  dataTitle={"title"}
+                  value={state.destination}
+                  label={"فلترة حسب الهدف"}
+                  name={"destination"}
                   onChange={handleFilterTerms}
                 />
               </div>

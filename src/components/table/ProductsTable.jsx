@@ -111,7 +111,8 @@ const formatting = (unFormattedData) => {
       profilePhoto: isPhone ? phone : accessor,
       barcode: row.qr_code ? row.qr_code : "لايوجد",
       productName: row.product_name || row.product,
-      type: isPhone ? "موبايل" : "إكسسوار",
+      type:rawCategory,
+      sku:row.sku,
       sellingPrice:
         sellingPriceValue != null
           ? currencyFormatting(sellingPriceValue)
