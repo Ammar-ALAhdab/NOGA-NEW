@@ -84,6 +84,22 @@ const buttonVariants = {
     icon: salesSale,
     backgroundColor: "#2DBDA8",
   },
+  transport: {
+    text:"إجراء عملية نقل",
+    icon: null,
+    backgroundColor: "#3457D5",
+  },
+  receive: {
+    text:"استلام",
+    icon: null,
+    backgroundColor: "#3457D5",
+  },
+  confirm: {
+    text:"تأكيد",
+    icon: null,
+    backgroundColor: "#3457D5",
+  },
+
 };
 
 const ButtonComponent = ({
