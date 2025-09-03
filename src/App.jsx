@@ -53,7 +53,16 @@ import ProductsRequestLog from "./pages/manager/ProductsRequestLog.jsx";
 import SoldProductsLog from "./pages/sales/SoldProductsLog.jsx";
 import Attributes from "./pages/warehouse/Attributes.jsx";
 import ManageTransportation from "./pages/warehouse/ManageTransportation.jsx";
-
+import WorkSchedules from "./pages/hr/WorkSchedules.jsx";
+import WorkSchedule from "./pages/hr/WorkSchedule.jsx";
+import AddWorkSchedule from "./pages/hr/AddWorkSchedule.jsx";
+import Vecations from "./pages/hr/vecations/Vecations.jsx";
+import Vecation from "./pages/hr/vecations/Vecation.jsx";
+import AddVecation from "./pages/hr/vecations/AddVecation.jsx";
+import Attendances from "./pages/hr/attendance/Attendances.jsx";
+import SignInOut from "./pages/hr/attendance/SignInOut.jsx";
+import Salaries from "./pages/hr/salaries/Salaries.jsx";
+import 'leaflet/dist/leaflet.css';
 export default function App() {
   return (
     <Routes>
@@ -143,6 +152,19 @@ export default function App() {
               {/* Redirect to manageEmployees by default */}
               <Route index element={<Navigate to="manageEmployees" />} />
               <Route path="manageEmployees" element={<Employees />} />
+              <Route path="workSchedules" element={<WorkSchedules />} />
+              <Route path="workSchedules/:workScheduleID" element={<WorkSchedule />} />
+              <Route path="workSchedules/addWorkSchedule" element={<AddWorkSchedule />} />
+
+              <Route path="vecations" element={<Vecations />} />
+              <Route path="vecations/:vecationID" element={<Vecation />} />
+              <Route path="vecations/addVecation" element={<AddVecation />} />
+
+              <Route path="attendances" element={<Attendances />} />
+              <Route path="attendances/sign" element={<SignInOut />} />
+
+              <Route path="salaries" element={<Salaries />} />
+
               <Route
                 path="manageEmployees/:EmployeeID"
                 element={<EmployeeDetails />}

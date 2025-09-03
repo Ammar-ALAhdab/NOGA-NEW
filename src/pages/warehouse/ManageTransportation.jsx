@@ -281,7 +281,7 @@ function ManageTransportation() {
 
         getTransportation();
     }, []);
-    console.log(productsTransportation.receviedProduct);
+
 
     const STATUSES = {
         'packaging': 'red',

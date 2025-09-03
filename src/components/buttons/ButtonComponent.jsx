@@ -99,7 +99,16 @@ const buttonVariants = {
     icon: null,
     backgroundColor: "#3457D5",
   },
-
+  sign_in: {
+    text:"تسجيل دخول",
+    icon: procedure,
+    backgroundColor: "#66C266",
+  },
+  sign_out: {
+    text:"تسجيل خروج",
+    icon: reject,
+    backgroundColor: "#FF7F7F",
+  },
 };
 
 const ButtonComponent = ({

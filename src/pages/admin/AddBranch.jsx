@@ -7,13 +7,14 @@ import useGoToBack from "../../hooks/useGoToBack";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useToast from "../../hooks/useToast";
 import { useNavigate } from "react-router-dom";
+import PositionOnMapComponent from "../../components/inputs/PositionOnMapComponent";
 
 const initState = {
   city: "",
   area: "",
   street: "",
   manager: "",
-  location: "location",
+  location: "34.713016581849445,36.70711612702235",
 };
 
 const formatAvailableMangers = (data) => {
@@ -61,6 +62,8 @@ function AddBranch() {
       const response = await axiosPrivate.get(link);
       const availableMangers = formatAvailableMangers(response.data.results);
       setBranchesManagers((prevData) => [...prevData, ...availableMangers]);
+      console.log(response);
+
       if (response.data.next) {
         getAvailableMangers(response.data.next);
       }
@@ -94,6 +97,7 @@ function AddBranch() {
       manager: managerID,
     }));
   };
+  console.log(branchInfo);
 
   const handleAddBranch = async () => {
     try {
@@ -116,11 +120,13 @@ function AddBranch() {
     }
   };
 
+
   return (
     <main className="flex flex-col items-center justify-between w-full h-full flex-grow gap-4">
       <Title text={"إضافة فرع:"} />
-      <section className="flex items-center justify-center flex-col gap-16 w-full bg-white rounded-[30px] py-8 px-4 my-box-shadow">
-        <form className="flex flex-col items-center justify-center gap-4">
+      <section className="relative w-full flex items-center justify-center flex-col gap-16 bg-white rounded-[30px] py-8 px-4 my-box-shadow">
+        <form className="relative w-full flex flex-col items-center justify-center gap-4">
+
           <DropDownComponent
             data={cities}
             dataValue={"id"}
@@ -151,6 +157,18 @@ function AddBranch() {
             loading={loadingManagers}
             error={errorManagers}
           />
+
+          <div className="relative w-full flex flex-col items-start justify-end py-5">
+            <p className="relative text-end w-full py-5">:الموقع</p>
+            <PositionOnMapComponent value={branchInfo.location.split(',').map(Number).every(item => typeof item === 'number' && isFinite(item)) ? branchInfo.location.split(',').map(Number).every(item => typeof item === 'number' && isFinite(item)) : [34.713016581849445, 36.70711612702235]} onChange={(value) => {
+              console.log(value);
+
+              setBranchInfo(prev => ({
+                ...prev,
+                location: value.join(',')
+              }))
+            }} />
+          </div>
         </form>
         <div className="flex items-center justify-end gap-4 w-full">
           <ButtonComponent variant={"back"} onClick={handleClickBack} />

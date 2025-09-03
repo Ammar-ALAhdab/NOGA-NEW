@@ -7,12 +7,14 @@ import useGoToBack from "../../hooks/useGoToBack";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import PositionOnMapComponent from "../../components/inputs/PositionOnMapComponent";
 
 function BranchDetails() {
   const branchInfo = useLocationState("branch");
   const handleClickBack = useGoToBack();
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
+console.log(typeof branchInfo.location);
 
   const handleDeleteBranch = async () => {
     Swal.fire({
@@ -47,6 +49,7 @@ function BranchDetails() {
       }
     });
   };
+  console.log(branchInfo);
 
   if (!branchInfo) {
     return <div>No branchInfo data available.</div>;
@@ -56,8 +59,8 @@ function BranchDetails() {
       <Title
         text={`شركة نوجا تيك فرع: ${branchInfo?.city_name} ${branchInfo?.number}`}
       />
-      <section className="flex items-center justify-center flex-col gap-16 w-full bg-white rounded-[30px] py-8 px-4 my-box-shadow">
-        <div className="flex flex-col items-center justify-center gap-4">
+      <section className="relative w-full flex items-center justify-center flex-col gap-16 bg-white rounded-[30px] py-8 px-4 my-box-shadow">
+        <div className="relative w-full flex flex-col items-center justify-center gap-4">
           <TextShowBlue label={"مدينة:"} value={branchInfo.city_name} />
           <TextInputComponent
             label={"منطقة:"}
@@ -70,6 +73,16 @@ function BranchDetails() {
             disabled={true}
           />
           <TextShowBlue label={"المدير:"} value={branchInfo.manager_name} />
+          <div className="relative w-full flex flex-col items-start justify-end py-5">
+            <p className="relative text-end w-full py-5">:الموقع</p>
+            <PositionOnMapComponent
+            title={branchInfo.city_name + branchInfo.number + " " + branchInfo.area + " " + branchInfo.street}
+            disabled={true}
+              value={
+                  branchInfo.location
+                }
+            />
+          </div>
         </div>
         <div className="flex items-center justify-end gap-4 w-full">
           <ButtonComponent variant={"back"} onClick={handleClickBack} />
