@@ -44,6 +44,7 @@ const navData = {
       الإحصائيات: [adminStatistics, adminStatisticsHover, "statistics"],
       "إدارة الأفرع": [adminBranches, adminBranchesHover, "branches"],
       "إدارة الموظفين": [adminEmployee, adminEmployeeHover, "manageEmployees"],
+      "الكاميرات": [, , "cameras"],
       الإعدادات: [adminSettings, adminSettingsHover, "settings"],
       "تسجيل الخروج": [logout, logoutHover, "logout"],
     },

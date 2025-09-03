@@ -63,6 +63,10 @@ import Attendances from "./pages/hr/attendance/Attendances.jsx";
 import SignInOut from "./pages/hr/attendance/SignInOut.jsx";
 import Salaries from "./pages/hr/salaries/Salaries.jsx";
 import 'leaflet/dist/leaflet.css';
+import Cameras from "./pages/admin/cameras/Cameras.jsx";
+import AddCamera from "./pages/admin/cameras/AddCamera.jsx";
+import Camera from "./pages/admin/cameras/Camera.jsx";
+import WatchCamera from "./pages/admin/cameras/WatchCamera.jsx";
 export default function App() {
   return (
     <Routes>
@@ -76,6 +80,7 @@ export default function App() {
         {/* Protected Routes is Here : */}
         <Route element={<PersistLogin />}>
           <Route element={<RequireAuth allowedRole={["admin", "CEO"]} />}>
+
             {/* ----- Start Admin Routes ----- */}
             <Route path="admin" element={<Admin />}>
               {/* Redirect to statistics by default */}
@@ -108,6 +113,13 @@ export default function App() {
                 element={<SalesAccountDetails />}
               />
               <Route path="branches/addBranch" element={<AddBranch />} />
+              
+              <Route path="cameras" element={<Cameras />} />
+              <Route path="cameras/addCamera" element={<AddCamera />} />
+              <Route path="cameras/:CameraId" element={<Camera />} />
+              <Route path="cameras/watch/:CameraId" element={<WatchCamera />} />
+              
+
               <Route path="settings" element={<SystemSettings />} />
               {/* <Route
                 path="settings/systemSettings"

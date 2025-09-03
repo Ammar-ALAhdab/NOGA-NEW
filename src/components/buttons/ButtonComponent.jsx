@@ -109,6 +109,11 @@ const buttonVariants = {
     icon: reject,
     backgroundColor: "#FF7F7F",
   },
+  watch: {
+    text: "مشاهدة البث",
+    icon: null,
+    backgroundColor: "#7049A3",
+  },
 };
 
 const ButtonComponent = ({
