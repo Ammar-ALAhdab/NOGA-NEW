@@ -1,0 +1,45 @@
+"filename", "language", "JavaScript JSX", "JavaScript", "XML", "comment", "blank", "total"
+"c:\Work\NOGA\src\App.jsx", "JavaScript JSX", -10, 0, 0, 23, 0, 13
+"c:\Work\NOGA\src\api\axios.js", "JavaScript", 0, 5, 0, 0, 1, 6
+"c:\Work\NOGA\src\assets\icons\Buttons\cart.svg", "XML", 0, 0, 5, 0, 1, 6
+"c:\Work\NOGA\src\assets\icons\Buttons\x.svg", "XML", 0, 0, 3, 0, 1, 4
+"c:\Work\NOGA\src\assets\icons\sideBar\constants.js", "JavaScript", 0, 5, 0, 0, 0, 5
+"c:\Work\NOGA\src\assets\icons\statistics\fluent-mdl2_product.svg", "XML", 0, 0, 3, 0, 1, 4
+"c:\Work\NOGA\src\assets\icons\statistics\income.svg", "XML", 0, 0, 2, 0, 0, 2
+"c:\Work\NOGA\src\assets\icons\statistics\octicon_heart-16.svg", "XML", 0, 0, 10, 0, 1, 11
+"c:\Work\NOGA\src\assets\icons\statistics\person.svg", "XML", 0, 0, 2, 0, 0, 2
+"c:\Work\NOGA\src\assets\icons\statistics\streamline_bag-dollar.svg", "XML", 0, 0, 4, 0, 1, 5
+"c:\Work\NOGA\src\components\buttons\ButtonComponent.jsx", "JavaScript JSX", 7, 0, 0, 0, 0, 7
+"c:\Work\NOGA\src\components\charts\BarChartComponent.jsx", "JavaScript JSX", 61, 0, 0, 0, 4, 65
+"c:\Work\NOGA\src\components\layout\Nav.jsx", "JavaScript JSX", -10, 0, 0, 5, 0, -5
+"c:\Work\NOGA\src\components\layout\SideBar.jsx", "JavaScript JSX", 9, 0, 0, 0, 0, 9
+"c:\Work\NOGA\src\components\layout\StatisticsBox.jsx", "JavaScript JSX", 16, 0, 0, 0, 0, 16
+"c:\Work\NOGA\src\components\table\DataTableAccordion.jsx", "JavaScript JSX", 8, 0, 0, 0, 0, 8
+"c:\Work\NOGA\src\components\table\DataTableEditRow.jsx", "JavaScript JSX", 8, 0, 0, 0, 2, 10
+"c:\Work\NOGA\src\components\table\ProductsSalesTable.jsx", "JavaScript JSX", -1, 0, 0, 0, 0, -1
+"c:\Work\NOGA\src\components\table\TableAccordion.jsx", "JavaScript JSX", 1, 0, 0, 0, 0, 1
+"c:\Work\NOGA\src\hooks\useSelectedImg.js", "JavaScript", 0, 4, 0, 0, 1, 5
+"c:\Work\NOGA\src\pages\admin\AddEmployee.jsx", "JavaScript JSX", 28, 0, 0, 3, 1, 32
+"c:\Work\NOGA\src\pages\admin\Branch.jsx", "JavaScript JSX", -6, 0, 0, 6, 0, 0
+"c:\Work\NOGA\src\pages\admin\CreateAccount.jsx", "JavaScript JSX", -1, 0, 0, 0, -1, -2
+"c:\Work\NOGA\src\pages\admin\EmployeeDetails.jsx", "JavaScript JSX", 17, 0, 0, 0, -2, 15
+"c:\Work\NOGA\src\pages\admin\Employees.jsx", "JavaScript JSX", 1, 0, 0, 0, 0, 1
+"c:\Work\NOGA\src\pages\admin\Statistics.jsx", "JavaScript JSX", 10, 0, 0, 0, 9, 19
+"c:\Work\NOGA\src\pages\manager\AccessoryDetails.jsx", "JavaScript JSX", 27, 0, 0, 1, 1, 29
+"c:\Work\NOGA\src\pages\manager\BranchProducts.jsx", "JavaScript JSX", -5, 0, 0, 0, 0, -5
+"c:\Work\NOGA\src\pages\manager\ManagerStatistics.jsx", "JavaScript JSX", 128, 0, 0, 0, 11, 139
+"c:\Work\NOGA\src\pages\manager\OrderProducts.jsx", "JavaScript JSX", -4, 0, 0, 0, 0, -4
+"c:\Work\NOGA\src\pages\manager\PhoneDetails.jsx", "JavaScript JSX", 27, 0, 0, 1, 0, 28
+"c:\Work\NOGA\src\pages\manager\ProductsRequestLog.jsx", "JavaScript JSX", 284, 0, 0, 2, 23, 309
+"c:\Work\NOGA\src\pages\public\Login.jsx", "JavaScript JSX", 4, 0, 0, 0, 0, 4
+"c:\Work\NOGA\src\pages\sales\MakeSale.jsx", "JavaScript JSX", 69, 0, 0, -6, 3, 66
+"c:\Work\NOGA\src\pages\sales\SoldProductsLog.jsx", "JavaScript JSX", 269, 0, 0, 2, 22, 293
+"c:\Work\NOGA\src\pages\warehouse\AccessoryProductDetails.jsx", "JavaScript JSX", 27, 0, 0, 1, 1, 29
+"c:\Work\NOGA\src\pages\warehouse\PhoneProductDetails.jsx", "JavaScript JSX", 30, 0, 0, 1, 1, 32
+"c:\Work\NOGA\src\pages\warehouse\Products.jsx", "JavaScript JSX", -5, 0, 0, 0, 0, -5
+"c:\Work\NOGA\src\pages\warehouse\ProductsLog.jsx", "JavaScript JSX", 152, 0, 0, 1, 15, 168
+"c:\Work\NOGA\src\pages\warehouse\Request.jsx", "JavaScript JSX", 55, 0, 0, -2, 5, 58
+"c:\Work\NOGA\src\pages\warehouse\RequestsLog.jsx", "JavaScript JSX", 216, 0, 0, 2, 17, 235
+"c:\Work\NOGA\src\pages\warehouse\ReturnProducts.jsx", "JavaScript JSX", -5, 0, 0, 0, 0, -5
+"c:\Work\NOGA\src\pages\warehouse\SendProducts.jsx", "JavaScript JSX", -5, 0, 0, 0, -2, -7
+"Total", "-", 1402, 14, 29, 40, 117, 1602

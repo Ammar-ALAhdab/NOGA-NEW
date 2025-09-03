@@ -1,0 +1,230 @@
+Date : 2024-08-10 18:06:40
+Directory : c:\Work\NOGA\src
+Total : 168 files,  15622 codes, 286 comments, 984 blanks, all 16892 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| JavaScript JSX |         86 |     11,999 |        226 |        823 |     13,048 |
+| XML            |         64 |      2,515 |          1 |         57 |      2,573 |
+| JSON           |          1 |        542 |          0 |          1 |        543 |
+| JavaScript     |         16 |        389 |         53 |         66 |        508 |
+| CSS            |          1 |        177 |          6 |         37 |        220 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                        | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                           |        168 |     15,622 |        286 |        984 |     16,892 |
+| . (Files)                                                                                   |          4 |        419 |         26 |         48 |        493 |
+| api                                                                                         |          1 |         12 |          3 |          5 |         20 |
+| assets                                                                                      |         67 |      2,665 |          1 |         66 |      2,732 |
+| assets\admin                                                                                |         10 |      2,191 |          0 |         10 |      2,201 |
+| assets\general                                                                              |          6 |         33 |          0 |          2 |         35 |
+| assets\icons                                                                                |         48 |        384 |          1 |         50 |        435 |
+| assets\icons\Buttons                                                                        |         11 |         68 |          1 |         11 |         80 |
+| assets\icons\sideBar                                                                        |         37 |        316 |          0 |         39 |        355 |
+| assets\icons\sideBar (Files)                                                                |          7 |        150 |          0 |         11 |        161 |
+| assets\icons\sideBar\admin                                                                  |          8 |         64 |          0 |          6 |         70 |
+| assets\icons\sideBar\branchManager                                                          |          2 |          6 |          0 |          2 |          8 |
+| assets\icons\sideBar\hr                                                                     |          2 |          6 |          0 |          2 |          8 |
+| assets\icons\sideBar\sales                                                                  |         10 |         62 |          0 |         10 |         72 |
+| assets\icons\sideBar\warehouseAdmin                                                         |          8 |         28 |          0 |          8 |         36 |
+| assets\login                                                                                |          3 |         57 |          0 |          4 |         61 |
+| auth                                                                                        |          2 |         26 |          0 |          7 |         33 |
+| components                                                                                  |         33 |      2,670 |        158 |        227 |      3,055 |
+| components\actions                                                                          |          3 |         45 |          0 |         11 |         56 |
+| components\buttons                                                                          |          2 |        153 |          1 |         11 |        165 |
+| components\inputs                                                                           |         12 |        631 |          0 |         67 |        698 |
+| components\layout                                                                           |          6 |        386 |          0 |         24 |        410 |
+| components\table                                                                            |          8 |      1,439 |        157 |        106 |      1,702 |
+| components\titles                                                                           |          2 |         16 |          0 |          8 |         24 |
+| context                                                                                     |          2 |         35 |          0 |         11 |         46 |
+| data                                                                                        |          1 |        542 |          0 |          1 |        543 |
+| hooks                                                                                       |         10 |        218 |         50 |         48 |        316 |
+| pages                                                                                       |         47 |      9,030 |         48 |        569 |      9,647 |
+| pages\admin                                                                                 |         17 |      2,728 |          8 |        173 |      2,909 |
+| pages\hr                                                                                    |          2 |        185 |          0 |         15 |        200 |
+| pages\manager                                                                               |          5 |        924 |          0 |         46 |        970 |
+| pages\public                                                                                |          5 |        286 |         10 |         27 |        323 |
+| pages\sales                                                                                 |          5 |        870 |         11 |         68 |        949 |
+| pages\warehouse                                                                             |         13 |      4,037 |         19 |        240 |      4,296 |
+| util                                                                                        |          1 |          5 |          0 |          2 |          7 |
++---------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                    | language       | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| c:\Work\NOGA\src\App.jsx                                                                    | JavaScript JSX |        210 |         20 |          8 |        238 |
+| c:\Work\NOGA\src\api\axios.js                                                               | JavaScript     |         12 |          3 |          5 |         20 |
+| c:\Work\NOGA\src\assets\admin\admin.svg                                                     | XML            |         86 |          0 |          1 |         87 |
+| c:\Work\NOGA\src\assets\admin\admin_acc.svg                                                 | XML            |        145 |          0 |          1 |        146 |
+| c:\Work\NOGA\src\assets\admin\branch_accounts.svg                                           | XML            |        391 |          0 |          1 |        392 |
+| c:\Work\NOGA\src\assets\admin\branch_info.svg                                               | XML            |         85 |          0 |          1 |         86 |
+| c:\Work\NOGA\src\assets\admin\branch_statistics.svg                                         | XML            |        184 |          0 |          1 |        185 |
+| c:\Work\NOGA\src\assets\admin\hr.svg                                                        | XML            |        266 |          0 |          1 |        267 |
+| c:\Work\NOGA\src\assets\admin\sales_acc.svg                                                 | XML            |        471 |          0 |          1 |        472 |
+| c:\Work\NOGA\src\assets\admin\settings.svg                                                  | XML            |        221 |          0 |          1 |        222 |
+| c:\Work\NOGA\src\assets\admin\settings_accounts.svg                                         | XML            |        193 |          0 |          1 |        194 |
+| c:\Work\NOGA\src\assets\admin\warehouse.svg                                                 | XML            |        149 |          0 |          1 |        150 |
+| c:\Work\NOGA\src\assets\general\error_icon.svg                                              | XML            |          1 |          0 |          0 |          1 |
+| c:\Work\NOGA\src\assets\general\no_data.svg                                                 | XML            |          1 |          0 |          0 |          1 |
+| c:\Work\NOGA\src\assets\general\noga_logo_blue.svg                                          | XML            |         15 |          0 |          1 |         16 |
+| c:\Work\NOGA\src\assets\general\noga_logo_white.svg                                         | XML            |         14 |          0 |          1 |         15 |
+| c:\Work\NOGA\src\assets\general\screen_size.svg                                             | XML            |          1 |          0 |          0 |          1 |
+| c:\Work\NOGA\src\assets\general\unauthorized.svg                                            | XML            |          1 |          0 |          0 |          1 |
+| c:\Work\NOGA\src\assets\icons\Buttons\ArrowDropDownIcon.jsx                                 | JavaScript JSX |         17 |          0 |          2 |         19 |
+| c:\Work\NOGA\src\assets\icons\Buttons\add.svg                                               | XML            |          4 |          0 |          1 |          5 |
+| c:\Work\NOGA\src\assets\icons\Buttons\back.svg                                              | XML            |          4 |          0 |          1 |          5 |
+| c:\Work\NOGA\src\assets\icons\Buttons\correct.svg                                           | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\Buttons\delete.svg                                            | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\Buttons\edit.svg                                              | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\Buttons\filter.svg                                            | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\Buttons\minus.svg                                             | XML            |         10 |          0 |          1 |         11 |
+| c:\Work\NOGA\src\assets\icons\Buttons\reject.svg                                            | XML            |          6 |          1 |          0 |          7 |
+| c:\Work\NOGA\src\assets\icons\Buttons\search.svg                                            | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\Buttons\show.svg                                              | XML            |         12 |          0 |          1 |         13 |
+| c:\Work\NOGA\src\assets\icons\sideBar\admin\admin_branches.svg                              | XML            |         15 |          0 |          0 |         15 |
+| c:\Work\NOGA\src\assets\icons\sideBar\admin\admin_branches_h.svg                            | XML            |         15 |          0 |          0 |         15 |
+| c:\Work\NOGA\src\assets\icons\sideBar\admin\admin_employee.svg                              | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\admin\admin_employee_h.svg                            | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\admin\admin_settings.svg                              | XML            |          4 |          0 |          1 |          5 |
+| c:\Work\NOGA\src\assets\icons\sideBar\admin\admin_settings_h.svg                            | XML            |          4 |          0 |          1 |          5 |
+| c:\Work\NOGA\src\assets\icons\sideBar\admin\admin_statistics.svg                            | XML            |         10 |          0 |          1 |         11 |
+| c:\Work\NOGA\src\assets\icons\sideBar\admin\admin_statistics_h.svg                          | XML            |         10 |          0 |          1 |         11 |
+| c:\Work\NOGA\src\assets\icons\sideBar\branchManager\branch_admin_products_request_log.svg   | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\branchManager\branch_admin_products_request_log_h.svg | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\constants.js                                          | JavaScript     |        130 |          0 |          5 |        135 |
+| c:\Work\NOGA\src\assets\icons\sideBar\hr\hr_manage_employees.svg                            | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\hr\hr_manage_employees_h.svg                          | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\logout.svg                                            | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\logout_h.svg                                          | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\profile_icon.svg                                      | XML            |          4 |          0 |          1 |          5 |
+| c:\Work\NOGA\src\assets\icons\sideBar\profile_icon_h.svg                                    | XML            |          4 |          0 |          1 |          5 |
+| c:\Work\NOGA\src\assets\icons\sideBar\sales\sales_add_customer.svg                          | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\sales\sales_add_customer_h.svg                        | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\sales\sales_customers.svg                             | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\sales\sales_customers_h.svg                           | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\sales\sales_products.svg                              | XML            |         10 |          0 |          1 |         11 |
+| c:\Work\NOGA\src\assets\icons\sideBar\sales\sales_products_h.svg                            | XML            |         10 |          0 |          1 |         11 |
+| c:\Work\NOGA\src\assets\icons\sideBar\sales\sales_products_log.svg                          | XML            |         11 |          0 |          1 |         12 |
+| c:\Work\NOGA\src\assets\icons\sideBar\sales\sales_products_log_h.svg                        | XML            |         11 |          0 |          1 |         12 |
+| c:\Work\NOGA\src\assets\icons\sideBar\sales\sales_sale.svg                                  | XML            |          4 |          0 |          1 |          5 |
+| c:\Work\NOGA\src\assets\icons\sideBar\sales\sales_sale_h.svg                                | XML            |          4 |          0 |          1 |          5 |
+| c:\Work\NOGA\src\assets\icons\sideBar\sidebar_arrow.svg                                     | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\sidebar_arrow_h.svg                                   | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\warehouseAdmin\warehouse_admin_manage_requests.svg    | XML            |          4 |          0 |          1 |          5 |
+| c:\Work\NOGA\src\assets\icons\sideBar\warehouseAdmin\warehouse_admin_manage_requests_h.svg  | XML            |          4 |          0 |          1 |          5 |
+| c:\Work\NOGA\src\assets\icons\sideBar\warehouseAdmin\warehouse_admin_products_log.svg       | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\warehouseAdmin\warehouse_admin_products_log_h.svg     | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\warehouseAdmin\warehouse_admin_return_products.svg    | XML            |          4 |          0 |          1 |          5 |
+| c:\Work\NOGA\src\assets\icons\sideBar\warehouseAdmin\warehouse_admin_return_products_h.svg  | XML            |          4 |          0 |          1 |          5 |
+| c:\Work\NOGA\src\assets\icons\sideBar\warehouseAdmin\warehouse_admin_send_products.svg      | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\icons\sideBar\warehouseAdmin\warehouse_admin_send_products_h.svg    | XML            |          3 |          0 |          1 |          4 |
+| c:\Work\NOGA\src\assets\login\img.svg                                                       | XML            |         38 |          0 |          1 |         39 |
+| c:\Work\NOGA\src\assets\login\index.js                                                      | JavaScript     |          3 |          0 |          2 |          5 |
+| c:\Work\NOGA\src\assets\login\profile_pic.svg                                               | XML            |         16 |          0 |          1 |         17 |
+| c:\Work\NOGA\src\auth\RequireAuth.jsx                                                       | JavaScript JSX |         20 |          0 |          4 |         24 |
+| c:\Work\NOGA\src\auth\useAuth.js                                                            | JavaScript     |          6 |          0 |          3 |          9 |
+| c:\Work\NOGA\src\components\actions\LoadingPage.jsx                                         | JavaScript JSX |          8 |          0 |          2 |         10 |
+| c:\Work\NOGA\src\components\actions\LoadingSpinner.jsx                                      | JavaScript JSX |         23 |          0 |          4 |         27 |
+| c:\Work\NOGA\src\components\actions\NoDataError.jsx                                         | JavaScript JSX |         14 |          0 |          5 |         19 |
+| c:\Work\NOGA\src\components\buttons\ButtonComponent.jsx                                     | JavaScript JSX |        127 |          1 |          7 |        135 |
+| c:\Work\NOGA\src\components\buttons\CardButton.jsx                                          | JavaScript JSX |         26 |          0 |          4 |         30 |
+| c:\Work\NOGA\src\components\inputs\CheckInputComponent.jsx                                  | JavaScript JSX |         46 |          0 |          4 |         50 |
+| c:\Work\NOGA\src\components\inputs\DateInputComponent.jsx                                   | JavaScript JSX |         64 |          0 |          7 |         71 |
+| c:\Work\NOGA\src\components\inputs\DropDownComponent.jsx                                    | JavaScript JSX |        152 |          0 |         10 |        162 |
+| c:\Work\NOGA\src\components\inputs\EmailInputComponent.jsx                                  | JavaScript JSX |         36 |          0 |          5 |         41 |
+| c:\Work\NOGA\src\components\inputs\FilterDropDown.jsx                                       | JavaScript JSX |         26 |          0 |          4 |         30 |
+| c:\Work\NOGA\src\components\inputs\FilterInputComponent.jsx                                 | JavaScript JSX |         26 |          0 |          4 |         30 |
+| c:\Work\NOGA\src\components\inputs\NumberInputComponent.jsx                                 | JavaScript JSX |         92 |          0 |          8 |        100 |
+| c:\Work\NOGA\src\components\inputs\PassInputComponent.jsx                                   | JavaScript JSX |         49 |          0 |          6 |         55 |
+| c:\Work\NOGA\src\components\inputs\SearchComponent.jsx                                      | JavaScript JSX |         35 |          0 |          4 |         39 |
+| c:\Work\NOGA\src\components\inputs\TextAreaComponent.jsx                                    | JavaScript JSX |         26 |          0 |          4 |         30 |
+| c:\Work\NOGA\src\components\inputs\TextInputComponent.jsx                                   | JavaScript JSX |         48 |          0 |          5 |         53 |
+| c:\Work\NOGA\src\components\inputs\TextShowBlue.jsx                                         | JavaScript JSX |         31 |          0 |          6 |         37 |
+| c:\Work\NOGA\src\components\layout\CardBox.jsx                                              | JavaScript JSX |         21 |          0 |          4 |         25 |
+| c:\Work\NOGA\src\components\layout\Nav.jsx                                                  | JavaScript JSX |         21 |          0 |          3 |         24 |
+| c:\Work\NOGA\src\components\layout\ScreenSizeAlert.jsx                                      | JavaScript JSX |         14 |          0 |          3 |         17 |
+| c:\Work\NOGA\src\components\layout\SideBar.jsx                                              | JavaScript JSX |        142 |          0 |          4 |        146 |
+| c:\Work\NOGA\src\components\layout\StatisticsBox.jsx                                        | JavaScript JSX |         41 |          0 |          5 |         46 |
+| c:\Work\NOGA\src\components\layout\SystemAccountsUsers.jsx                                  | JavaScript JSX |        147 |          0 |          5 |        152 |
+| c:\Work\NOGA\src\components\table\DataTable.jsx                                             | JavaScript JSX |        130 |        148 |         14 |        292 |
+| c:\Work\NOGA\src\components\table\DataTableAccordion.jsx                                    | JavaScript JSX |        147 |          1 |         11 |        159 |
+| c:\Work\NOGA\src\components\table\DataTableEditRow.jsx                                      | JavaScript JSX |        228 |          2 |         19 |        249 |
+| c:\Work\NOGA\src\components\table\DataTablePagination.jsx                                   | JavaScript JSX |        105 |          1 |          6 |        112 |
+| c:\Work\NOGA\src\components\table\ProductsSalesTable.jsx                                    | JavaScript JSX |        371 |          2 |         24 |        397 |
+| c:\Work\NOGA\src\components\table\ProductsTable.jsx                                         | JavaScript JSX |        352 |          2 |         24 |        378 |
+| c:\Work\NOGA\src\components\table\TableAccordion.jsx                                        | JavaScript JSX |         77 |          1 |          4 |         82 |
+| c:\Work\NOGA\src\components\table\TablePagination.jsx                                       | JavaScript JSX |         29 |          0 |          4 |         33 |
+| c:\Work\NOGA\src\components\titles\SectionTitle.jsx                                         | JavaScript JSX |          8 |          0 |          4 |         12 |
+| c:\Work\NOGA\src\components\titles\Title.jsx                                                | JavaScript JSX |          8 |          0 |          4 |         12 |
+| c:\Work\NOGA\src\constants.js                                                               | JavaScript     |         15 |          0 |          1 |         16 |
+| c:\Work\NOGA\src\context\AuthProvider.jsx                                                   | JavaScript JSX |         15 |          0 |          5 |         20 |
+| c:\Work\NOGA\src\context\SaleProvider.jsx                                                   | JavaScript JSX |         20 |          0 |          6 |         26 |
+| c:\Work\NOGA\src\data\db.json                                                               | JSON           |        542 |          0 |          1 |        543 |
+| c:\Work\NOGA\src\hooks\useAxiosPrivate.js                                                   | JavaScript     |         38 |          0 |          5 |         43 |
+| c:\Work\NOGA\src\hooks\useGoToBack.js                                                       | JavaScript     |          9 |          0 |          3 |         12 |
+| c:\Work\NOGA\src\hooks\useLocationState.js                                                  | JavaScript     |         12 |          0 |          5 |         17 |
+| c:\Work\NOGA\src\hooks\useLogout.js                                                         | JavaScript     |         17 |          9 |          5 |         31 |
+| c:\Work\NOGA\src\hooks\useObjectReducer.js                                                  | JavaScript     |         17 |         18 |          8 |         43 |
+| c:\Work\NOGA\src\hooks\useRefreshToken.js                                                   | JavaScript     |         22 |          0 |          3 |         25 |
+| c:\Work\NOGA\src\hooks\useSaleContext.js                                                    | JavaScript     |          6 |          0 |          3 |          9 |
+| c:\Work\NOGA\src\hooks\useScreenResize.js                                                   | JavaScript     |         21 |          0 |          5 |         26 |
+| c:\Work\NOGA\src\hooks\useSelectedImg.js                                                    | JavaScript     |         54 |          0 |          6 |         60 |
+| c:\Work\NOGA\src\hooks\useToast.js                                                          | JavaScript     |         22 |         23 |          5 |         50 |
+| c:\Work\NOGA\src\index.css                                                                  | CSS            |        177 |          6 |         37 |        220 |
+| c:\Work\NOGA\src\main.jsx                                                                   | JavaScript JSX |         17 |          0 |          2 |         19 |
+| c:\Work\NOGA\src\pages\admin\AddBranch.jsx                                                  | JavaScript JSX |        154 |          0 |         11 |        165 |
+| c:\Work\NOGA\src\pages\admin\AddEmployee.jsx                                                | JavaScript JSX |        319 |          0 |         17 |        336 |
+| c:\Work\NOGA\src\pages\admin\Admin.jsx                                                      | JavaScript JSX |         19 |          0 |          3 |         22 |
+| c:\Work\NOGA\src\pages\admin\Branch.jsx                                                     | JavaScript JSX |         58 |          0 |          4 |         62 |
+| c:\Work\NOGA\src\pages\admin\BranchAccounts.jsx                                             | JavaScript JSX |         50 |          0 |          4 |         54 |
+| c:\Work\NOGA\src\pages\admin\BranchDetails.jsx                                              | JavaScript JSX |         83 |          0 |          5 |         88 |
+| c:\Work\NOGA\src\pages\admin\Branches.jsx                                                   | JavaScript JSX |        315 |          2 |         31 |        348 |
+| c:\Work\NOGA\src\pages\admin\CreateAccount.jsx                                              | JavaScript JSX |        129 |          0 |         13 |        142 |
+| c:\Work\NOGA\src\pages\admin\EmployeeDetails.jsx                                            | JavaScript JSX |        322 |          0 |         16 |        338 |
+| c:\Work\NOGA\src\pages\admin\Employees.jsx                                                  | JavaScript JSX |        340 |          2 |         26 |        368 |
+| c:\Work\NOGA\src\pages\admin\MangerAccountDetails.jsx                                       | JavaScript JSX |        131 |          4 |          6 |        141 |
+| c:\Work\NOGA\src\pages\admin\SalesAccountDetails.jsx                                        | JavaScript JSX |        104 |          0 |          4 |        108 |
+| c:\Work\NOGA\src\pages\admin\SalesAccounts.jsx                                              | JavaScript JSX |        130 |          0 |          5 |        135 |
+| c:\Work\NOGA\src\pages\admin\Settings.jsx                                                   | JavaScript JSX |         45 |          0 |          4 |         49 |
+| c:\Work\NOGA\src\pages\admin\Statistics.jsx                                                 | JavaScript JSX |        149 |          0 |          5 |        154 |
+| c:\Work\NOGA\src\pages\admin\SystemAccounts.jsx                                             | JavaScript JSX |         52 |          0 |          4 |         56 |
+| c:\Work\NOGA\src\pages\admin\SystemSettings.jsx                                             | JavaScript JSX |        328 |          0 |         15 |        343 |
+| c:\Work\NOGA\src\pages\hr\Hr.jsx                                                            | JavaScript JSX |         19 |          0 |          5 |         24 |
+| c:\Work\NOGA\src\pages\hr\HrSettings.jsx                                                    | JavaScript JSX |        166 |          0 |         10 |        176 |
+| c:\Work\NOGA\src\pages\manager\AccessoryDetails.jsx                                         | JavaScript JSX |        121 |          0 |          7 |        128 |
+| c:\Work\NOGA\src\pages\manager\BranchManager.jsx                                            | JavaScript JSX |         19 |          0 |          3 |         22 |
+| c:\Work\NOGA\src\pages\manager\BranchProducts.jsx                                           | JavaScript JSX |        117 |          0 |          6 |        123 |
+| c:\Work\NOGA\src\pages\manager\OrderProducts.jsx                                            | JavaScript JSX |        290 |          0 |         18 |        308 |
+| c:\Work\NOGA\src\pages\manager\PhoneDetails.jsx                                             | JavaScript JSX |        377 |          0 |         12 |        389 |
+| c:\Work\NOGA\src\pages\public\ErrorPage.jsx                                                 | JavaScript JSX |         21 |          0 |          3 |         24 |
+| c:\Work\NOGA\src\pages\public\Layout.jsx                                                    | JavaScript JSX |         10 |          0 |          4 |         14 |
+| c:\Work\NOGA\src\pages\public\Login.jsx                                                     | JavaScript JSX |        190 |         10 |         12 |        212 |
+| c:\Work\NOGA\src\pages\public\PersistLogin.jsx                                              | JavaScript JSX |         24 |          0 |          4 |         28 |
+| c:\Work\NOGA\src\pages\public\Unauthorized.jsx                                              | JavaScript JSX |         41 |          0 |          4 |         45 |
+| c:\Work\NOGA\src\pages\sales\AddCustomer.jsx                                                | JavaScript JSX |        129 |          0 |         10 |        139 |
+| c:\Work\NOGA\src\pages\sales\CustomerDetails.jsx                                            | JavaScript JSX |        211 |          0 |         13 |        224 |
+| c:\Work\NOGA\src\pages\sales\Customers.jsx                                                  | JavaScript JSX |        253 |          2 |         25 |        280 |
+| c:\Work\NOGA\src\pages\sales\MakeSale.jsx                                                   | JavaScript JSX |        258 |          9 |         17 |        284 |
+| c:\Work\NOGA\src\pages\sales\SalesOfficer.jsx                                               | JavaScript JSX |         19 |          0 |          3 |         22 |
+| c:\Work\NOGA\src\pages\warehouse\AccessoryProductDetails.jsx                                | JavaScript JSX |        370 |          2 |         23 |        395 |
+| c:\Work\NOGA\src\pages\warehouse\AddProduct.jsx                                             | JavaScript JSX |        739 |          6 |         33 |        778 |
+| c:\Work\NOGA\src\pages\warehouse\EditProducts.jsx                                           | JavaScript JSX |        284 |          0 |         17 |        301 |
+| c:\Work\NOGA\src\pages\warehouse\ManageRequests.jsx                                         | JavaScript JSX |        274 |          2 |         29 |        305 |
+| c:\Work\NOGA\src\pages\warehouse\PhoneProductDetails.jsx                                    | JavaScript JSX |        743 |          6 |         32 |        781 |
+| c:\Work\NOGA\src\pages\warehouse\Products.jsx                                               | JavaScript JSX |        118 |          0 |          8 |        126 |
+| c:\Work\NOGA\src\pages\warehouse\ProductsLog.jsx                                            | JavaScript JSX |        140 |          1 |         10 |        151 |
+| c:\Work\NOGA\src\pages\warehouse\Request.jsx                                                | JavaScript JSX |        163 |          2 |          7 |        172 |
+| c:\Work\NOGA\src\pages\warehouse\RequestsLog.jsx                                            | JavaScript JSX |         96 |          0 |          8 |        104 |
+| c:\Work\NOGA\src\pages\warehouse\ReturnProducts.jsx                                         | JavaScript JSX |        327 |          0 |         20 |        347 |
+| c:\Work\NOGA\src\pages\warehouse\SendProducts.jsx                                           | JavaScript JSX |        323 |          0 |         23 |        346 |
+| c:\Work\NOGA\src\pages\warehouse\WareHouseSettings.jsx                                      | JavaScript JSX |        441 |          0 |         25 |        466 |
+| c:\Work\NOGA\src\pages\warehouse\WarehouseAdmin.jsx                                         | JavaScript JSX |         19 |          0 |          5 |         24 |
+| c:\Work\NOGA\src\util\currencyFormatting.js                                                 | JavaScript     |          5 |          0 |          2 |          7 |
+| Total                                                                                       |                |     15,622 |        286 |        984 |     16,892 |
++---------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
