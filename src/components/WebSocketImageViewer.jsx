@@ -244,7 +244,7 @@ function WebSocketImageViewer({
         fontSize: '12px',
         zIndex: 10
       }}>
-        {isConnected ? 'Connected' : 'Disconnected'}
+        {isConnected ? 'متصل' : 'غير متصل'}
       </div>
 
       {!isConnected && (
@@ -260,7 +260,7 @@ function WebSocketImageViewer({
           padding: '10px 20px',
           borderRadius: '5px'
         }}>
-          Waiting for connection...
+          بانتظار الاتصال...
         </div>
       )}
     </div>

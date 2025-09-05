@@ -17,6 +17,7 @@ import DropDownComponent from "../../../components/inputs/DropDownComponent";
 import DateInputComponent from "../../../components/inputs/DateInputComponent";
 import SearchComponent from "../../../components/inputs/SearchComponent";
 import WebSocketImageViewer from "../../../components/WebSocketImageViewer";
+import WebSocketImageViewerTwoQuadrilateralRegions from "../../../components/WebSocketImageViewerTwoQuadrilateralRegions";
 
 const CAMERA_TYPES = [
     { id: 1, title: "مراقبة", camera_type: "monitoring" },

@@ -17,6 +17,7 @@ import DropDownComponent from "../../../components/inputs/DropDownComponent";
 import DateInputComponent from "../../../components/inputs/DateInputComponent";
 import SearchComponent from "../../../components/inputs/SearchComponent";
 import WebSocketImageViewer from "../../../components/WebSocketImageViewer";
+import WebSocketImageViewerTwoQuadrilateralRegions from "../../../components/WebSocketImageViewerTwoQuadrilateralRegions";
 
 const CAMERA_TYPES = [
     { id: 1, title: "مراقبة", camera_type: "monitoring" },
@@ -42,7 +43,7 @@ function Camera() {
 
     const editCamera = async () => {
         Swal.fire({
-            title: "هل أنت متأكد من عملية تعديل الاجازة",
+            title: "هل أنت متأكد من عملية تعديل الكاميرا",
             icon: "warning",
             showCancelButton: true,
             cancelButtonText: "لا",
@@ -155,6 +156,8 @@ function Camera() {
         getBranches("/branches")
         getCamera()
     }, [])
+    // console.log("camera.area_points\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" , camera?.area_points);
+    
     return (
         <main className="relative w-full flex flex-col items-center justify-center w-full h-full flex-grow gap-4 ">
             <Title text="الاجازات:" />
@@ -196,10 +199,25 @@ function Camera() {
                                     camera_type: value
                                 }))} />
                         </div>
+                        {
+                            camera.camera_type == "visitors"
+                            ?
+                            <WebSocketImageViewerTwoQuadrilateralRegions area_points={camera.area_points} wsUrl={camera.view_url} width='100%' height='100%' onChange={(value) => {
+                                setCamera(prev => ({
+                                    ...prev,
+                                    area_points : value
+                                }))
+                                
+                            }}/>
+
+                            :
+
                         <div className="flex items-start justify-end py-5">
                             <WebSocketImageViewer wsUrl={camera.view_url} width='100%' height='100%' />
                             <p className="relative text-end w-[250px]">:البث المياشر </p>
                         </div>
+
+                        }
 
                     </div>
                 }

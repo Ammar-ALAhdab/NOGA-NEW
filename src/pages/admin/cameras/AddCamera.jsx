@@ -21,7 +21,21 @@ import SearchComponent from "../../../components/inputs/SearchComponent";
 function AddCamera() {
     const [camera, setCamera] = useState({
         branch: null,
-        camera_type: null
+        camera_type: null,
+        area_points: {
+            "area1": [
+                { "x": 12.51, "y": 47.67 },
+                { "x": 87.29, "y": 48.55 },
+                { "x": 87.95, "y": 99.00 },
+                { "x": 13.00, "y": 99.59 }
+            ],
+            "area2": [
+                { "x": 12.67, "y": 1.36 },
+                { "x": 12.51, "y": 46.78 },
+                { "x": 87.79, "y": 48.26 },
+                { "x": 87.79, "y": 0.77 }
+            ]
+        }
 
     })
     const [lodingCamera, setLodingCamera] = useState(true)
@@ -215,7 +229,7 @@ function AddCamera() {
                                     value={camera.branch}
                                     onSelect={(value) => setCamera(prev => ({
                                         ...prev,
-                                        branch:value
+                                        branch: value
                                     }))}
                                 />
                             </div>
