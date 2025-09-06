@@ -3,10 +3,13 @@ import Title from "../../components/titles/Title";
 import ProductsTable from "../../components/table/ProductsTable";
 import ButtonComponent from "../../components/buttons/ButtonComponent";
 import { useNavigate } from "react-router-dom";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import Swal from "sweetalert2";
 
 function ProductsCopy() {
   const [rowSelectionID, setRowSelectionID] = useState([]);
   const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
   const handleClickAdd = () => {
     navigate("addProduct");
   };
@@ -15,11 +18,37 @@ function ProductsCopy() {
     setRowSelectionID(newRowSelectionModel);
   };
 
-  const handleClickGotoProductById = (productId, type) => {
-    const toProduct =
-      type == "موبايل" ? `phone/${productId}` : `accessory/${productId}`;
-    navigate(toProduct, {
-      state: { product: productId },
+  const handleClickGotoVariant = (variantId) => {
+    navigate(`variant/${variantId}`);
+  };
+
+  const handleDeleteVariant = (variantId, refresh) => {
+    Swal.fire({
+      title: "هل أنت متأكد من عملية الحذف؟",
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonText: "لا",
+      confirmButtonColor: "#E76D3B",
+      cancelButtonColor: "#3457D5",
+      confirmButtonText: "نعم",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosPrivate
+          .delete(`/products/variants/${variantId}`)
+          .then(() => {
+            Swal.fire({ title: "تم الحذف", icon: "success" });
+            if (typeof refresh === "function") refresh();
+          })
+          .catch(() => {
+            Swal.fire({
+              title: "خطأ",
+              text: "لا يمكن حذف هذه النسخة",
+              icon: "error",
+              confirmButtonColor: "#3457D5",
+              confirmButtonText: "حسناً",
+            });
+          });
+      }
     });
   };
 
@@ -73,17 +102,25 @@ function ProductsCopy() {
     {
       field: "options",
       headerName: "خيارات",
-      width: 150,
+      width: 200,
       sortable: false,
       renderCell: (params) => {
+        // params.id corresponds to variant id from /products/variants
         return (
-          <ButtonComponent
-            variant={"show"}
-            small={true}
-            onClick={() =>
-              handleClickGotoProductById(params.id, params.row.type)
-            }
-          />
+          <div className="flex items-center justify-center gap-2 h-full">
+            <ButtonComponent
+              variant={"show"}
+              small={true}
+              onClick={() => handleClickGotoVariant(params.id)}
+            />
+            <ButtonComponent
+              variant={"delete"}
+              small={true}
+              onClick={() =>
+                handleDeleteVariant(params.id, () => window.location.reload())
+              }
+            />
+          </div>
         );
       },
     },
@@ -94,6 +131,11 @@ function ProductsCopy() {
       <Title text={" قائمة منتجات المستودع المركزي:"} />
       <div className="w-full flex items-center flex-row-reverse gap-2 mb-4">
         <ButtonComponent variant={"add"} onClick={handleClickAdd} />
+        <ButtonComponent
+          textButton="عرض المنتجات الرئيسية"
+          variant={"show"}
+          onClick={() => navigate("/warehouseAdmin/mainProducts")}
+        />
         {rowSelectionID.length > 0 && (
           <ButtonComponent
             textButton="تعديل المنتجات المحددة"

@@ -74,7 +74,7 @@ function DataTable({
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>
         <div
-          className="md:w-[570px] lg:w-[650px]  xlg:w-[770px] 2xl:w-[900px] flex items-center justify-center min-h-[200px]"
+          className="md:w-[570px] lg:w-[650px]  xlg:w-[770px] 2xl:w-[1100px] flex items-center justify-center min-h-[200px]"
           dir="rtl"
         >
           <DataGridPro

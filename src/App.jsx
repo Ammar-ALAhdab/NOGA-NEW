@@ -37,6 +37,7 @@ import SalesOfficer from "./pages/sales/SalesOfficer.jsx";
 import WareHouseSettings from "./pages/warehouse/WareHouseSettings.jsx";
 import PhoneProductDetails from "./pages/warehouse/PhoneProductDetails.jsx";
 import AccessoryProductDetails from "./pages/warehouse/AccessoryProductDetails.jsx";
+import VariantDetails from "./pages/warehouse/VariantDetails.jsx";
 import EditProducts from "./pages/warehouse/EditProducts.jsx";
 import RequestsLog from "./pages/warehouse/RequestsLog.jsx";
 import OrderProducts from "./pages/manager/OrderProducts.jsx";
@@ -53,6 +54,11 @@ import ProductsRequestLog from "./pages/manager/ProductsRequestLog.jsx";
 import SoldProductsLog from "./pages/sales/SoldProductsLog.jsx";
 import Attributes from "./pages/warehouse/Attributes.jsx";
 import ManageTransportation from "./pages/warehouse/ManageTransportation.jsx";
+import PrintTransportationCode from "./pages/warehouse/PrintTransportationCode.jsx";
+import MainProducts from "./pages/warehouse/MainProducts.jsx";
+import ProductVariants from "./pages/warehouse/ProductVariants.jsx";
+import LinkProducts from "./pages/warehouse/LinkProducts.jsx";
+
 import WorkSchedules from "./pages/hr/WorkSchedules.jsx";
 import WorkSchedule from "./pages/hr/WorkSchedule.jsx";
 import AddWorkSchedule from "./pages/hr/AddWorkSchedule.jsx";
@@ -203,11 +209,24 @@ export default function App() {
               <Route index element={<Navigate to="products" />} />
               {/* <Route path="products" element={<ProductsCopy />} /> */}
               <Route path="products" element={<Products />} />
+              <Route path="mainProducts" element={<MainProducts />} />
+              <Route
+                path="mainProducts/:productId"
+                element={<ProductVariants />}
+              />
+              <Route
+                path="mainProducts/linkProducts/:productId"
+                element={<LinkProducts />}
+              />
               <Route
                 path="products/addProduct"
                 element={<AddProductWizard />}
               />
               <Route path="products/editProducts" element={<EditProducts />} />
+              <Route
+                path="products/variant/:VariantId"
+                element={<VariantDetails />}
+              />
               <Route
                 path="products/phone/:ProductId"
                 element={<PhoneProductDetails />}
@@ -219,6 +238,14 @@ export default function App() {
               <Route path="sendProducts" element={<SendProducts />} />
               <Route path="returnProducts" element={<ReturnProducts />} />
               <Route path="productsLog" element={<ProductsLog />} />
+              <Route
+                path="productsLog/:transportationId"
+                element={<ManageTransportation />}
+              />
+              <Route
+                path="productsLog/:transportationId/print"
+                element={<PrintTransportationCode />}
+              />
               <Route path="productsLog/:transportationId" element={<ManageTransportation />} />
               <Route path="manageRequests" element={<ManageRequests />} />
               <Route path="manageRequests/:RequestId" element={<Request />} />
