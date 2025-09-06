@@ -131,6 +131,11 @@ function ProductsCopy() {
       <Title text={" قائمة منتجات المستودع المركزي:"} />
       <div className="w-full flex items-center flex-row-reverse gap-2 mb-4">
         <ButtonComponent variant={"add"} onClick={handleClickAdd} />
+        <ButtonComponent
+          textButton="عرض المنتجات الرئيسية"
+          variant={"show"}
+          onClick={() => navigate("/warehouseAdmin/mainProducts")}
+        />
         {rowSelectionID.length > 0 && (
           <ButtonComponent
             textButton="تعديل المنتجات المحددة"

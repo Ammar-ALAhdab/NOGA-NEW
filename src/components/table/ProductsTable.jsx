@@ -60,14 +60,27 @@ const reducer = (state, action) => {
 
 const formatting = (unFormattedData) => {
   const rowsData = unFormattedData.map((row) => {
-    const rawCategory =
+    // Handle different data structures from warehouse vs branch endpoints
+    let productData = row;
+    let categoryData =
       row?.category_name || row?.category || row?.category?.category;
+
+    // If this is from warehouse endpoint (has nested product object)
+    if (row?.product && typeof row.product === "object") {
+      productData = row.product;
+      categoryData =
+        row.product?.category_name ||
+        row.product?.category ||
+        row.product?.category?.category;
+    }
+
     const isPhone =
-      typeof rawCategory === "string" && rawCategory.toLowerCase() === "phone";
+      typeof categoryData === "string" &&
+      categoryData.toLowerCase() === "phone";
 
     // Determine prices: prefer top-level, else derive from variants
-    const variantSellingPrices = Array.isArray(row?.variants)
-      ? row.variants
+    const variantSellingPrices = Array.isArray(productData?.variants)
+      ? productData.variants
           .map((v) =>
             Number(
               v?.selling_price ??
@@ -78,41 +91,35 @@ const formatting = (unFormattedData) => {
           )
           .filter((n) => !Number.isNaN(n) && Number.isFinite(n))
       : [];
-    const variantWholesalePrices = Array.isArray(row?.variants)
-      ? row.variants
+    const variantWholesalePrices = Array.isArray(productData?.variants)
+      ? productData.variants
           .map((v) => Number(v?.wholesale_price ?? v?.wholesalePrice ?? NaN))
           .filter((n) => !Number.isNaN(n) && Number.isFinite(n))
       : [];
 
     const sellingPriceValue =
-      typeof row?.selling_price === "number"
-        ? row.selling_price
+      typeof productData?.selling_price === "number"
+        ? productData.selling_price
         : variantSellingPrices.length
         ? Math.min(...variantSellingPrices)
         : null;
     const wholesalePriceValue =
-      typeof row?.wholesale_price === "number"
-        ? row.wholesale_price
+      typeof productData?.wholesale_price === "number"
+        ? productData.wholesale_price
         : variantWholesalePrices.length
         ? Math.min(...variantWholesalePrices)
         : null;
-    const quantityValue =
-      typeof row?.quantity === "number"
-        ? row.quantity
-        : Array.isArray(row?.variants)
-        ? row.variants
-            .map((v) => Number(v?.quantity))
-            .filter((n) => !Number.isNaN(n) && Number.isFinite(n))
-            .reduce((acc, n) => acc + n, 0)
-        : 0;
+
+    // For warehouse endpoint, use the branch quantity, for branch endpoint use product quantity
+    const quantityValue = row?.quantity || productData?.quantity || 0;
 
     return {
-      id: row.id,
+      id: productData.id,
       profilePhoto: isPhone ? phone : accessor,
-      barcode: row.qr_code ? row.qr_code : "لايوجد",
-      productName: row.product_name || row.product,
-      type:rawCategory,
-      sku:row.sku,
+      barcode: productData.qr_code ? productData.qr_code : "لايوجد",
+      productName: productData.product_name || productData.product,
+      type: categoryData,
+      sku: productData.sku,
       sellingPrice:
         sellingPriceValue != null
           ? currencyFormatting(sellingPriceValue)
@@ -132,7 +139,12 @@ const formatting = (unFormattedData) => {
   return rowsData;
 };
 
-function Products({ handleSelectProduct, rowSelectionID, columns }) {
+function Products({
+  handleSelectProduct,
+  rowSelectionID,
+  columns,
+  link = "/products/variants",
+}) {
   const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [errorProducts, setErrorProducts] = useState(null);
@@ -150,17 +162,28 @@ function Products({ handleSelectProduct, rowSelectionID, columns }) {
 
   const handleChangePage = (event, value) => {
     setPage(value);
-    getProducts(
-      `/products/variants?page=${value}${
-        searchQuery ? `&search=${searchQuery}` : ""
-      }${state.filter ? `${filterTerms}` : ""}`,
-      state.filter
-    );
+    const baseUrl = link.includes("?") ? link.split("?")[0] : link;
+    const existingParams = link.includes("?") ? link.split("?")[1] : "";
+    const pageParam = `page=${value}`;
+    const searchParam = searchQuery ? `&search=${searchQuery}` : "";
+    const filterParam = state.filter ? `${filterTerms}` : "";
+
+    const fullUrl = `${baseUrl}?${pageParam}${searchParam}${filterParam}${
+      existingParams ? `&${existingParams}` : ""
+    }`;
+    getProducts(fullUrl, state.filter);
   };
 
   const handleSearchClick = () => {
     setPage(1);
-    getProducts(`/products/variants?search=${searchQuery}`);
+    const baseUrl = link.includes("?") ? link.split("?")[0] : link;
+    const existingParams = link.includes("?") ? link.split("?")[1] : "";
+    const searchParam = `search=${searchQuery}`;
+
+    const fullUrl = `${baseUrl}?${searchParam}${
+      existingParams ? `&${existingParams}` : ""
+    }`;
+    getProducts(fullUrl);
   };
 
   const [state, dispatch] = useReducer(reducer, initialFilterState);
@@ -220,14 +243,11 @@ function Products({ handleSelectProduct, rowSelectionID, columns }) {
     }, 300);
   };
 
-  const getProducts = async (
-    link = "/products/variants",
-    applyLocalFilter = false
-  ) => {
+  const getProducts = async (customLink = link, applyLocalFilter = false) => {
     try {
       setLoadingProducts(true);
       setErrorProducts(null);
-      const response = await axiosPrivate.get(link);
+      const response = await axiosPrivate.get(customLink);
       let formattedProducts = formatting(response?.data?.results);
       if (applyLocalFilter) {
         // Apply client-side filtering/sorting for correctness with derived prices
@@ -329,6 +349,15 @@ function Products({ handleSelectProduct, rowSelectionID, columns }) {
     getFilterSettings("/accessories_categories", "accessories_categories");
     getProducts();
   }, []);
+
+  // Refetch products when link prop changes
+  useEffect(() => {
+    console.log("ProductsTable: Link prop changed to:", link);
+    if (link) {
+      setPage(1);
+      getProducts(link);
+    }
+  }, [link]);
 
   return (
     <>
@@ -493,6 +522,7 @@ Products.propTypes = {
   handleSelectProduct: PropTypes.func,
   rowSelectionID: PropTypes.array,
   columns: PropTypes.array,
+  link: PropTypes.string,
 };
 
 export default Products;

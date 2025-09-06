@@ -54,6 +54,10 @@ import ProductsRequestLog from "./pages/manager/ProductsRequestLog.jsx";
 import SoldProductsLog from "./pages/sales/SoldProductsLog.jsx";
 import Attributes from "./pages/warehouse/Attributes.jsx";
 import ManageTransportation from "./pages/warehouse/ManageTransportation.jsx";
+import PrintTransportationCode from "./pages/warehouse/PrintTransportationCode.jsx";
+import MainProducts from "./pages/warehouse/MainProducts.jsx";
+import ProductVariants from "./pages/warehouse/ProductVariants.jsx";
+import LinkProducts from "./pages/warehouse/LinkProducts.jsx";
 
 export default function App() {
   return (
@@ -170,6 +174,15 @@ export default function App() {
               <Route index element={<Navigate to="products" />} />
               {/* <Route path="products" element={<ProductsCopy />} /> */}
               <Route path="products" element={<Products />} />
+              <Route path="mainProducts" element={<MainProducts />} />
+              <Route
+                path="mainProducts/:productId"
+                element={<ProductVariants />}
+              />
+              <Route
+                path="mainProducts/linkProducts/:productId"
+                element={<LinkProducts />}
+              />
               <Route
                 path="products/addProduct"
                 element={<AddProductWizard />}
@@ -190,7 +203,14 @@ export default function App() {
               <Route path="sendProducts" element={<SendProducts />} />
               <Route path="returnProducts" element={<ReturnProducts />} />
               <Route path="productsLog" element={<ProductsLog />} />
-              <Route path="productsLog/:transportationId" element={<ManageTransportation />} />
+              <Route
+                path="productsLog/:transportationId"
+                element={<ManageTransportation />}
+              />
+              <Route
+                path="productsLog/:transportationId/print"
+                element={<PrintTransportationCode />}
+              />
               <Route path="manageRequests" element={<ManageRequests />} />
               <Route path="manageRequests/:RequestId" element={<Request />} />
               <Route path="requestsLog" element={<RequestsLog />} />

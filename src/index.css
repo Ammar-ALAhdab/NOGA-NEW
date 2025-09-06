@@ -217,3 +217,85 @@ li a.active .my-child-none {
 .MuiDataGrid-rowCount {
   display: none !important;
 }
+
+/* Print Styles */
+@media print {
+  @page {
+    margin: 1cm;
+    size: A4;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-hidden {
+    display: none !important;
+  }
+
+  .print-visible {
+    display: block !important;
+  }
+
+  /* Ensure text is readable when printed */
+  * {
+    color: black !important;
+    background: white !important;
+  }
+
+  /* Hide navigation and other UI elements when printing */
+  nav,
+  header,
+  footer,
+  button:not(.print-button),
+  aside,
+  .sidebar,
+  [class*="sidebar"],
+  [class*="SideBar"],
+  [class*="Nav"],
+  [class*="nav"] {
+    display: none !important;
+  }
+
+  /* Ensure tables print properly */
+  table {
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border: 1px solid #000;
+    padding: 8px;
+  }
+
+  /* Ensure proper page breaks */
+  .page-break {
+    page-break-before: always;
+  }
+
+  .avoid-break {
+    page-break-inside: avoid;
+  }
+
+  /* Ensure main content takes full width when printing */
+  main,
+  .main-content,
+  [class*="main"] {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Remove any flex layouts that might cause issues */
+  .flex,
+  [class*="flex"] {
+    display: block !important;
+  }
+
+  /* Ensure the print page content is centered and takes full width */
+  .min-h-screen {
+    min-height: auto !important;
+    width: 100% !important;
+  }
+}

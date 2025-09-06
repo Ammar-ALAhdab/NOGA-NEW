@@ -24,26 +24,45 @@ function VariantDetails() {
   const [variant, setVariant] = useState(null);
 
   // Editable fields
+  const [productName, setProductName] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [wholesalePrice, setWholesalePrice] = useState("");
   const [sellingPrice, setSellingPrice] = useState("");
   const [images, setImages] = useState([]);
+  const [options, setOptions] = useState([]);
 
   const getVariant = async (id) => {
     try {
       setLoading(true);
       setError(null);
+      console.log("Fetching variant with ID:", id);
       const res = await axiosPrivate.get(`/products/variants/${id}`);
       setVariant(res.data);
+      console.log("Received variant data:", res.data);
+
       // Try to infer editable fields from response
+      const product =
+        res?.data?.product_name || res?.data?.product || res?.data?.name || "";
       const q = res?.data?.quantity;
       const wp = res?.data?.wholesale_price ?? res?.data?.wholesalePrice;
       const sp = res?.data?.selling_price ?? res?.data?.sellingPrice;
+      const opts = res?.data?.options || [];
+
+      console.log("Extracted fields:", {
+        product,
+        quantity: q,
+        wholesale_price: wp,
+        selling_price: sp,
+        options: opts,
+      });
+
+      setProductName(product);
       if (typeof q !== "undefined") setQuantity(q);
       if (typeof wp !== "undefined") setWholesalePrice(String(wp));
       if (typeof sp !== "undefined") setSellingPrice(String(sp));
+      setOptions([...opts]); // Create a copy of options array
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching variant:", err);
       setError(err);
     } finally {
       setLoading(false);
@@ -62,25 +81,52 @@ function VariantDetails() {
     ""
   ).toString();
 
-  const buildFormData = () => {
-    const fd = new FormData();
-    fd.append("quantity", String(quantity));
-    fd.append("wholesale_price", String(wholesalePrice));
-    fd.append("selling_price", String(sellingPrice));
-    const files = Array.from(images || []);
-    for (let i = 0; i < files.length; i++) fd.append("images", files[i]);
-    // Note: options editing is not included here to keep the editor focused on core fields
-    return fd;
+  const handleOptionChange = (index, field, value) => {
+    const updatedOptions = [...options];
+    updatedOptions[index] = { ...updatedOptions[index], [field]: value };
+    setOptions(updatedOptions);
+  };
+
+  const buildUpdateData = () => {
+    const updateData = {
+      product: productName,
+      quantity: parseInt(quantity),
+      wholesale_price: parseFloat(wholesalePrice) || 0,
+      selling_price: parseFloat(sellingPrice) || 0,
+    };
+
+    // Add options data
+    if (options.length > 0) {
+      updateData.options = options;
+    }
+
+    // If there are images, we'll need to handle them separately
+    // For now, we'll focus on the text/JSON data
+    if (images && images.length > 0) {
+      console.log("Images detected but not included in JSON update");
+    }
+
+    console.log("Update data being sent:", updateData);
+    return updateData;
   };
 
   const updateVariant = async () => {
     try {
-      const fd = buildFormData();
-      await axiosPrivate.put(`/products/variants/${VariantId}`, fd);
+      const updateData = buildUpdateData();
+      console.log("Sending update request with data:", updateData);
+      console.log("Request URL:", `/products/variants/${VariantId}`);
+
+      const response = await axiosPrivate.put(
+        `/products/variants/${VariantId}`,
+        updateData
+      );
+      console.log("Update response:", response.data);
+
       Toast.fire({ icon: "success", title: "تم حفظ التعديلات" });
       getVariant(VariantId);
     } catch (err) {
-      console.error(err);
+      console.error("Update error:", err);
+      console.error("Error response:", err?.response?.data);
       const data = err?.response?.data;
       const msg = typeof data === "string" ? data : "تعذر حفظ التعديلات";
       Toast.fire({ icon: "error", title: msg });
@@ -132,6 +178,12 @@ function VariantDetails() {
               <SectionTitle text={`معلومات المنتج: ${variantName}`} />
               <div className="grid grid-cols-1 gap-4 w-full">
                 <div className="flex flex-col items-end justify-start gap-4">
+                  <TextInputComponent
+                    label={"اسم المنتج:"}
+                    id={"product_name"}
+                    value={productName}
+                    onChange={setProductName}
+                  />
                   <NumberInputComponent
                     label={"الكمية:"}
                     id={"quantity"}
@@ -167,8 +219,7 @@ function VariantDetails() {
                 </div>
                 <div className="flex flex-col items-center justify-center gap-3 w-full">
                   <SectionTitle text={"خصائص المنتج:"} />
-                  {Array.isArray(variant?.options) &&
-                  variant.options.length > 0 ? (
+                  {Array.isArray(options) && options.length > 0 ? (
                     <div className="max-h-[300px] overflow-auto w-full pr-2 flex items-center justify-center">
                       <table className="w-[600px] text-sm border border-primary rounded-2xl overflow-hidden">
                         <thead className="bg-primary text-white *:text-center">
@@ -179,7 +230,7 @@ function VariantDetails() {
                           </tr>
                         </thead>
                         <tbody>
-                          {variant.options.map((opt, idx) => (
+                          {options.map((opt, idx) => (
                             <tr
                               key={`opt-${idx}`}
                               className={
@@ -192,9 +243,20 @@ function VariantDetails() {
                                 {opt?.unit ? String(opt.unit) : "-"}
                               </td>
                               <td className="py-2 px-3 text-center">
-                                {String(opt?.option ?? "-")}
+                                <input
+                                  type="text"
+                                  value={opt?.option || ""}
+                                  onChange={(e) =>
+                                    handleOptionChange(
+                                      idx,
+                                      "option",
+                                      e.target.value
+                                    )
+                                  }
+                                  className="w-full text-center border border-gray-300 rounded px-2 py-1 text-sm"
+                                  dir="ltr"
+                                />
                               </td>
-
                               <td className="py-2 px-3 text-center">
                                 {opt?.attribute_name ||
                                   opt?.attribute ||

@@ -82,16 +82,21 @@ const navData = {
     role: "مسؤول المستودع:",
     links: {
       "إدارة المنتجات": [salesProducts, salesProductsHover, "products"],
-      "إرسال منتجات": [
+      "إدارة خصائص المنتجات": [
+        warehouseAdminAttributes,
+        warehouseAdminAttributesHover,
+        "attributes",
+      ],
+      " نقل المنتجات": [
         warehouseAdSendProducts,
         warehouseAdSendProductsHover,
         "sendProducts",
       ],
-      "إعادة منتجات": [
-        warehouseAdminReturnProducts,
-        warehouseAdminReturnProductsHover,
-        "returnProducts",
-      ],
+      // "إعادة منتجات": [
+      //   warehouseAdminReturnProducts,
+      //   warehouseAdminReturnProductsHover,
+      //   "returnProducts",
+      // ],
       "سجل حركة المنتجات": [
         warehouseAdminProductsLog,
         warehouseAdminProductsLogHover,
@@ -108,12 +113,8 @@ const navData = {
         warehouseAdminProductsLogHover,
         "requestsLog",
       ],
-      "إدارة خصائص المنتجات": [
-        warehouseAdminAttributes,
-        warehouseAdminAttributesHover,
-        "attributes",
-      ],
-      الإعدادات: [adminSettings, adminSettingsHover, "settings"],
+
+      // الإعدادات: [adminSettings, adminSettingsHover, "settings"],
 
       "تسجيل الخروج": [logout, logoutHover, "logout"],
     },

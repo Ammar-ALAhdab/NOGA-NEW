@@ -97,7 +97,7 @@ function ProductsSalesTable({
   const handleChangePage = (event, value) => {
     setPage(value);
     getProducts(
-      `/products/branch?branch__id=${branchID}&page=${value}${
+      `/branches/products?branch=${branchID}&page=${value}${
         searchQuery ? `&search=${searchQuery}` : ""
       }${state.filter ? `${filterTerms}` : ""}`
     );
@@ -106,7 +106,7 @@ function ProductsSalesTable({
   const handleSearchClick = () => {
     setPage(1);
     getProducts(
-      `/products/branch?branch__id=${branchID}&search=${searchQuery}`
+      `/branches/products?branch=${branchID}&search=${searchQuery}`
     );
   };
 
@@ -152,7 +152,7 @@ function ProductsSalesTable({
     setFilterTerms(filter);
     setPage(1);
     console.log(filter);
-    getProducts(`/products/branch?branch__id=${branchID}${filter}`);
+    getProducts(`/branches/products?branch=${branchID}${filter}`);
     handleCloseFilter();
   };
 
@@ -172,7 +172,7 @@ function ProductsSalesTable({
   };
 
   const getProducts = async (
-    link = `/products/branch?branch__id=${branchID}`
+    link = `/branches/products?branch=${branchID}`
   ) => {
     try {
       setLoadingProducts(true);
