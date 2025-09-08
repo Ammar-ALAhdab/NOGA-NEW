@@ -117,14 +117,14 @@ function SoldProductsLog({ customerRecords = false }) {
     let filter = orderingFilter;
     setFilterTerms(filter);
     setPage(1);
-    getPurchasedProducts(`/purchase?${LINK}${filter}`);
+    getPurchasedProducts(`/sales/purchases?${LINK}${filter}`);
     handleCloseFilter();
   };
 
   const handleChangePage = (event, value) => {
     setPage(value);
     getPurchasedProducts(
-      `/purchase?${LINK}&page=${value}${
+      `/sales/purchases?${LINK}&page=${value}${
         searchQuery ? `&search=${searchQuery}` : ""
       }${state.filter ? `${filterTerms}` : ""}`
     );
@@ -140,7 +140,7 @@ function SoldProductsLog({ customerRecords = false }) {
   const handleSearchClick = () => {
     setPage(1);
 
-    getPurchasedProducts(`/purchase?${LINK}&search=${searchQuery}`);
+    getPurchasedProducts(`/sales/purchases?${LINK}&search=${searchQuery}`);
   };
 
   const formatting = (unFormattedData) => {
@@ -178,7 +178,7 @@ function SoldProductsLog({ customerRecords = false }) {
     }, 300);
   };
 
-  const getPurchasedProducts = async (link = `/purchase?${LINK}`) => {
+  const getPurchasedProducts = async (link = `/sales/purchases?${LINK}`) => {
     try {
       setLoading(true);
       setError(null);

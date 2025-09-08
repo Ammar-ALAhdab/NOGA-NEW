@@ -62,7 +62,7 @@ function CustomerDetails() {
     try {
       setLoading(true);
       setError(null);
-      const response = await axiosPrivate.get(`/customers/${CustomerID}`);
+      const response = await axiosPrivate.get(`/sales/customers/${CustomerID}`);
       const customerData = response?.data;
       dispatch({ type: `SET_INITIAL_DETAILS`, payload: customerData });
     } catch (error) {
@@ -85,7 +85,7 @@ function CustomerDetails() {
     }).then((result) => {
       if (result.isConfirmed) {
         axiosPrivate
-          .delete(`/customers/${CustomerID}`)
+          .delete(`/sales/customers/${CustomerID}`)
           .then(() => {
             Swal.fire({
               title: "تمت عملية الحذف بنجاح",
@@ -119,7 +119,7 @@ function CustomerDetails() {
     }).then((result) => {
       if (result.isConfirmed) {
         axiosPrivate
-          .put(`/customers/${CustomerID}`, JSON.stringify(customerInfo))
+          .put(`/sales/customers/${CustomerID}`, JSON.stringify(customerInfo))
           .then(() => {
             Swal.fire({
               title: "تمت عملية التعديل بنجاح",
