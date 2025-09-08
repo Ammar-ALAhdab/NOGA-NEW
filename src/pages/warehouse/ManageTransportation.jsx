@@ -1,21 +1,21 @@
 import Title from "../../components/titles/Title";
-import { useState, useEffect, useReducer } from "react";
+import { useState, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import DataTableAccordion from "../../components/table/DataTableAccordion";
+// import DataTableAccordion from "../../components/table/DataTableAccordion";
 import LoadingSpinner from "../../components/actions/LoadingSpinner";
 import NoDataError from "../../components/actions/NoDataError";
-import TablePagination from "../../components/table/TablePagination";
+// import TablePagination from "../../components/table/TablePagination";
 import ButtonComponent from "../../components/buttons/ButtonComponent";
-import FilterDropDown from "../../components/inputs/FilterDropDown";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX } from "@fortawesome/free-solid-svg-icons";
-import SectionTitle from "../../components/titles/SectionTitle";
-import SearchComponent from "../../components/inputs/SearchComponent";
+// import FilterDropDown from "../../components/inputs/FilterDropDown";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faX } from "@fortawesome/free-solid-svg-icons";
+// import SectionTitle from "../../components/titles/SectionTitle";
+// import SearchComponent from "../../components/inputs/SearchComponent";
 import { useNavigate, useParams } from "react-router-dom";
-import DropDownComponent from "../../components/inputs/DropDownComponent";
+// import DropDownComponent from "../../components/inputs/DropDownComponent";
 import DataTable from "../../components/table/DataTable";
 import Swal from "sweetalert2";
-import DataTableEditRow from "../../components/table/DataTableEditRow";
+// import DataTableEditRow from "../../components/table/DataTableEditRow";
 import DataTableEditRowWithoutDelete from "../../components/table/DataTableEditRowWithoutDelete";
 import TextInputComponent from "../../components/inputs/TextInputComponent";
 
@@ -23,58 +23,58 @@ function ManageTransportation() {
   const { transportationId } = useParams();
   const navigate = useNavigate();
 
-  const columns = [
-    { field: "id", headerName: "", width: 50 },
-    {
-      field: "idOfOrder",
-      headerName: "معرف المناقلة",
-      width: 200,
-      valueGetter: (value, row) => `#${row.id}`,
-    },
-    { field: "date", headerName: "التاريخ", flex: 1 },
-    {
-      field: "source",
-      headerName: "من",
-      flex: 1,
-      valueGetter: (value, row) => {
-        if (row.source) {
-          return row.source;
-        } else {
-          return "المستودع الرئيسي";
-        }
-      },
-    },
-    {
-      field: "destination",
-      headerName: "الى",
-      flex: 1,
-      valueGetter: (value, row) => {
-        if (row.destination) {
-          return row.destination;
-        } else {
-          return "المستودع الرئيسي";
-        }
-      },
-    },
-    { field: "productCount", headerName: "عدد المنتجات", flex: 1 },
-    {
-      field: "status",
-      headerName: "الحالة",
-      flex: 1,
-      renderCell: (params) => {
-        return (
-          <span
-            className="font-bold"
-            style={{
-              color: params.row.status == "إرسال" ? "#2DBDA8" : "#E76D3B",
-            }}
-          >
-            {params.row.status}
-          </span>
-        );
-      },
-    },
-  ];
+  // const columns = [
+  //   { field: "id", headerName: "", width: 50 },
+  //   {
+  //     field: "idOfOrder",
+  //     headerName: "معرف المناقلة",
+  //     width: 200,
+  //     valueGetter: (value, row) => `#${row.id}`,
+  //   },
+  //   { field: "date", headerName: "التاريخ", flex: 1 },
+  //   {
+  //     field: "source",
+  //     headerName: "من",
+  //     flex: 1,
+  //     valueGetter: (value, row) => {
+  //       if (row.source) {
+  //         return row.source;
+  //       } else {
+  //         return "المستودع الرئيسي";
+  //       }
+  //     },
+  //   },
+  //   {
+  //     field: "destination",
+  //     headerName: "الى",
+  //     flex: 1,
+  //     valueGetter: (value, row) => {
+  //       if (row.destination) {
+  //         return row.destination;
+  //       } else {
+  //         return "المستودع الرئيسي";
+  //       }
+  //     },
+  //   },
+  //   { field: "productCount", headerName: "عدد المنتجات", flex: 1 },
+  //   {
+  //     field: "status",
+  //     headerName: "الحالة",
+  //     flex: 1,
+  //     renderCell: (params) => {
+  //       return (
+  //         <span
+  //           className="font-bold"
+  //           style={{
+  //             color: params.row.status == "إرسال" ? "#2DBDA8" : "#E76D3B",
+  //           }}
+  //         >
+  //           {params.row.status}
+  //         </span>
+  //       );
+  //     },
+  //   },
+  // ];
 
   const detailColumns = [
     { field: "id", headerName: "#", width: 50 },
@@ -109,56 +109,56 @@ function ManageTransportation() {
       flex: 1,
     },
   ];
-  const initialFilterState = {
-    filter: false,
-    branch: "",
-    ordering: "",
-    orderingType: "",
-  };
+  // const initialFilterState = {
+  //   filter: false,
+  //   branch: "",
+  //   ordering: "",
+  //   orderingType: "",
+  // };
 
-  const formatBranches = (unFormattedData) => {
-    const data = unFormattedData.map((d) => ({
-      id: d.id,
-      title: `${d.number} ${d.city_name}`,
-    }));
-    return data;
-  };
+  // const formatBranches = (unFormattedData) => {
+  //   const data = unFormattedData.map((d) => ({
+  //     id: d.id,
+  //     title: `${d.number} ${d.city_name}`,
+  //   }));
+  //   return data;
+  // };
 
-  const ORDERING_FIELDS = [{ id: "date_of_process", title: "التاريخ" }];
+  // const ORDERING_FIELDS = [{ id: "date_of_process", title: "التاريخ" }];
 
-  const ORDERING_TYPE = [
-    { id: 1, title: "تصاعدي" },
-    { id: 2, title: "تنازلي" },
-  ];
+  // const ORDERING_TYPE = [
+  //   { id: 1, title: "تصاعدي" },
+  //   { id: 2, title: "تنازلي" },
+  // ];
 
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case "SET_FIELD":
-        return { ...state, [action.field]: action.value, filter: true };
-      case "RESET":
-        return initialFilterState;
-      default:
-        return state;
-    }
-  };
+  // const reducer = (state, action) => {
+  //   switch (action.type) {
+  //     case "SET_FIELD":
+  //       return { ...state, [action.field]: action.value, filter: true };
+  //     case "RESET":
+  //       return initialFilterState;
+  //     default:
+  //       return state;
+  //   }
+  // };
 
   const [productsTransportation, setProductsTransportation] = useState([]);
-  const [paginationSettings, setPaginationSettings] = useState(null);
+  // const [paginationSettings, setPaginationSettings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
   const axiosPrivate = useAxiosPrivate();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterShow, setFilterShow] = useState(false);
-  const [filterTerms, setFilterTerms] = useState("");
-  const [state, dispatch] = useReducer(reducer, initialFilterState);
-  const [scrollTop, setScrollTop] = useState(0);
-  const [branches, setBranches] = useState([]);
+  // const [searchQuery, setSearchQuery] = useState("");
+  // const [filterShow, setFilterShow] = useState(false);
+  // const [filterTerms, setFilterTerms] = useState("");
+  // const [state, dispatch] = useReducer(reducer, initialFilterState);
+  // const [scrollTop, setScrollTop] = useState(0);
+  // const [branches, setBranches] = useState([]);
   const [code, setCode] = useState("");
-  const handleFilterTerms = (e) => {
-    const { name, value } = e.target;
-    dispatch({ type: "SET_FIELD", field: name, value });
-  };
+  // const handleFilterTerms = (e) => {
+  //   const { name, value } = e.target;
+  //   dispatch({ type: "SET_FIELD", field: name, value });
+  // };
 
   // const handleFilterClick = () => {
   //     let branchFilter = state.branch ? `&branch__id=${state.branch}` : "";
@@ -244,13 +244,13 @@ function ManageTransportation() {
     return formattedData;
   };
 
-  const handleCloseFilter = () => {
-    setFilterShow(false);
-    document.body.style.overflow = "auto";
-    setTimeout(() => {
-      document.documentElement.scrollTop = scrollTop;
-    }, 300);
-  };
+  // const handleCloseFilter = () => {
+  //   setFilterShow(false);
+  //   document.body.style.overflow = "auto";
+  //   setTimeout(() => {
+  //     document.documentElement.scrollTop = scrollTop;
+  //   }, 300);
+  // };
 
   const getTransportation = async (
     link = `/products/transportations/${transportationId}`
