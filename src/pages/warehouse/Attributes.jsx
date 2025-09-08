@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Title from "../../components/titles/Title";
 import SectionTitle from "../../components/titles/SectionTitle";
 import LoadingSpinner from "../../components/actions/LoadingSpinner";
@@ -34,7 +34,7 @@ function Attributes() {
   const [isMultivalue, setIsMultivalue] = useState(false);
   const [isCategorical, setIsCategorical] = useState(false);
   const [hasUnit, setHasUnit] = useState(false);
-  const [unitsDraft, setUnitsDraft] = useState([]); // array of strings
+  const [selectedUnitIds, setSelectedUnitIds] = useState([]); // array of unit IDs
 
   // Units (global) state
   const [units, setUnits] = useState([]);
@@ -98,33 +98,59 @@ function Attributes() {
     getUnits(`/products/units?page=${value}`);
   };
 
-  const getAttributes = async (url = "/products/attributes") => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await axiosPrivate.get(url);
-      const withCounts = response.data.results?.map((a) => ({
-        ...a,
-        units_count: Array.isArray(a.units) ? a.units.length : 0,
-      }));
-      setAttributes(withCounts);
-      setPaginationSettings({
-        count: response.data.count,
-        next: response.data.next,
-        previous: response.data.previous,
-      });
-    } catch (err) {
-      console.error(err);
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const getAttributes = useCallback(
+    async (url = "/products/attributes") => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await axiosPrivate.get(url);
+        const withCounts = response.data.results?.map((a) => ({
+          ...a,
+          units_count: Array.isArray(a.units) ? a.units.length : 0,
+        }));
+        setAttributes(withCounts);
+        setPaginationSettings({
+          count: response.data.count,
+          next: response.data.next,
+          previous: response.data.previous,
+        });
+      } catch (err) {
+        console.error(err);
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [axiosPrivate]
+  );
+
+  // Units CRUD via /products/units
+  const getUnits = useCallback(
+    async (url = "/products/units") => {
+      try {
+        setUnitsLoading(true);
+        setUnitsError(null);
+        const response = await axiosPrivate.get(url);
+        setUnits(response.data.results);
+        setUnitsPaginationSettings({
+          count: response.data.count,
+          next: response.data.next,
+          previous: response.data.previous,
+        });
+      } catch (err) {
+        console.error(err);
+        setUnitsError(err);
+      } finally {
+        setUnitsLoading(false);
+      }
+    },
+    [axiosPrivate]
+  );
 
   useEffect(() => {
     getAttributes();
     getUnits();
-  }, []);
+  }, [getAttributes, getUnits]);
 
   const updateFunction = async (updatedRow) => {
     const payload = {
@@ -185,45 +211,72 @@ function Attributes() {
     });
   };
 
-  const handleAddUnitDraft = () => {
-    setUnitsDraft((prev) => [...prev, ""]);
-  };
-
-  const handleUnitDraftChange = (index, value) => {
-    setUnitsDraft((prev) => prev.map((u, i) => (i === index ? value : u)));
-  };
-
-  const handleRemoveUnitDraft = (index) => {
-    setUnitsDraft((prev) => prev.filter((_, i) => i !== index));
+  const handleToggleUnit = (unitId) => {
+    setSelectedUnitIds((prev) => {
+      if (prev.includes(unitId)) {
+        return prev.filter((id) => id !== unitId);
+      } else {
+        return [...prev, unitId];
+      }
+    });
   };
 
   const handleAddAttribute = async () => {
+    // Validation
+    if (!attributeName.trim()) {
+      Swal.fire({
+        title: "خطأ",
+        text: "اسم الخاصية مطلوب",
+        icon: "error",
+        confirmButtonColor: "#3457D5",
+        confirmButtonText: "حسناً",
+      });
+      return;
+    }
+
+    if (hasUnit && selectedUnitIds.length === 0) {
+      Swal.fire({
+        title: "خطأ",
+        text: "يجب اختيار وحدة واحدة على الأقل",
+        icon: "error",
+        confirmButtonColor: "#3457D5",
+        confirmButtonText: "حسناً",
+      });
+      return;
+    }
+
     const payload = {
-      attribute: attributeName,
+      attribute: attributeName.trim(),
       attribute_type: attributeType,
       is_multivalue: isMultivalue,
       is_categorical: isCategorical,
       has_unit: hasUnit,
-      units: hasUnit
-        ? unitsDraft
-            .map((u) => (typeof u === "string" ? u.trim() : ""))
-            .filter((u) => u.length > 0)
-            .map((u) => ({ unit: u }))
-        : [],
+      units: hasUnit ? selectedUnitIds : [],
     };
+
+    console.log("Adding attribute with payload:", payload);
+    console.log("Payload JSON string:", JSON.stringify(payload));
+
     try {
-      await axiosPrivate.post(`/products/attributes`, JSON.stringify(payload));
+      const response = await axiosPrivate.post(
+        `/products/attributes`,
+        JSON.stringify(payload)
+      );
+      console.log("Attribute added successfully:", response.data);
       Toast.fire({ icon: "success", title: "تمت إضافة الخاصية" });
-      // reset form
+
+      // Reset form
       setAttributeName("");
       setAttributeType("number");
       setIsMultivalue(false);
       setIsCategorical(false);
       setHasUnit(false);
-      setUnitsDraft([]);
+      setSelectedUnitIds([]);
+
+      // Refresh data
       getAttributes(`/products/attributes?page=${page}`);
     } catch (err) {
-      console.error(err);
+      console.error("Error adding attribute:", err);
       Swal.fire({
         title: "خطأ",
         text: "تعذر إضافة الخاصية",
@@ -231,26 +284,6 @@ function Attributes() {
         confirmButtonColor: "#3457D5",
         confirmButtonText: "حسناً",
       });
-    }
-  };
-
-  // Units CRUD via /products/units
-  const getUnits = async (url = "/products/units") => {
-    try {
-      setUnitsLoading(true);
-      setUnitsError(null);
-      const response = await axiosPrivate.get(url);
-      setUnits(response.data.results);
-      setUnitsPaginationSettings({
-        count: response.data.count,
-        next: response.data.next,
-        previous: response.data.previous,
-      });
-    } catch (err) {
-      console.error(err);
-      setUnitsError(err);
-    } finally {
-      setUnitsLoading(false);
     }
   };
 
@@ -370,38 +403,44 @@ function Attributes() {
         </div>
         {hasUnit && (
           <div className="flex flex-col items-end justify-center gap-2 w-full">
-            <SectionTitle text={"الوحدات:"} />
-            {unitsDraft.map((u, i) => (
-              <div
-                key={`unit-${i}`}
-                className="flex items-center justify-end gap-2 w-full"
-              >
-                
-                <ButtonComponent
-                  variant={"delete"}
-                  small={true}
-                  onClick={() => handleRemoveUnitDraft(i)}
-                />
-                <div className="w-[500px]">
-                  <TextInputComponent
-                    label={`وحدة #${i + 1}`}
-                    value={u}
-                    onChange={(val) => handleUnitDraftChange(i, val)}
-                  />
-                </div>
+            <SectionTitle text={"اختر الوحدات:"} />
+            {unitsLoading ? (
+              <div className="flex justify-center items-center h-[100px]">
+                <LoadingSpinner />
               </div>
-            ))}
-            <div className="flex items-center gap-2">
-              <ButtonComponent
-                variant={"add"}
-                onClick={handleAddUnitDraft}
-                text={"إضافة وحدة"}
-              />
-            </div>
+            ) : unitsError ? (
+              <div className="text-red-500 text-center">
+                خطأ في تحميل الوحدات
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-4 w-full">
+                {units.map((unit) => (
+                  <div
+                    key={unit.id}
+                    className="flex items-center justify-end gap-2 p-2 border rounded-lg"
+                  >
+                    <label className="text-sm font-medium text-gray-700">
+                      {unit.unit}
+                    </label>
+                    <input
+                      type="checkbox"
+                      checked={selectedUnitIds.includes(unit.id)}
+                      onChange={() => handleToggleUnit(unit.id)}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+            {selectedUnitIds.length > 0 && (
+              <div className="text-sm text-gray-600 text-right w-full">
+                تم اختيار {selectedUnitIds.length} وحدة
+              </div>
+            )}
           </div>
         )}
         <div className="flex items-center justify-end w-full">
-          <ButtonComponent variant={"add"} onClick={handleAddAttribute}  />
+          <ButtonComponent variant={"add"} onClick={handleAddAttribute} />
         </div>
       </section>
 

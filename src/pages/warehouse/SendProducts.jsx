@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import ButtonComponent from "../../components/buttons/ButtonComponent";
 import DropDownComponent from "../../components/inputs/DropDownComponent";
 import SectionTitle from "../../components/titles/SectionTitle";
@@ -263,18 +263,21 @@ function SendProducts() {
     getSelectedProducts();
   };
 
-  const getBranches = async (url = "/branches") => {
-    try {
-      const response = await axiosPrivate.get(url);
-      const formattedData = formatBranches(response.data.results);
-      setBranches((prev) => [...prev, ...formattedData]);
-      if (response.data.next) {
-        getBranches(response.data.next);
+  const getBranches = useCallback(
+    async (url = "/branches") => {
+      try {
+        const response = await axiosPrivate.get(url);
+        const formattedData = formatBranches(response.data.results);
+        setBranches((prev) => [...prev, ...formattedData]);
+        if (response.data.next) {
+          getBranches(response.data.next);
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    },
+    [axiosPrivate]
+  );
 
   const updateFunction = (newRow) => {
     console.log("SendProducts: updateFunction called with:", newRow);
@@ -517,7 +520,7 @@ function SendProducts() {
 
   useEffect(() => {
     getBranches();
-  }, []);
+  }, [getBranches]);
 
   // Debug effect to log state changes
   useEffect(() => {
@@ -676,7 +679,6 @@ function SendProducts() {
                 );
                 return (
                   <ProductsTable
-                    key={`warehouse-${Date.now()}`}
                     handleSelectProduct={handleSelectProduct}
                     rowSelectionID={rowSelectionID}
                     columns={columns}
@@ -696,7 +698,6 @@ function SendProducts() {
                 );
                 return (
                   <ProductsTable
-                    key={`branch-${selectedSource}-${Date.now()}`}
                     handleSelectProduct={handleSelectProduct}
                     rowSelectionID={rowSelectionID}
                     columns={columns}
@@ -714,7 +715,6 @@ function SendProducts() {
                 );
                 return (
                   <ProductsTable
-                    key={`branch-branch-${Date.now()}`}
                     handleSelectProduct={handleSelectProduct}
                     rowSelectionID={rowSelectionID}
                     columns={columns}
@@ -726,7 +726,6 @@ function SendProducts() {
                 console.log("SendProducts: Using default ProductsTable");
                 return (
                   <ProductsTable
-                    key={`default-${Date.now()}`}
                     handleSelectProduct={handleSelectProduct}
                     rowSelectionID={rowSelectionID}
                     columns={columns}
