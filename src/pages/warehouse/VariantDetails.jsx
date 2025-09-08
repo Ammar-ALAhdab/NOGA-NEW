@@ -22,6 +22,7 @@ function VariantDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [variant, setVariant] = useState(null);
+  const [productId, setProductId] = useState(null); // Store product ID separately
 
   // Editable fields
   const [productName, setProductName] = useState("");
@@ -36,9 +37,52 @@ function VariantDetails() {
       setLoading(true);
       setError(null);
       console.log("Fetching variant with ID:", id);
-      const res = await axiosPrivate.get(`/products/variants/${id}`);
+
+      // Fetch variant data
+      const variantRes = await axiosPrivate.get(`/products/variants/${id}`);
+      const res = { data: variantRes.data };
       setVariant(res.data);
+      console.log("=== VARIANT DATA ANALYSIS ===");
       console.log("Received variant data:", res.data);
+      console.log("Full variant object keys:", Object.keys(res.data));
+      console.log("Product field:", res.data?.product);
+      console.log("Product field type:", typeof res.data?.product);
+      console.log("All variant data:", JSON.stringify(res.data, null, 2));
+
+      // Extract product ID using the correct field: main_product
+      let extractedProductId = res.data?.main_product;
+
+      console.log("=== PRODUCT ID EXTRACTION (UPDATED) ===");
+      console.log("Using main_product field:", res.data?.main_product);
+      console.log("Extracted product ID:", extractedProductId);
+      console.log("Product ID type:", typeof extractedProductId);
+
+      // Check if we have the product ID from main_product field
+      if (!extractedProductId) {
+        console.error("No main_product field found in variant data!");
+        console.log("Available fields:", Object.keys(res.data));
+      }
+
+      setProductId(extractedProductId);
+
+      console.log("=== OPTIONS ANALYSIS ===");
+      console.log("Options array:", res.data?.options);
+      console.log("Options length:", res.data?.options?.length);
+
+      if (res.data?.options?.length > 0) {
+        res.data.options.forEach((opt, index) => {
+          console.log(`Option ${index}:`, {
+            id: opt.id,
+            option: opt.option,
+            attribute: opt.attribute,
+            attribute_id: opt.attribute_id,
+            attribute_name: opt.attribute_name,
+            unit: opt.unit,
+            full_option: opt,
+            all_keys: Object.keys(opt),
+          });
+        });
+      }
 
       // Try to infer editable fields from response
       const product =
@@ -48,13 +92,12 @@ function VariantDetails() {
       const sp = res?.data?.selling_price ?? res?.data?.sellingPrice;
       const opts = res?.data?.options || [];
 
-      console.log("Extracted fields:", {
-        product,
-        quantity: q,
-        wholesale_price: wp,
-        selling_price: sp,
-        options: opts,
-      });
+      console.log("=== EXTRACTING EDITABLE FIELDS ===");
+      console.log("Product name for display:", product);
+      console.log("Quantity:", q);
+      console.log("Wholesale price:", wp);
+      console.log("Selling price:", sp);
+      console.log("Options:", opts);
 
       setProductName(product);
       if (typeof q !== "undefined") setQuantity(q);
@@ -88,16 +131,96 @@ function VariantDetails() {
   };
 
   const buildUpdateData = () => {
+    console.log("=== BUILDING UPDATE DATA ===");
+    console.log("Current state values:");
+    console.log("- productId:", productId, "type:", typeof productId);
+    console.log("- productName:", productName, "type:", typeof productName);
+    console.log("- quantity:", quantity, "type:", typeof quantity);
+    console.log(
+      "- wholesalePrice:",
+      wholesalePrice,
+      "type:",
+      typeof wholesalePrice
+    );
+    console.log("- sellingPrice:", sellingPrice, "type:", typeof sellingPrice);
+    console.log("- options:", options);
+
+    if (!productId) {
+      console.error("No product ID available for update!");
+      Toast.fire({
+        icon: "error",
+        title: "خطأ: لا يمكن العثور على معرف المنتج",
+      });
+      return null;
+    }
+
+    // CRITICAL: Ensure we're using productId, not productName
+    console.log("=== CRITICAL CHECK ===");
+    console.log(
+      "productId (should be used):",
+      productId,
+      "type:",
+      typeof productId
+    );
+    console.log(
+      "productName (should NOT be used):",
+      productName,
+      "type:",
+      typeof productName
+    );
+
+    if (typeof productId === "string" && productId === productName) {
+      console.error(
+        "ERROR: productId is the same as productName! This will cause the API error!"
+      );
+    }
+
     const updateData = {
-      product: productName,
+      product: productId, // Use stored product ID
       quantity: parseInt(quantity),
       wholesale_price: parseFloat(wholesalePrice) || 0,
       selling_price: parseFloat(sellingPrice) || 0,
     };
 
-    // Add options data
+    // Add options data with proper ID mapping
     if (options.length > 0) {
-      updateData.options = options;
+      console.log("=== PROCESSING OPTIONS FOR UPDATE ===");
+      updateData.options = options.map((option, index) => {
+        console.log(`=== PROCESSING OPTION ${index} ===`);
+        console.log("Original option:", option);
+        console.log("Option keys:", Object.keys(option));
+
+        // Use the correct field: attribute_id
+        const attributeId = option.attribute_id;
+        const unitId = option.unit_id;
+
+        console.log(`Option ${index} - Using correct fields:`, {
+          "option.attribute_id": option.attribute_id,
+          "option.unit_id": option.unit_id,
+          "option.option": option.option,
+          final_attributeId: attributeId,
+          final_unitId: unitId,
+        });
+
+        // Validate that we have the required fields
+        if (!attributeId) {
+          console.error(`No attribute_id found for option ${index}:`, option);
+          console.error("This will cause the API to reject the request!");
+        }
+        if (!unitId) {
+          console.warn(`No unit_id found for option ${index}:`, option);
+        }
+
+        const processedOption = {
+          // Don't include id field as requested
+          option: option.option,
+          attribute: attributeId, // Use attribute_id from the option
+          unit: unitId, // Use unit_id from the option
+        };
+
+        console.log(`Option ${index} processed:`, processedOption);
+        return processedOption;
+      });
     }
 
     // If there are images, we'll need to handle them separately
@@ -106,13 +229,33 @@ function VariantDetails() {
       console.log("Images detected but not included in JSON update");
     }
 
-    console.log("Update data being sent:", updateData);
+    console.log("=== FINAL UPDATE DATA ===");
+    console.log("Complete update data:", updateData);
+    console.log("Update data JSON:", JSON.stringify(updateData, null, 2));
+    console.log(
+      "Product field value:",
+      updateData.product,
+      "type:",
+      typeof updateData.product
+    );
+    console.log("Options count:", updateData.options?.length);
+    if (updateData.options) {
+      updateData.options.forEach((opt, idx) => {
+        console.log(`Final option ${idx}:`, opt);
+      });
+    }
     return updateData;
   };
 
   const updateVariant = async () => {
     try {
       const updateData = buildUpdateData();
+
+      if (!updateData) {
+        console.error("Cannot proceed with update - no valid data");
+        return;
+      }
+
       console.log("Sending update request with data:", updateData);
       console.log("Request URL:", `/products/variants/${VariantId}`);
 

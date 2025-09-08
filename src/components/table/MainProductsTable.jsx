@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import ButtonComponent from "../../components/buttons/ButtonComponent";
 import DataTable from "../../components/table/DataTable";
 import LoadingSpinner from "../../components/actions/LoadingSpinner";
@@ -21,7 +21,7 @@ const initialFilterState = {
   name: "",
   minPrice: "",
   maxPrice: "",
-  productType: "",
+  category: "", // Changed from productType to category
   brand: "",
   cpu: "",
   color: "",
@@ -42,10 +42,7 @@ const ORDERING_TYPE = [
   { id: 2, title: "تنازلي" },
 ];
 
-const PRODUCT_TYPE = [
-  { id: 1, title: "موبايل" },
-  { id: 2, title: "إكسسوار" },
-];
+// Removed hardcoded PRODUCT_TYPE - now using dynamic categories
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -131,6 +128,9 @@ function MainProductsTable({
   const [attributeOptions, setAttributeOptions] = useState({});
   const [loadingAttributes, setLoadingAttributes] = useState(false);
 
+  // Dynamic category filtering state
+  const [categories, setCategories] = useState([]);
+
   const handleChangePage = (event, value) => {
     setPage(value);
     const baseUrl = link.includes("?") ? link.split("?")[0] : link;
@@ -140,36 +140,93 @@ function MainProductsTable({
     getProducts(newUrl);
   };
 
-  const getProducts = async (url = null) => {
-    try {
-      setLoadingProducts(true);
-      setErrorProducts(null);
+  const getProducts = useCallback(
+    async (url = null) => {
+      try {
+        setLoadingProducts(true);
+        setErrorProducts(null);
 
-      const endpoint = url || link;
-      console.log("MainProductsTable: Fetching from:", endpoint);
+        let endpoint = url || link;
 
-      const response = await axiosPrivate.get(endpoint);
-      console.log("MainProductsTable: Raw response:", response?.data);
+        // Apply filters if they exist
+        if (state.filter) {
+          const baseUrl = link.includes("?") ? link.split("?")[0] : link;
+          const params = new URLSearchParams();
 
-      const formattedData = formatting(response?.data);
-      console.log("MainProductsTable: Formatted data:", formattedData);
+          // Add search query if exists
+          if (searchQuery) {
+            params.append("search", searchQuery);
+          }
 
-      setProducts(formattedData);
-      setPaginationSettings(response?.data);
-    } catch (error) {
-      console.error("MainProductsTable: Error fetching products:", error);
-      setErrorProducts(error);
-    } finally {
-      setLoadingProducts(false);
-    }
-  };
+          // Add category filter
+          if (state.category) {
+            // Ensure category is a string/number, not an object
+            const categoryValue =
+              typeof state.category === "object"
+                ? state.category.id
+                : state.category;
+            params.append("category", String(categoryValue));
+          }
+
+          // Add other filters as needed
+          if (state.minPrice) {
+            params.append("min_price", state.minPrice);
+          }
+          if (state.maxPrice) {
+            params.append("max_price", state.maxPrice);
+          }
+          if (state.ordering) {
+            // Build ordering parameter with field and direction
+            let orderingParam =
+              typeof state.ordering === "object"
+                ? state.ordering.id
+                : state.ordering;
+            if (state.orderingType) {
+              // Map orderingType to API format
+              const direction = state.orderingType === 1 ? "" : "-"; // 1 = ascending (default), 2 = descending
+              orderingParam = `${direction}${orderingParam}`;
+            }
+            params.append("ordering", String(orderingParam));
+          }
+
+          // Build the final URL
+          const queryString = params.toString();
+          endpoint = queryString ? `${baseUrl}?${queryString}` : baseUrl;
+        }
+
+        console.log("MainProductsTable: Fetching from:", endpoint);
+        console.log("MainProductsTable: Current filters:", state);
+        console.log(
+          "MainProductsTable: Category value:",
+          state.category,
+          "Type:",
+          typeof state.category
+        );
+
+        const response = await axiosPrivate.get(endpoint);
+        console.log("MainProductsTable: Raw response:", response?.data);
+
+        const formattedData = formatting(response?.data);
+        console.log("MainProductsTable: Formatted data:", formattedData);
+
+        setProducts(formattedData);
+        setPaginationSettings(response?.data);
+      } catch (error) {
+        console.error("MainProductsTable: Error fetching products:", error);
+        setErrorProducts(error);
+      } finally {
+        setLoadingProducts(false);
+      }
+    },
+    [link, state, searchQuery, axiosPrivate]
+  );
 
   useEffect(() => {
     getProducts();
-  }, [link]);
+  }, [link, getProducts]);
 
   // Fetch all available attributes for dynamic filtering
-  const fetchAttributes = async () => {
+  const fetchAttributes = useCallback(async () => {
     try {
       setLoadingAttributes(true);
       const response = await axiosPrivate.get("/products/attributes");
@@ -203,12 +260,48 @@ function MainProductsTable({
     } finally {
       setLoadingAttributes(false);
     }
-  };
+  }, [axiosPrivate]);
 
-  // Fetch attributes when component mounts
+  // Fetch all available categories for dynamic filtering
+  const fetchCategories = useCallback(async () => {
+    try {
+      const response = await axiosPrivate.get("/products/categories");
+      const fetchedCategories = response.data.results || [];
+
+      // Transform categories to match the expected format for FilterDropDown
+      const transformedCategories = fetchedCategories.map((category) => ({
+        id: category.id,
+        title: category.category, // Use the category name as title
+      }));
+
+      setCategories(transformedCategories);
+      console.log("Fetched categories:", transformedCategories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  }, [axiosPrivate]);
+
+  // Fetch attributes and categories when component mounts
   useEffect(() => {
     fetchAttributes();
-  }, []);
+    fetchCategories();
+  }, [fetchAttributes, fetchCategories]);
+
+  // Re-fetch products when filters change
+  useEffect(() => {
+    if (state.filter) {
+      setPage(1);
+      getProducts();
+    }
+  }, [
+    state.category,
+    state.minPrice,
+    state.maxPrice,
+    state.ordering,
+    state.orderingType,
+    state.filter,
+    getProducts,
+  ]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -221,8 +314,18 @@ function MainProductsTable({
 
   const handleFilter = () => {
     setPage(1);
-    const baseUrl = link.includes("?") ? link.split("?")[0] : link;
-    getProducts(baseUrl);
+    // getProducts will automatically apply filters when state.filter is true
+    getProducts();
+    // Close the filter modal after applying filters
+    handleCloseFilter();
+  };
+
+  const handleClearFilters = () => {
+    dispatch({ type: "RESET" });
+    setPage(1);
+    getProducts();
+    // Close the filter modal after clearing filters
+    handleCloseFilter();
   };
 
   const handleShowFilter = () => {
@@ -318,14 +421,20 @@ function MainProductsTable({
             </div>
             <div className="flex flex-row-reverse items-center justify-center gap-2 w-full">
               <FilterDropDown
-                data={PRODUCT_TYPE}
+                data={categories}
                 dataTitle={"title"}
-                value={state.productType}
+                value={state.category}
                 label={"فلترة حسب تصنيف المنتج"}
-                name={"productType"}
-                onChange={(value) =>
-                  dispatch({ type: "SET_FIELD", field: "productType", value })
-                }
+                name={"category"}
+                onChange={(value) => {
+                  console.log(
+                    "Category onChange called with value:",
+                    value,
+                    "Type:",
+                    typeof value
+                  );
+                  dispatch({ type: "SET_FIELD", field: "category", value });
+                }}
               />
             </div>
             <div className="flex flex-row-reverse items-center justify-center gap-2 w-full">
@@ -335,9 +444,15 @@ function MainProductsTable({
                 value={state.ordering}
                 label={"ترتيب حسب حقل"}
                 name={"ordering"}
-                onChange={(value) =>
-                  dispatch({ type: "SET_FIELD", field: "ordering", value })
-                }
+                onChange={(value) => {
+                  console.log(
+                    "Ordering onChange called with value:",
+                    value,
+                    "Type:",
+                    typeof value
+                  );
+                  dispatch({ type: "SET_FIELD", field: "ordering", value });
+                }}
               />
               <FilterDropDown
                 data={ORDERING_TYPE}
@@ -345,9 +460,15 @@ function MainProductsTable({
                 value={state.orderingType}
                 label={"نمط الترتيب"}
                 name={"orderingType"}
-                onChange={(value) =>
-                  dispatch({ type: "SET_FIELD", field: "orderingType", value })
-                }
+                onChange={(value) => {
+                  console.log(
+                    "OrderingType onChange called with value:",
+                    value,
+                    "Type:",
+                    typeof value
+                  );
+                  dispatch({ type: "SET_FIELD", field: "orderingType", value });
+                }}
               />
             </div>
 
@@ -401,7 +522,7 @@ function MainProductsTable({
               <ButtonComponent
                 variant={"delete"}
                 textButton="إزالة الفلتر"
-                onClick={() => dispatch({ type: "RESET" })}
+                onClick={handleClearFilters}
               />
               <ButtonComponent
                 variant={"filter"}

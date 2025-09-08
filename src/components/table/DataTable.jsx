@@ -19,8 +19,6 @@ let licensingModel = LICENSING_MODELS[0]; // 'perpetual', 'subscription'
 let licenseInfo = `O=${orderNumber},E=${expiryTimestamp},S=${scope},LM=${licensingModel},KV=2`;
 LicenseInfo.setLicenseKey(md5(btoa(licenseInfo)) + btoa(licenseInfo));
 
-
-
 const cacheRtl = createCache({
   key: "data-grid-rtl-demo",
   stylisPlugins: [prefixer, rtlPlugin],
@@ -34,6 +32,7 @@ function DataTable({
   hideFooter = true,
   hideSelectRows = true,
   pagination = false,
+  rowCount,
 }) {
   const existingTheme = useTheme();
   const theme = useMemo(
@@ -83,6 +82,7 @@ function DataTable({
             pagination={pagination}
             pageSize={5} // Set the number of rows per page to 5
             rowsPerPageOptions={[5]} // Optional: To hide rows per page selector
+            rowCount={rowCount}
             sx={{
               width: "100%",
               minHeight: "200px",
@@ -140,6 +140,7 @@ DataTable.propTypes = {
   hideSelectRows: PropTypes.bool,
   rowSelectionModel: PropTypes.array,
   onRowSelectionModelChange: PropTypes.func,
+  rowCount: PropTypes.number,
 };
 
 export default DataTable;

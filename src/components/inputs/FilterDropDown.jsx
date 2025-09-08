@@ -10,7 +10,11 @@ function FilterDropDown({
 }) {
   return (
     <div className="custom-select">
-      <select name={name} value={value} onChange={onChange}>
+      <select
+        name={name}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      >
         <option value="" dir="rtl">
           {label}
         </option>

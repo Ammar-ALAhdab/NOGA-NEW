@@ -8,7 +8,6 @@ import DataTable from "../../components/table/DataTable";
 import Swal from "sweetalert2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faEdit,
   faTrash,
   faPlus,
   faArrowLeft,
@@ -26,9 +25,9 @@ function ProductVariants() {
   const [editingVariant, setEditingVariant] = useState(null);
   const [showAddVariant, setShowAddVariant] = useState(false);
   const [formData, setFormData] = useState({
-    quantity: 1,
-    wholesale_price: 0,
-    selling_price: 0,
+    quantity: "",
+    wholesale_price: "",
+    selling_price: "",
     options: [],
   });
   const [errors, setErrors] = useState({});
@@ -79,10 +78,10 @@ function ProductVariants() {
     }
   };
 
-  const handleEditVariant = (variant) => {
-    setEditingVariant(variant);
-    setShowAddVariant(false);
-  };
+  // const handleEditVariant = (variant) => {
+  //   setEditingVariant(variant);
+  //   setShowAddVariant(false);
+  // };
 
   const handleAddVariant = () => {
     console.log("=== ADD VARIANT BUTTON CLICKED ===");
@@ -105,9 +104,9 @@ function ProductVariants() {
     setEditingVariant(null);
     setShowAddVariant(false);
     setFormData({
-      quantity: 1,
-      wholesale_price: 0,
-      selling_price: 0,
+      quantity: "",
+      wholesale_price: "",
+      selling_price: "",
       options: [],
     });
     setErrors({});
@@ -221,16 +220,64 @@ function ProductVariants() {
   };
 
   const addOption = () => {
-    if (productData.category?.attributes) {
+    console.log("=== ADDING NEW OPTION ===");
+    console.log("Product data:", productData);
+    console.log("Product category:", productData?.category);
+    console.log("Category attributes:", productData?.category?.attributes);
+
+    try {
+      // Check if we have category and attributes
+      if (!productData?.category) {
+        console.error("No category found in product data");
+        Swal.fire({
+          title: "خطأ!",
+          text: "لا توجد فئة للمنتج",
+          icon: "error",
+        });
+        return;
+      }
+
+      if (
+        !productData.category.attributes ||
+        productData.category.attributes.length === 0
+      ) {
+        console.error("No attributes found in category");
+        Swal.fire({
+          title: "خطأ!",
+          text: "لا توجد خصائص متاحة لهذه الفئة",
+          icon: "error",
+        });
+        return;
+      }
+
+      // Get the first available attribute
+      const firstAttribute = productData.category.attributes[0];
+      console.log("First attribute:", firstAttribute);
+
       const newOption = {
-        attribute: productData.category.attributes[0]?.id,
+        attribute: firstAttribute.id,
         option: "",
-        unit: productData.category.attributes[0]?.units?.[0]?.id || null,
+        unit:
+          firstAttribute.units && firstAttribute.units.length > 0
+            ? firstAttribute.units[0].id
+            : null,
       };
+
+      console.log("New option to add:", newOption);
+
       setFormData((prev) => ({
         ...prev,
         options: [...prev.options, newOption],
       }));
+
+      console.log("Option added successfully");
+    } catch (error) {
+      console.error("Error in addOption:", error);
+      Swal.fire({
+        title: "خطأ!",
+        text: "حدث خطأ أثناء إضافة الخاصية",
+        icon: "error",
+      });
     }
   };
 
@@ -254,9 +301,10 @@ function ProductVariants() {
       typeof formData.quantity
     );
     if (
+      formData.quantity === "" ||
       formData.quantity === undefined ||
       formData.quantity === null ||
-      formData.quantity < 0
+      (typeof formData.quantity === "number" && formData.quantity < 0)
     ) {
       newErrors.quantity = "الكمية مطلوبة ويجب أن تكون أكبر من أو تساوي 0";
       console.log("Quantity validation failed");
@@ -271,9 +319,11 @@ function ProductVariants() {
       typeof formData.wholesale_price
     );
     if (
+      formData.wholesale_price === "" ||
       formData.wholesale_price === undefined ||
       formData.wholesale_price === null ||
-      formData.wholesale_price < 0
+      (typeof formData.wholesale_price === "number" &&
+        formData.wholesale_price < 0)
     ) {
       newErrors.wholesale_price =
         "سعر الجملة مطلوب ويجب أن يكون أكبر من أو يساوي 0";
@@ -289,9 +339,10 @@ function ProductVariants() {
       typeof formData.selling_price
     );
     if (
+      formData.selling_price === "" ||
       formData.selling_price === undefined ||
       formData.selling_price === null ||
-      formData.selling_price < 0
+      (typeof formData.selling_price === "number" && formData.selling_price < 0)
     ) {
       newErrors.selling_price =
         "سعر البيع مطلوب ويجب أن يكون أكبر من أو يساوي 0";
@@ -306,7 +357,11 @@ function ProductVariants() {
       ">=",
       formData.wholesale_price
     );
-    if (formData.selling_price < formData.wholesale_price) {
+    if (
+      typeof formData.selling_price === "number" &&
+      typeof formData.wholesale_price === "number" &&
+      formData.selling_price < formData.wholesale_price
+    ) {
       newErrors.selling_price =
         "سعر البيع يجب أن يكون أكبر من أو يساوي سعر الجملة";
       console.log("Price comparison validation failed");
@@ -344,52 +399,62 @@ function ProductVariants() {
       "Form data before processing:",
       JSON.stringify(formData, null, 2)
     );
+    console.log("Product data:", productData);
+    console.log("Product ID:", productId);
 
     try {
       console.log("=== BUILDING NEW VARIANT ===");
 
-      // Build the new variant data
-      const newVariant = {
-        quantity: formData.quantity,
-        wholesale_price: formData.wholesale_price,
-        selling_price: formData.selling_price,
-        options: formData.options.map((opt) => ({
-          attribute: parseInt(opt.attribute),
-          option: opt.option,
-          unit: opt.unit ? parseInt(opt.unit) : null,
-        })),
-      };
-
-      console.log("New variant object:", JSON.stringify(newVariant, null, 2));
-
-      console.log("=== BUILDING UPDATE DATA ===");
-      // Add the new variant to the existing variants
-      const updatedVariants = [...(productData.variants || []), newVariant];
+      // Build the new variant data for POST /products/variants
       console.log(
-        "Updated variants array:",
-        JSON.stringify(updatedVariants, null, 2)
+        "Product ID from URL params:",
+        productId,
+        "type:",
+        typeof productId
       );
 
-      // Update the product with the new variant
-      const updateData = {
-        ...productData,
-        variants: updatedVariants,
+      const newVariantData = {
+        product: parseInt(productId), // Use the product ID from URL params
+        quantity: parseInt(formData.quantity) || 0,
+        wholesale_price: parseFloat(formData.wholesale_price) || 0,
+        selling_price: parseFloat(formData.selling_price) || 0,
+        options: formData.options.map((opt, index) => {
+          console.log(`Processing option ${index}:`, opt);
+          const processedOption = {
+            attribute: parseInt(opt.attribute), // attribute ID
+            option: opt.option, // option value
+            unit: opt.unit ? parseInt(opt.unit) : null, // unit ID
+          };
+          console.log(`Processed option ${index}:`, processedOption);
+          return processedOption;
+        }),
       };
 
-      // Remove fields that shouldn't be sent in update
-      delete updateData.id;
-      delete updateData.qr_code;
-      delete updateData.qr_codes_download;
-      delete updateData.linked_products;
-      delete updateData.images;
-
-      console.log("Final update data:", JSON.stringify(updateData, null, 2));
-      console.log("Sending PUT request to:", `/products/${productId}`);
+      console.log(
+        "New variant data for POST:",
+        JSON.stringify(newVariantData, null, 2)
+      );
+      console.log("=== FINAL VALIDATION ===");
+      console.log(
+        "Product ID:",
+        newVariantData.product,
+        "type:",
+        typeof newVariantData.product
+      );
+      console.log("Options count:", newVariantData.options.length);
+      newVariantData.options.forEach((opt, idx) => {
+        console.log(`Final option ${idx}:`, {
+          attribute: opt.attribute,
+          option: opt.option,
+          unit: opt.unit,
+        });
+      });
+      console.log("Sending POST request to:", `/products/variants`);
 
       console.log("=== MAKING API CALL ===");
-      const response = await axiosPrivate.put(
-        `/products/${productId}`,
-        updateData
+      const response = await axiosPrivate.post(
+        `/products/variants`,
+        newVariantData
       );
       console.log("API response:", response);
       console.log("API response data:", JSON.stringify(response.data, null, 2));
@@ -440,24 +505,27 @@ function ProductVariants() {
   const variantsToDisplay =
     filteredVariants.length > 0 ? filteredVariants : productData.variants || [];
 
+  const handleClickGotoVariant = (variantId) => {
+    navigate(`/warehouseAdmin/products/variant/${variantId}`);
+  };
+
   // Define columns for variants table
   const variantColumns = [
     { field: "id", headerName: "#", width: 80 },
-    { field: "sku", headerName: "SKU", flex: 1 },
-    { field: "quantity", headerName: "الكمية", flex: 1 },
-    { field: "wholesale_price", headerName: "سعر الجملة", flex: 1 },
-    { field: "selling_price", headerName: "سعر البيع", flex: 1 },
-    { field: "total", headerName: "السعر الإجمالي", flex: 1 },
+    { field: "sku", headerName: "SKU", width: 160 },
+    { field: "quantity", headerName: "الكمية", width: 160 },
+    { field: "wholesale_price", headerName: "سعر الجملة", width: 160 },
+    { field: "selling_price", headerName: "سعر البيع", width: 160 },
+    { field: "total", headerName: "السعر الإجمالي", width: 160 },
     {
       field: "actions",
       headerName: "الإجراءات",
-      flex: 1,
+      width: 300,
       renderCell: (params) => (
-        <div className="flex gap-2">
+        <div className="flex gap-2 justify-center py-1">
           <ButtonComponent
-            variant="edit"
-            onClick={() => handleEditVariant(params.row)}
-            icon={<FontAwesomeIcon icon={faEdit} />}
+            variant={"show"}
+            onClick={() => handleClickGotoVariant(params.id)}
           />
           <ButtonComponent
             variant="delete"
@@ -470,7 +538,7 @@ function ProductVariants() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-6 rounded-2xl">
       {/* Header Section */}
       <div className="max-w-7xl mx-auto">
         {/* Navigation and Title */}
@@ -804,7 +872,9 @@ function ProductVariants() {
                       onChange={(e) =>
                         handleInputChange(
                           "quantity",
-                          parseInt(e.target.value) || 0
+                          e.target.value === ""
+                            ? ""
+                            : parseInt(e.target.value) || ""
                         )
                       }
                       className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
@@ -831,7 +901,9 @@ function ProductVariants() {
                         onChange={(e) =>
                           handleInputChange(
                             "wholesale_price",
-                            parseFloat(e.target.value) || 0
+                            e.target.value === ""
+                              ? ""
+                              : parseFloat(e.target.value) || ""
                           )
                         }
                         className={`w-full pl-12 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
@@ -867,7 +939,9 @@ function ProductVariants() {
                         onChange={(e) =>
                           handleInputChange(
                             "selling_price",
-                            parseFloat(e.target.value) || 0
+                            e.target.value === ""
+                              ? ""
+                              : parseFloat(e.target.value) || ""
                           )
                         }
                         className={`w-full pl-12 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
