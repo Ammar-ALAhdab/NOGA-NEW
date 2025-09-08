@@ -78,6 +78,12 @@ const formatting = (unFormattedData) => {
       typeof categoryData === "string" &&
       categoryData.toLowerCase() === "phone";
 
+    // Determine product image: use actual product image if available, otherwise use default
+    const productImage =
+      productData?.images?.[0]?.image ||
+      productData?.image ||
+      (isPhone ? phone : accessor);
+
     // Determine prices: prefer top-level, else derive from variants
     const variantSellingPrices = Array.isArray(productData?.variants)
       ? productData.variants
@@ -115,7 +121,7 @@ const formatting = (unFormattedData) => {
 
     return {
       id: productData.id,
-      profilePhoto: isPhone ? phone : accessor,
+      profilePhoto: productImage,
       barcode: productData.qr_code ? productData.qr_code : "لايوجد",
       productName: productData.product_name || productData.product,
       type: categoryData,
