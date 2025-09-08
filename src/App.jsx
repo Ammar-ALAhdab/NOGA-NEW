@@ -83,6 +83,10 @@ import Coupon from "./pages/warehouse/purchase/coupons/Coupon.jsx";
 import Purchases from "./pages/warehouse/purchase/Purchase.jsx";
 import AddDiscount from "./pages/warehouse/purchase/discounts/AddDiscount.jsx";
 import Discount from "./pages/warehouse/purchase/discounts/Discount.jsx";
+import ProductsLogSource from "./pages/manager/ProductsLogSource.jsx";
+import ProductsLogDestination from "./pages/manager/ProductsLogDestination.jsx";
+import ManageTransportationSource from "./pages/manager/ManageTransportationSource.jsx";
+import PurchasedProducts from "./pages/manager/PurchasedProducts.jsx";
 export default function App() {
   return (
     <Routes>
@@ -285,6 +289,27 @@ export default function App() {
           {/* ----- Start Branch Manger Routes ----- */}
           <Route element={<RequireAuth allowedRole={["Manager"]} />}>
             <Route path="/branchManager" element={<BranchManager />}>
+            <Route path="productsLogSource" element={<ProductsLogSource />} />
+            <Route path="productsLogDestination" element={<ProductsLogDestination />} />
+            <Route
+                path="productsLogSource/:transportationId"
+                element={<ManageTransportationSource />}
+              />
+                          <Route
+                path="productsLogDestination/:transportationId"
+                element={<ManageTransportation />}
+              />
+              <Route
+                path="productsLogSource/:transportationId/print"
+                element={<PrintTransportationCode />}
+              />
+                          <Route
+                path="productsLogDestination/:transportationId/print"
+                element={<PrintTransportationCode />}
+              />
+              <Route path="productsLog/:transportationId" element={<ManageTransportation />} />
+
+
               {/* Redirect to statistics by default */}
               <Route index element={<Navigate to="statistics" />} />
               <Route path="statistics" element={<ManagerStatistics />} />
@@ -305,7 +330,7 @@ export default function App() {
                 path="productsRequestLog"
                 element={<ProductsRequestLog />}
               />
-              <Route path="soldProductsLog" element={<SoldProductsLog />} />
+              <Route path="soldProductsLog" element={<PurchasedProducts />} />
             </Route>
           </Route>
           {/* ----- End Branch Manger Routes ----- */}

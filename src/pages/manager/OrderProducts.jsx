@@ -15,12 +15,14 @@ import Swal from "sweetalert2";
 import TextAreaComponent from "../../components/inputs/TextAreaComponent";
 
 const formatting = (unFormattedData) => {
+  console.log(unFormattedData);
+  
   const rowsData = {
     id: unFormattedData.id,
     profilePhoto: unFormattedData.category_name == "Phone" ? phone : accessor,
     barcode: unFormattedData.qr_code ? unFormattedData.qr_code : "لايوجد",
-    productName: unFormattedData.product_name,
-    type: unFormattedData.category_name == "Phone" ? "موبايل" : "إكسسوار",
+    productName: unFormattedData.product,
+    type: unFormattedData.category,
     sellingPrice: currencyFormatting(unFormattedData.selling_price),
     wholesalePrice: currencyFormatting(unFormattedData.wholesale_price),
     totalQuantity: unFormattedData.quantity,
@@ -56,7 +58,7 @@ function OrderProducts() {
 
       for (let i = 0; i < rowSelectionID.length; i++) {
         const response = await axiosPrivate.get(
-          `/products/${rowSelectionID[i]}`
+          `/products/variants/${rowSelectionID[i]}`
         );
         const formattedProduct = formatting(response?.data);
         setSelectedProducts((prev) => [...prev, formattedProduct]);
@@ -87,12 +89,11 @@ function OrderProducts() {
 
   const handleOrderProducts = () => {
     const OrderedProducts = {
-      branch_id: branchID,
-      note: description,
-      requests: [
+      branch: branchID,
+      requested_products: [
         ...selectedProducts.map((p) => {
           return {
-            product_id: p.id,
+            product: p.id,
             quantity: p.sendQuantity,
           };
         }),
@@ -110,7 +111,7 @@ function OrderProducts() {
       }).then((result) => {
         if (result.isConfirmed) {
           axiosPrivate
-            .post("/products/request", JSON.stringify(OrderedProducts))
+            .post("/products/requests", JSON.stringify(OrderedProducts))
             .then(() => {
               Swal.fire({
                 title: "تمت عملية الطلب بنجاح، في انتظار المعالجة",
@@ -135,6 +136,7 @@ function OrderProducts() {
     };
     orderProducts();
   };
+console.log(selectedProducts);
 
   const selectedProductsColumns = [
     { field: "id", headerName: "ID", width: 50 },
@@ -274,19 +276,7 @@ function OrderProducts() {
             )
           ) : null}
         </div>
-        <div className="w-full">
-          <SectionTitle text={"إضافة ملاحظة:"} />
-          <div className="grid grid-cols-2 gap-4 w-full">
-            <div className="flex flex-col items-start justify-center gap-4"></div>
-            <div className="flex flex-col items-end justify-center gap-4">
-              <TextAreaComponent
-                id={"description"}
-                value={description}
-                onChange={handleChangeDescription}
-              />
-            </div>
-          </div>
-        </div>
+        
         <div className="flex items-center justify-between gap-4 w-full mt-8">
           <ButtonComponent variant={"back"} onClick={handleClickBack} />
           <ButtonComponent

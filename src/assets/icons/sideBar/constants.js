@@ -153,6 +153,16 @@ const navData = {
         warehouseAdSendProductsHover,
         "orderProducts",
       ],
+      "حركة المنتجات المرسلة": [
+        warehouseAdminProductsLog,
+        warehouseAdminProductsLogHover,
+        "productsLogSource",
+      ],
+      "حركة المنتجات المستلمة": [
+        warehouseAdminProductsLog,
+        warehouseAdminProductsLogHover,
+        "productsLogDestination",
+      ],
       "سجل الطلبات": [
         branchManagerProductsRequestLog,
         branchManagerProductsRequestLogHover,
