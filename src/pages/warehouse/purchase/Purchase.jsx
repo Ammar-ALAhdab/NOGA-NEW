@@ -137,7 +137,7 @@ function Purchases() {
             flex: 1,
         },
         {
-            field: "customer",
+            field: "customer_name",
             headerName: "العميل",
             flex: 1,
             // renderCell: (params) => {
