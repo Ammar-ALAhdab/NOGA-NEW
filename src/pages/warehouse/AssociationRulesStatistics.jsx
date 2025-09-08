@@ -289,50 +289,10 @@ console.log(allPurchacedproducts);
 
     return (
         <main className="flex flex-col items-center justify-between w-full h-full flex-grow gap-3">
-            <Title text="الإحصائيات:" />
-            <section className="flex flex-col items-center justify-center gap-8 w-full bg-white rounded-[30px] p-4 my-box-shadow ">
-                <div className="flex flex-row-reverse items-center justify-end w-full gap-4">
-                    <DateInputComponent
-                        label={"التاريخ:"}
-                        value={dateTime}
-                        onChange={setDateTime}
-                    />
-                    <DropDownComponent
-                        label="الفترة الزمنية:"
-                        data={time}
-                        dataTitle={"title"}
-                        dataValue={"value"}
-                        ButtonText={"اختر الفترة"}
-                        value={periodTime}
-                        onSelect={setPeriodTime}
-                    />
-                </div>
-                <div className="flex flex-row-reverse items-center justify-center w-full gap-4">
-                    <StatisticsBox
-                        type={"totalPurchasedProducts"}
-                        value={purchacedproducts.total}
-                    />
-                    <StatisticsBox
-                        type={"PopularProduct"}
-                        value={purchacedproducts.popularProduct}
-                    />
-                </div>
-                <SectionTitle text={"المخططات البيانية:"} />
-                <div className="w-full flex flex-wrap items-center justify-center">
-                    <div className="flex-1 flex items-center justify-center">
-                        <BarChartComponent
-                            data={allPurchacedproducts}
-                            fill="#7049A3"
-                            hoverFill="#D9A322"
-                            dataKey="total"
-                            XdataKey ="product_name"
-                            Xvalue="المنتجات"
-                            title="المنتجات المباعة"
-                        />
-                    </div>
-                </div>
-            </section>
-            <section className="flex flex-col items-center justify-center w-full bg-white rounded-[30px] p-4 my-box-shadow gap-8">
+
+            <Title text="احصائيات قواعد الرتباط:" />
+
+            {/* <section className="flex flex-col items-center justify-center w-full bg-white rounded-[30px] p-4 my-box-shadow gap-8"> */}
                 {/* ################################### START SEARCH AND FILTER ################################### */}
                 <div className="flex flex-col items-center justify-center gap-2 w-full">
                     <div className="flex items-center justify-center gap-8 w-full">
@@ -407,7 +367,7 @@ console.log(allPurchacedproducts);
                     <DataTable columns={columns} rows={associationRules} />
                 )}
 
-            </section>
+            {/* </section> */}
         </main>
     );
 }

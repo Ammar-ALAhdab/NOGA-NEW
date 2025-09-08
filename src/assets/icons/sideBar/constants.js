@@ -45,6 +45,20 @@ const navData = {
       "إدارة الأفرع": [adminBranches, adminBranchesHover, "branches"],
       "إدارة الموظفين": [adminEmployee, adminEmployeeHover, "manageEmployees"],
       "الكاميرات": [, , "cameras"],
+      "الخصومات": [
+        warehouseAdminProductsLog,
+        warehouseAdminProductsLogHover,
+        "discounts",
+      ],
+      "الكوبونات": [
+        warehouseAdminProductsLog,
+        warehouseAdminProductsLogHover,
+        "coupons",
+      ],"عمليات الشراء": [
+        warehouseAdminProductsLog,
+        warehouseAdminProductsLogHover,
+        "purchases",
+      ],
       الإعدادات: [adminSettings, adminSettingsHover, "settings"],
       "تسجيل الخروج": [logout, logoutHover, "logout"],
     },
@@ -91,7 +105,6 @@ const navData = {
   warehouseAdmin: {
     role: "مسؤول المستودع:",
     links: {
-      "احصائيات": [, , "statistics"],
       "إدارة المنتجات": [salesProducts, salesProductsHover, "products"],
       "إدارة خصائص المنتجات": [
         warehouseAdminAttributes,
@@ -124,20 +137,7 @@ const navData = {
         warehouseAdminProductsLogHover,
         "requestsLog",
       ],
-      "الخصومات": [
-        warehouseAdminProductsLog,
-        warehouseAdminProductsLogHover,
-        "discounts",
-      ],
-      "الكوبونات": [
-        warehouseAdminProductsLog,
-        warehouseAdminProductsLogHover,
-        "coupons",
-      ],"عمليات الشراء": [
-        warehouseAdminProductsLog,
-        warehouseAdminProductsLogHover,
-        "purchases",
-      ],
+      
       // الإعدادات: [adminSettings, adminSettingsHover, "settings"],
 
       "تسجيل الخروج": [logout, logoutHover, "logout"],

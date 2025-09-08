@@ -102,6 +102,18 @@ export default function App() {
               {/* Redirect to statistics by default */}
               <Route index element={<Navigate to="statistics" />} />
               <Route path="statistics" element={<Statistics />} />
+
+              <Route path="coupons/addCoupon" element={<AddCoupon />} />
+              <Route path="coupons/:couponId" element={<Coupon/>} />
+              <Route path="coupons" element={<Coupons />} />
+
+              <Route path="discounts/addDiscount" element={<AddDiscount />} />
+              <Route path="discounts/:discountId" element={<Discount />} />
+              <Route path="discounts" element={<Discounts />} />
+
+              <Route path="purchases" element={<Purchases />} />
+
+
               <Route path="branches" element={<Branches />} />
               <Route path="branches/:BranchId" element={<Branch />} />
               <Route
@@ -219,15 +231,7 @@ export default function App() {
               <Route index element={<Navigate to="products" />} />
               {/* <Route path="products" element={<ProductsCopy />} /> */}
 
-              <Route path="coupons/addCoupon" element={<AddCoupon />} />
-              <Route path="coupons/:couponId" element={<Coupon/>} />
-              <Route path="coupons" element={<Coupons />} />
-
-              <Route path="discounts/addDiscount" element={<AddDiscount />} />
-              <Route path="discounts/:discountId" element={<Discount />} />
-              <Route path="discounts" element={<Discounts />} />
-
-              <Route path="purchases" element={<Purchases />} />
+             
 
               <Route path="statistics" element={<AssociationRulesStatistics />} />
               <Route path="products" element={<Products />} />
@@ -253,10 +257,10 @@ export default function App() {
                 path="products/phone/:ProductId"
                 element={<PhoneProductDetails />}
               />
-              <Route
+              {/* <Route
                 path="products/accessory/:ProductId"
                 element={<AccessoryProductDetails />}
-              />
+              /> */}
               <Route path="sendProducts" element={<SendProducts />} />
               <Route path="returnProducts" element={<ReturnProducts />} />
               <Route path="productsLog" element={<ProductsLog />} />

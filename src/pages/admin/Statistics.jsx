@@ -8,6 +8,7 @@ import BarChartComponent from "../../components/charts/BarChartComponent";
 import DateInputComponent from "../../components/inputs/DateInputComponent";
 import dayjs from "dayjs";
 import Title from "../../components/titles/Title";
+import AssociationRulesStatistics from "../warehouse/AssociationRulesStatistics";
 
 const time = [
   { id: 1, value: "year", title: "سنوية" },
@@ -23,6 +24,7 @@ function Statistics() {
   const [totalBranchesVisitors, setTotalBranchesVisitors] = useState({
     total_visitors: 0,
   });
+  const [allPurchacedproducts, setAllPurchacedproducts] = useState([]);
   const [purchacedproducts, setPurchacedproducts] = useState({});
   const [branchesEarnings, setBranchesEarnings] = useState([]);
   const [branchesIncomings, setBranchesIncomings] = useState([]);
@@ -69,7 +71,7 @@ function Statistics() {
       console.log(error);
     }
   };
-  
+
   const getBranchesIncomings = async (link) => {
     try {
       const response = await axiosPrivate.get(link);
@@ -90,6 +92,7 @@ function Statistics() {
     }
   };
 
+
   const getPurchacedproducts = async (link) => {
     try {
       let highestTotal = 0;
@@ -103,6 +106,7 @@ function Statistics() {
           productWithHighestTotal = item.product_name;
         }
       });
+      setAllPurchacedproducts(response.data)
       setPurchacedproducts({
         popularProduct: productWithHighestTotal,
         countPurchased: highestTotal.toString(),
@@ -140,7 +144,7 @@ function Statistics() {
   return (
     <main className="flex flex-col items-center justify-between w-full h-full flex-grow gap-4">
       <Title text="الإحصائيات:" />
-      <section className="flex flex-col items-center justify-center gap-8 w-full bg-white rounded-[30px] p-4 my-box-shadow ">
+      <section className="flex flex-col items-center justify-center gap-8 w-full bg-white rounded-[30px] p-4 my-box-shadow pb-6">
         <div className="flex flex-row-reverse items-center justify-end w-full gap-4">
           <DateInputComponent
             label={"التاريخ:"}
@@ -174,7 +178,7 @@ function Statistics() {
             type={"newCustomersCounter"}
             value={`+${newCustomersCounter?.customers_number}`}
           />
-           <StatisticsBox
+          <StatisticsBox
             type={"totalVisitors"}
             value={`+${totalBranchesVisitors?.total_visitors}`}
           />
@@ -202,19 +206,34 @@ function Statistics() {
                 title="العائدات للأفرع"
               />
             </div>
-            <div className="flex-1 flex items-center justify-center">
-              <BarChartComponent
-                data={branchVisitors}
-                fill="#7049A3"
-                hoverFill="#D9A322"
-                dataKey="total_visitors"
-                // Yvalue="الأرباح بالليرة السورية"
-                title="عدد الزوار للأفرع"
-              />
+
+              <div className="flex-1 flex items-center justify-center">
+                <BarChartComponent
+                  data={branchVisitors}
+                  fill="#7049A3"
+                  hoverFill="#D9A322"
+                  dataKey="total_visitors"
+                  // Yvalue="الأرباح بالليرة السورية"
+                  title="عدد الزوار للأفرع"
+                />
+              </div>
+            <div className="w-full flex flex-wrap items-center justify-center">
+              <div className="flex-1 flex items-center justify-center">
+                <BarChartComponent
+                  data={allPurchacedproducts}
+                  fill="#7049A3"
+                  hoverFill="#D9A322"
+                  dataKey="total"
+                  XdataKey="product_name"
+                  Xvalue="المنتجات"
+                  title="المنتجات المباعة"
+                />
+              </div>
             </div>
           </div>
-         
+
         </div>
+      <AssociationRulesStatistics />
       </section>
     </main>
   );
