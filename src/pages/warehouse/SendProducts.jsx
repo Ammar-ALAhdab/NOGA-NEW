@@ -26,8 +26,13 @@ const formatting = (unFormattedData) => {
     productData = unFormattedData.product;
     categoryData = unFormattedData.product.category;
     quantityValue = unFormattedData.quantity; // Branch quantity
-    productId = unFormattedData.id; // Branch product ID (unique)
-    console.log("Branch product detected, using ID:", productId);
+    productId = unFormattedData.product.id; // Use the MAIN PRODUCT ID, not branch product ID
+    console.log("Branch product detected, using MAIN PRODUCT ID:", productId);
+    console.log("Branch product ID (unFormattedData.id):", unFormattedData.id);
+    console.log(
+      "Main product ID (unFormattedData.product.id):",
+      unFormattedData.product.id
+    );
   } else {
     // Warehouse endpoint structure: data is direct product
     productData = unFormattedData;
@@ -85,6 +90,7 @@ function SendProducts() {
   // New state for transfer type checkboxes
   const [isWarehouseToBranch, setIsWarehouseToBranch] = useState(false);
   const [isBranchToWarehouse, setIsBranchToWarehouse] = useState(false);
+  const [isBranchToBranch, setIsBranchToBranch] = useState(false);
 
   // Products table will handle its own data fetching via link prop
 
@@ -113,8 +119,9 @@ function SendProducts() {
     setIsWarehouseToBranch(checked);
 
     if (checked) {
-      // If warehouse to branch is selected, uncheck branch to warehouse
+      // If warehouse to branch is selected, uncheck other options
       setIsBranchToWarehouse(false);
+      setIsBranchToBranch(false);
       // Set source to null (warehouse) and clear destination
       setSelectedSource(null);
       setSelectedDestination("");
@@ -136,11 +143,36 @@ function SendProducts() {
     setIsBranchToWarehouse(checked);
 
     if (checked) {
-      // If branch to warehouse is selected, uncheck warehouse to branch
+      // If branch to warehouse is selected, uncheck other options
       setIsWarehouseToBranch(false);
+      setIsBranchToBranch(false);
       // Set destination to null (warehouse) and clear source
       setSelectedDestination(null);
       setSelectedSource("");
+      // Clear selections - ProductsTable will handle data fetching
+      setRowSelectionID([]);
+      setSelectedProducts([]);
+    } else {
+      // If unchecked, clear both
+      setSelectedSource("");
+      setSelectedDestination("");
+      setRowSelectionID([]);
+      setSelectedProducts([]);
+    }
+  };
+
+  // Handle branch to branch checkbox
+  const handleBranchToBranch = (e) => {
+    const checked = e.target.checked;
+    setIsBranchToBranch(checked);
+
+    if (checked) {
+      // If branch to branch is selected, uncheck other options
+      setIsWarehouseToBranch(false);
+      setIsBranchToWarehouse(false);
+      // Clear both source and destination to force user selection
+      setSelectedSource("");
+      setSelectedDestination("");
       // Clear selections - ProductsTable will handle data fetching
       setRowSelectionID([]);
       setSelectedProducts([]);
@@ -223,8 +255,50 @@ function SendProducts() {
               response?.data
             );
           }
+        } else if (isBranchToBranch) {
+          // Branch to Branch: fetch from source branch endpoint to get branch-specific quantity
+          endpoint = `/branches/products/${rowSelectionID[i]}?branch=${selectedSource}`;
+          console.log(
+            "Fetching branch product details for branch-to-branch from:",
+            endpoint
+          );
+          response = await axiosPrivate.get(endpoint);
+
+          // Branch endpoint returns paginated response, extract the first result
+          const branchProductData = response?.data?.results?.[0];
+          console.log(
+            "Branch product data for branch-to-branch:",
+            branchProductData
+          );
+
+          if (branchProductData) {
+            const formattedProduct = formatting(branchProductData);
+            console.log(
+              "Formatted branch product for branch-to-branch:",
+              formattedProduct
+            );
+
+            if (formattedProduct && formattedProduct.id) {
+              console.log(
+                "Adding formatted branch product to selectedProducts for branch-to-branch:",
+                formattedProduct
+              );
+              setSelectedProducts((prev) => [...prev, formattedProduct]);
+            } else {
+              console.error(
+                "Failed to format branch product or missing ID for branch-to-branch:",
+                branchProductData,
+                formattedProduct
+              );
+            }
+          } else {
+            console.error(
+              "No branch product data found in response for branch-to-branch:",
+              response?.data
+            );
+          }
         } else {
-          // Regular Branch to Branch: fetch from warehouse endpoint
+          // Fallback: fetch from warehouse endpoint
           endpoint = `/products/variants/${rowSelectionID[i]}`;
           console.log("Fetching product details from:", endpoint);
           response = await axiosPrivate.get(endpoint);
@@ -304,12 +378,25 @@ function SendProducts() {
     if (
       !isWarehouseToBranch &&
       !isBranchToWarehouse &&
+      !isBranchToBranch &&
       !selectedSource &&
       !selectedDestination
     ) {
       Swal.fire({
         title: "خطأ",
         text: "يرجى اختيار نوع النقل أو تحديد الفرع المصدر والفرع الهدف",
+        icon: "error",
+        confirmButtonColor: "#3457D5",
+        confirmButtonText: "حسناً",
+      });
+      return;
+    }
+
+    // Additional validation for branch-to-branch
+    if (isBranchToBranch && (!selectedSource || !selectedDestination)) {
+      Swal.fire({
+        title: "خطأ",
+        text: "يرجى تحديد الفرع المصدر والفرع الهدف للنقل من فرع إلى فرع",
         icon: "error",
         confirmButtonColor: "#3457D5",
         confirmButtonText: "حسناً",
@@ -344,9 +431,34 @@ function SendProducts() {
       return;
     }
 
+    // Detailed logging for debugging
+    console.log("=== SEND PRODUCTS DEBUG INFO ===");
+    console.log("Selected Products Array:", selectedProducts);
+    console.log("Selected Products Count:", selectedProducts.length);
+    console.log("Row Selection IDs:", rowSelectionID);
+    console.log("Selected Source:", selectedSource);
+    console.log("Selected Destination:", selectedDestination);
+    console.log("Transfer Types:");
+    console.log("  - isWarehouseToBranch:", isWarehouseToBranch);
+    console.log("  - isBranchToWarehouse:", isBranchToWarehouse);
+    console.log("  - isBranchToBranch:", isBranchToBranch);
+
+    // Log each selected product in detail
+    selectedProducts.forEach((product, index) => {
+      console.log(`Product ${index + 1}:`, {
+        id: product.id,
+        name: product.name,
+        sendQuantity: product.sendQuantity,
+        availableQuantity: product.quantity,
+        wholesale_price: product.wholesale_price,
+        selling_price: product.selling_price,
+        fullProduct: product,
+      });
+    });
+
     const sendProducts = {
-      source: selectedSource,
-      destination: selectedDestination,
+      source: isWarehouseToBranch ? null : selectedSource, // null for warehouse
+      destination: isBranchToWarehouse ? null : selectedDestination, // null for warehouse
       transported_products: [
         ...selectedProducts.map((p) => {
           return {
@@ -357,9 +469,10 @@ function SendProducts() {
       ],
     };
 
-    console.log("Sending products with data:", sendProducts);
-    console.log("Transfer type - Warehouse to Branch:", isWarehouseToBranch);
-    console.log("Transfer type - Branch to Warehouse:", isBranchToWarehouse);
+    console.log("=== FINAL PAYLOAD BEING SENT ===");
+    console.log("Complete sendProducts object:", sendProducts);
+    console.log("Transportation endpoint will be: /transportations/");
+    console.log("=================================");
 
     const transportProducts = () => {
       Swal.fire({
@@ -372,9 +485,20 @@ function SendProducts() {
         confirmButtonText: "نعم",
       }).then((result) => {
         if (result.isConfirmed) {
+          console.log("=== API REQUEST DETAILS ===");
+          console.log("Making POST request to: /products/transportations");
+          console.log("Request payload:", sendProducts);
+          console.log("Request headers:", axiosPrivate.defaults.headers);
+          console.log("===========================");
+
           axiosPrivate
             .post("/products/transportations", sendProducts)
-            .then(() => {
+            .then((response) => {
+              console.log("=== API SUCCESS RESPONSE ===");
+              console.log("Response status:", response.status);
+              console.log("Response data:", response.data);
+              console.log("=============================");
+
               Swal.fire({
                 title: "تمت عملية الإرسال بنجاح",
                 icon: "success",
@@ -387,8 +511,15 @@ function SendProducts() {
               setSelectedDestination("");
             })
             .catch((error) => {
-              console.error("Transportation error:", error);
-              console.error("Error response:", error?.response?.data);
+              console.log("=== API ERROR RESPONSE ===");
+              console.error("Full error object:", error);
+              console.error("Error message:", error.message);
+              console.error("Error status:", error.response?.status);
+              console.error("Error status text:", error.response?.statusText);
+              console.error("Error response data:", error?.response?.data);
+              console.error("Error request config:", error.config);
+              console.log("==========================");
+
               Swal.fire({
                 title: "خطأ",
                 text: "حدث خطأ ما في إرسال المنتجات",
@@ -551,43 +682,142 @@ function SendProducts() {
         <div className="w-full">
           <SectionTitle text={"نوع النقل:"} />
 
-          {/* Transfer Type Checkboxes */}
-          <div className="flex items-center justify-center gap-8 py-4">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="branch-to-warehouse"
-                checked={isBranchToWarehouse}
-                onChange={handleBranchToWarehouse}
-                className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-2"
-              />
-              <label
-                htmlFor="branch-to-warehouse"
-                className="text-sm font-medium text-gray-700"
-              >
-                من الفرع إلى المستودع الرئيسي
-              </label>
+          {/* Transfer Type Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-6">
+            {/* Branch to Warehouse Card */}
+            <div
+              className={`relative p-6 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                isBranchToWarehouse
+                  ? "border-primary bg-primary/5 shadow-lg"
+                  : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
+              }`}
+              onClick={() =>
+                handleBranchToWarehouse({
+                  target: { checked: !isBranchToWarehouse },
+                })
+              }
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="branch-to-warehouse"
+                    checked={isBranchToWarehouse}
+                    onChange={handleBranchToWarehouse}
+                    className="w-5 h-5 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-2"
+                  />
+                  <label
+                    htmlFor="branch-to-warehouse"
+                    className="text-lg font-semibold text-gray-800 cursor-pointer"
+                  >
+                    من الفرع إلى المستودع
+                  </label>
+                </div>
+                <div
+                  className={`w-3 h-3 rounded-full ${
+                    isBranchToWarehouse ? "bg-primary" : "bg-gray-300"
+                  }`}
+                ></div>
+              </div>
+              <div className="text-sm text-gray-600 leading-relaxed">
+                نقل المنتجات من أحد الفروع إلى المستودع الرئيسي
+              </div>
+              <div className="mt-3 flex items-center text-xs text-gray-500">
+                <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
+                فرع → مستودع رئيسي
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="warehouse-to-branch"
-                checked={isWarehouseToBranch}
-                onChange={handleWarehouseToBranch}
-                className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-2"
-              />
-              <label
-                htmlFor="warehouse-to-branch"
-                className="text-sm font-medium text-gray-700"
-              >
-                من المستودع الرئيسي إلى الفرع
-              </label>
+
+            {/* Warehouse to Branch Card */}
+            <div
+              className={`relative p-6 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                isWarehouseToBranch
+                  ? "border-primary bg-primary/5 shadow-lg"
+                  : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
+              }`}
+              onClick={() =>
+                handleWarehouseToBranch({
+                  target: { checked: !isWarehouseToBranch },
+                })
+              }
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="warehouse-to-branch"
+                    checked={isWarehouseToBranch}
+                    onChange={handleWarehouseToBranch}
+                    className="w-5 h-5 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-2"
+                  />
+                  <label
+                    htmlFor="warehouse-to-branch"
+                    className="text-lg font-semibold text-gray-800 cursor-pointer"
+                  >
+                    من المستودع إلى الفرع
+                  </label>
+                </div>
+                <div
+                  className={`w-3 h-3 rounded-full ${
+                    isWarehouseToBranch ? "bg-primary" : "bg-gray-300"
+                  }`}
+                ></div>
+              </div>
+              <div className="text-sm text-gray-600 leading-relaxed">
+                نقل المنتجات من المستودع الرئيسي إلى أحد الفروع
+              </div>
+              <div className="mt-3 flex items-center text-xs text-gray-500">
+                <span className="w-2 h-2 bg-blue-400 rounded-full mr-2"></span>
+                مستودع رئيسي → فرع
+              </div>
+            </div>
+
+            {/* Branch to Branch Card */}
+            <div
+              className={`relative p-6 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                isBranchToBranch
+                  ? "border-primary bg-primary/5 shadow-lg"
+                  : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-md"
+              }`}
+              onClick={() =>
+                handleBranchToBranch({ target: { checked: !isBranchToBranch } })
+              }
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="branch-to-branch"
+                    checked={isBranchToBranch}
+                    onChange={handleBranchToBranch}
+                    className="w-5 h-5 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-2"
+                  />
+                  <label
+                    htmlFor="branch-to-branch"
+                    className="text-lg font-semibold text-gray-800 cursor-pointer"
+                  >
+                    من الفرع إلى الفرع
+                  </label>
+                </div>
+                <div
+                  className={`w-3 h-3 rounded-full ${
+                    isBranchToBranch ? "bg-primary" : "bg-gray-300"
+                  }`}
+                ></div>
+              </div>
+              <div className="text-sm text-gray-600 leading-relaxed">
+                نقل المنتجات مباشرة بين فرعين مختلفين
+              </div>
+              <div className="mt-3 flex items-center text-xs text-gray-500">
+                <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                فرع → فرع آخر
+              </div>
             </div>
           </div>
 
           <SectionTitle text={"اختر الفرع:"} />
 
-          {/* Source Dropdown - Only show if not warehouse to branch */}
+          {/* Source Dropdown - Show for branch-to-warehouse and branch-to-branch */}
           {!isWarehouseToBranch && (
             <div className="flex items-start justify-center py-5">
               <DropDownComponent
@@ -603,7 +833,7 @@ function SendProducts() {
             </div>
           )}
 
-          {/* Destination Dropdown - Only show if not branch to warehouse */}
+          {/* Destination Dropdown - Show for warehouse-to-branch and branch-to-branch */}
           {!isBranchToWarehouse && (
             <div className="flex items-start justify-center py-5">
               <DropDownComponent
@@ -620,54 +850,123 @@ function SendProducts() {
           )}
 
           {/* Show current selection status */}
-          <div className="text-center py-2 text-sm text-gray-600">
-            {isWarehouseToBranch && (
-              <span className="text-primary font-medium">
-                النقل: من المستودع الرئيسي إلى الفرع المحدد
-              </span>
-            )}
-            {isBranchToWarehouse && (
-              <span className="text-primary font-medium">
-                النقل: من الفرع المحدد إلى المستودع الرئيسي
-              </span>
-            )}
-            {!isWarehouseToBranch && !isBranchToWarehouse && (
-              <span className="text-gray-500">النقل: من فرع إلى فرع آخر</span>
-            )}
+          <div className="mt-6 p-4 bg-gray-50 rounded-lg border">
+            <div className="text-center">
+              {isWarehouseToBranch && (
+                <div className="flex items-center justify-center gap-3">
+                  <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
+                  <span className="text-primary font-semibold text-lg">
+                    النقل: من المستودع الرئيسي إلى الفرع المحدد
+                  </span>
+                  <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
+                </div>
+              )}
+              {isBranchToWarehouse && (
+                <div className="flex items-center justify-center gap-3">
+                  <div className="w-3 h-3 bg-orange-400 rounded-full"></div>
+                  <span className="text-primary font-semibold text-lg">
+                    النقل: من الفرع المحدد إلى المستودع الرئيسي
+                  </span>
+                  <div className="w-3 h-3 bg-orange-400 rounded-full"></div>
+                </div>
+              )}
+              {isBranchToBranch && (
+                <div className="flex items-center justify-center gap-3">
+                  <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                  <span className="text-primary font-semibold text-lg">
+                    النقل: من الفرع المصدر إلى الفرع الهدف
+                  </span>
+                  <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                </div>
+              )}
+              {!isWarehouseToBranch &&
+                !isBranchToWarehouse &&
+                !isBranchToBranch && (
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+                    <span className="text-gray-500 font-medium text-lg">
+                      النقل: من فرع إلى فرع آخر
+                    </span>
+                    <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+                  </div>
+                )}
+            </div>
           </div>
         </div>
         <div className="w-full flex flex-col items-end justify-center mb-4">
           <SectionTitle text={"اختر المنتجات:"} />
 
           {/* Show transfer type instructions */}
-          <div className="text-center py-2 text-sm text-gray-600 mb-4">
-            {isWarehouseToBranch && (
-              <span className="text-green-600 font-medium">
-                ✓ عرض منتجات المستودع الرئيسي
-              </span>
-            )}
-            {isBranchToWarehouse && selectedSource && (
-              <span className="text-green-600 font-medium">
-                ✓ عرض منتجات الفرع المحدد
-              </span>
-            )}
-            {!isWarehouseToBranch && !isBranchToWarehouse && selectedSource && (
-              <span className="text-green-600 font-medium">
-                ✓ عرض منتجات الفرع المصدر
-              </span>
-            )}
-            {!isWarehouseToBranch &&
-              !isBranchToWarehouse &&
-              !selectedSource && (
-                <span className="text-gray-500">
-                  يرجى تحديد الفرع المصدر أولاً
-                </span>
-              )}
-            {isBranchToWarehouse && !selectedSource && (
-              <span className="text-gray-500">
-                يرجى تحديد الفرع المصدر أولاً
-              </span>
-            )}
+          <div className="mb-6 p-4 rounded-lg border-l-4 border-l-primary bg-blue-50">
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                <span className="text-white text-sm font-bold">i</span>
+              </div>
+              <div className="flex-1">
+                {isWarehouseToBranch && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-green-600 text-lg">✓</span>
+                    <span className="text-green-700 font-semibold">
+                      عرض منتجات المستودع الرئيسي
+                    </span>
+                  </div>
+                )}
+                {isBranchToWarehouse && selectedSource && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-green-600 text-lg">✓</span>
+                    <span className="text-green-700 font-semibold">
+                      عرض منتجات الفرع المحدد
+                    </span>
+                  </div>
+                )}
+                {isBranchToBranch && selectedSource && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-green-600 text-lg">✓</span>
+                    <span className="text-green-700 font-semibold">
+                      عرض منتجات الفرع المصدر
+                    </span>
+                  </div>
+                )}
+                {!isWarehouseToBranch &&
+                  !isBranchToWarehouse &&
+                  !isBranchToBranch &&
+                  selectedSource && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-green-600 text-lg">✓</span>
+                      <span className="text-green-700 font-semibold">
+                        عرض منتجات الفرع المصدر
+                      </span>
+                    </div>
+                  )}
+                {!isWarehouseToBranch &&
+                  !isBranchToWarehouse &&
+                  !isBranchToBranch &&
+                  !selectedSource && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-orange-500 text-lg">⚠</span>
+                      <span className="text-orange-700 font-medium">
+                        يرجى تحديد الفرع المصدر أولاً
+                      </span>
+                    </div>
+                  )}
+                {isBranchToWarehouse && !selectedSource && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-orange-500 text-lg">⚠</span>
+                    <span className="text-orange-700 font-medium">
+                      يرجى تحديد الفرع المصدر أولاً
+                    </span>
+                  </div>
+                )}
+                {isBranchToBranch && !selectedSource && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-orange-500 text-lg">⚠</span>
+                    <span className="text-orange-700 font-medium">
+                      يرجى تحديد الفرع المصدر أولاً
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           <div className="w-full flex flex-col items-center justify-center gap-4">
@@ -704,14 +1003,33 @@ function SendProducts() {
                     link={branchLink}
                   />
                 );
+              } else if (isBranchToBranch) {
+                // Branch to Branch: use ProductsTable with branch endpoint for source branch
+                const branchLink = selectedSource
+                  ? `/branches/products?branch=${selectedSource}`
+                  : "/products/variants"; // Fallback to warehouse if no branch selected
+
+                console.log(
+                  "SendProducts: Using ProductsTable for branch-to-branch with source branch link:",
+                  branchLink
+                );
+                return (
+                  <ProductsTable
+                    handleSelectProduct={handleSelectProduct}
+                    rowSelectionID={rowSelectionID}
+                    columns={columns}
+                    link={branchLink}
+                  />
+                );
               } else if (
                 !isWarehouseToBranch &&
                 !isBranchToWarehouse &&
+                !isBranchToBranch &&
                 selectedSource
               ) {
-                // Regular Branch to Branch: use ProductsTable with warehouse endpoint
+                // Legacy Branch to Branch: use ProductsTable with warehouse endpoint
                 console.log(
-                  "SendProducts: Using ProductsTable for branch-to-branch transfer"
+                  "SendProducts: Using ProductsTable for legacy branch-to-branch transfer"
                 );
                 return (
                   <ProductsTable
