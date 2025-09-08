@@ -78,16 +78,16 @@ function Customers() {
     let filter = orderingFilter;
     setFilterTerms(filter);
     setPage(1);
-    getCustomers(`/customers?${filter}`);
+    getCustomers(`/sales/customers?${filter}`);
     handleCloseFilter();
   };
 
   const handleChangePage = (event, value) => {
     setPage(value);
     getCustomers(
-      `/customers?page=${value}${searchQuery ? `&search=${searchQuery}` : ""}${
-        state.filter ? `${filterTerms}` : ""
-      }`
+      `/sales/customers?page=${value}${
+        searchQuery ? `&search=${searchQuery}` : ""
+      }${state.filter ? `${filterTerms}` : ""}`
     );
   };
 
@@ -104,7 +104,7 @@ function Customers() {
 
   const handleSearchClick = () => {
     setPage(1);
-    getCustomers(`/customers?search=${searchQuery}`);
+    getCustomers(`/sales/customers?search=${searchQuery}`);
     console.log(searchQuery);
   };
 
@@ -116,7 +116,7 @@ function Customers() {
     }, 300);
   };
 
-  const getCustomers = async (link = "/customers") => {
+  const getCustomers = async (link = "/sales/customers") => {
     try {
       setLoading(true);
       setError(null);
@@ -141,7 +141,9 @@ function Customers() {
 
   const handleGetBranchById = async (branchId) => {
     try {
-      const response = await axiosPrivate.get(`/customers?id=${branchId}`);
+      const response = await axiosPrivate.get(
+        `/sales/customers?id=${branchId}`
+      );
       const branchData = response?.data?.results;
       navigateToBranchByID(`${branchId}`, {
         state: { branch: branchData },

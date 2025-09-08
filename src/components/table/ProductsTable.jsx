@@ -150,6 +150,7 @@ function Products({
   rowSelectionID,
   columns,
   link = "/products/variants",
+  onProductsFetched, // New prop to pass fetched products back to parent
 }) {
   const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
@@ -309,6 +310,10 @@ function Products({
           next: null,
           previous: null,
         });
+        // Pass fetched products back to parent
+        if (onProductsFetched) {
+          onProductsFetched(formattedProducts);
+        }
       } else {
         setProducts(formattedProducts);
         setPaginationSettings({
@@ -316,6 +321,10 @@ function Products({
           next: response.data.next,
           previous: response.data.previous,
         });
+        // Pass fetched products back to parent
+        if (onProductsFetched) {
+          onProductsFetched(formattedProducts);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -529,6 +538,7 @@ Products.propTypes = {
   rowSelectionID: PropTypes.array,
   columns: PropTypes.array,
   link: PropTypes.string,
+  onProductsFetched: PropTypes.func,
 };
 
 export default Products;

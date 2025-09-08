@@ -54,7 +54,7 @@ function AddCustomer() {
 
   const handleAddCustomer = async () => {
     try {
-      await axiosPrivate.post("/customers", JSON.stringify(customerInfo));
+      await axiosPrivate.post("/sales/customers", JSON.stringify(customerInfo));
       Toast.fire({
         icon: "success",
         title: "تمت عملية الإضافة بنجاح",

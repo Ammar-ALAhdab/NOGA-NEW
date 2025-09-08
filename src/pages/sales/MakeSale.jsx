@@ -73,7 +73,7 @@ function MakeSale() {
   };
 
   const handleSearchClick = () => {
-    getCustomers(`/customers?search=${searchQuery}`);
+    getCustomers(`/sales/customers?search=${searchQuery}`);
   };
 
   const calculateTotalPrice = (rows) => {
@@ -87,7 +87,7 @@ function MakeSale() {
     return total;
   };
 
-  const getCustomers = async (link = "/customers") => {
+  const getCustomers = async (link = "/sales/customers") => {
     try {
       setLoadingCustomer(true);
       setErrorCustomer(false);
@@ -120,7 +120,7 @@ function MakeSale() {
 
       for (let i = 0; i < productIDs?.length; i++) {
         const response = await axiosPrivate.get(
-          `/products/branch?branch__id=${branchID}&product__id=${productIDs[i]}`
+          `/branches/products?branch=${branchID}&product__id=${productIDs[i]}`
         );
         const p = response.data?.results;
         const formattedProduct = formatting(...p);
@@ -136,13 +136,13 @@ function MakeSale() {
 
   const handleMakeSale = () => {
     const saleProcess = {
-      branch_id: branchID,
-      customer_id: customer.id,
-      products: [
+      branch: branchID,
+      customer: customer.id,
+      purchased_products: [
         ...uniqueSelectedProducts.map((p) => {
           return {
-            product_id: p.id,
-            purchased_quantity: p.wantedQuantity,
+            product: p.id,
+            quantity: p.wantedQuantity,
           };
         }),
       ],
@@ -159,7 +159,7 @@ function MakeSale() {
       }).then((result) => {
         if (result.isConfirmed) {
           axiosPrivate
-            .post("/purchase", JSON.stringify(saleProcess))
+            .post("/sales/purchases", JSON.stringify(saleProcess))
             .then(() => {
               Swal.fire({
                 title: "تمت عملية الشراء بنجاح",

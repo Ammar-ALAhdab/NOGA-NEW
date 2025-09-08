@@ -7,67 +7,10 @@ import useGoToBack from "../../hooks/useGoToBack";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import LoadingSpinner from "../../components/actions/LoadingSpinner";
 import NoDataError from "../../components/actions/NoDataError";
-import currencyFormatting from "../../util/currencyFormatting";
-import phone from "../../assets/warehouse admin/phone.jpg";
-import accessor from "../../assets/warehouse admin/accessor.png";
 import ProductsTable from "../../components/table/ProductsTable";
 import DataTableEditRow from "../../components/table/DataTableEditRow";
 import BranchSelectedProductsTable from "../../components/table/BranchSelectedProductsTable";
 import Swal from "sweetalert2";
-
-const formatting = (unFormattedData) => {
-  console.log("Formatting function called with:", unFormattedData);
-
-  // Handle different data structures from warehouse vs branch endpoints
-  let productData, categoryData, quantityValue, productId;
-
-  if (unFormattedData?.product && typeof unFormattedData.product === "object") {
-    // Branch endpoint structure: data has nested product object
-    productData = unFormattedData.product;
-    categoryData = unFormattedData.product.category;
-    quantityValue = unFormattedData.quantity; // Branch quantity
-    productId = unFormattedData.product.id; // Use the MAIN PRODUCT ID, not branch product ID
-    console.log("Branch product detected, using MAIN PRODUCT ID:", productId);
-    console.log("Branch product ID (unFormattedData.id):", unFormattedData.id);
-    console.log(
-      "Main product ID (unFormattedData.product.id):",
-      unFormattedData.product.id
-    );
-  } else {
-    // Warehouse endpoint structure: data is direct product
-    productData = unFormattedData;
-    categoryData = unFormattedData.category;
-    quantityValue = unFormattedData.quantity; // Warehouse quantity
-    productId = unFormattedData.id; // Product ID
-    console.log("Warehouse product detected, using ID:", productId);
-  }
-
-  // Ensure we have a valid ID
-  if (!productId) {
-    console.error("No valid ID found in product data:", unFormattedData);
-    return null;
-  }
-
-  const isPhone =
-    typeof categoryData === "string" && categoryData.toLowerCase() === "phone";
-
-  const rowsData = {
-    id: productId, // Always use the determined product ID
-    profilePhoto: isPhone ? phone : accessor,
-    barcode: productData.qr_code ? productData.qr_code : "لايوجد",
-    productName: productData.product_name || productData.product,
-    type: categoryData,
-    sellingPrice: currencyFormatting(productData.selling_price || 0),
-    wholesalePrice: currencyFormatting(productData.wholesale_price || 0),
-    totalQuantity: quantityValue,
-    sku: productData.sku,
-    sendQuantity: 0,
-    options: <ButtonComponent />,
-  };
-
-  console.log("Formatted rowsData:", rowsData);
-  return rowsData;
-};
 
 const formatBranches = (unFormattedData) => {
   const data = unFormattedData.map((d) => ({
@@ -81,6 +24,13 @@ function SendProducts() {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [errorProducts, setErrorProducts] = useState(null);
+  const [allProducts, setAllProducts] = useState([]); // Store all fetched products
+
+  // Function to store products when they're fetched by ProductsTable
+  const handleProductsFetched = (products) => {
+    console.log("📦 Products fetched and stored in cache:", products);
+    setAllProducts(products);
+  };
   const axiosPrivate = useAxiosPrivate();
   const [branches, setBranches] = useState([]);
   const [selectedSource, setSelectedSource] = useState("");
@@ -95,7 +45,32 @@ function SendProducts() {
   // Products table will handle its own data fetching via link prop
 
   const handleSelectProduct = (newRowSelectionModel) => {
+    console.log("=== PRODUCT SELECTION EVENT ===");
+    console.log("Previous rowSelectionID:", rowSelectionID);
+    console.log("New rowSelectionModel:", newRowSelectionModel);
+    console.log(
+      "Transportation type - Warehouse to Branch:",
+      isWarehouseToBranch
+    );
+    console.log(
+      "Transportation type - Branch to Warehouse:",
+      isBranchToWarehouse
+    );
+    console.log("Transportation type - Branch to Branch:", isBranchToBranch);
+    console.log("Selected Source:", selectedSource);
+    console.log("Selected Destination:", selectedDestination);
+    console.log("=================================");
+
     setRowSelectionID(newRowSelectionModel);
+
+    // Automatically fetch selected products when products are selected
+    if (newRowSelectionModel.length > 0) {
+      console.log("Products selected, will fetch product details...");
+      getSelectedProducts();
+    } else {
+      console.log("No products selected, clearing selected products");
+      setSelectedProducts([]);
+    }
   };
 
   const handleSourceSelect = (e) => {
@@ -187,145 +162,72 @@ function SendProducts() {
 
   const handleClickBack = useGoToBack();
 
-  const getSelectedProducts = async () => {
+  const getSelectedProducts = () => {
+    console.log("=== PROCESSING SELECTED PRODUCTS FROM CACHED DATA ===");
+    console.log("rowSelectionID array:", rowSelectionID);
+    console.log("Number of selected products:", rowSelectionID.length);
+    console.log("All products available:", allProducts.length);
+    console.log(
+      "Transportation type - Warehouse to Branch:",
+      isWarehouseToBranch
+    );
+    console.log(
+      "Transportation type - Branch to Warehouse:",
+      isBranchToWarehouse
+    );
+    console.log("Transportation type - Branch to Branch:", isBranchToBranch);
+    console.log("=====================================================");
+
     try {
       setLoadingProducts(true);
       setErrorProducts(null);
 
+      const newSelectedProducts = [];
+
       for (let i = 0; i < rowSelectionID.length; i++) {
-        let endpoint;
-        let response;
+        console.log(
+          `\n--- Processing Product ${i + 1}/${rowSelectionID.length} ---`
+        );
+        console.log("Looking for Product ID:", rowSelectionID[i]);
 
-        if (isWarehouseToBranch) {
-          // Warehouse to Branch: fetch from warehouse endpoint
-          endpoint = `/products/variants/${rowSelectionID[i]}`;
-          console.log("Fetching warehouse product details from:", endpoint);
-          response = await axiosPrivate.get(endpoint);
-          // Warehouse endpoint returns direct product data
-          const productData = response?.data;
-          console.log("Warehouse product data:", productData);
+        // Find the product in our cached data
+        const foundProduct = allProducts.find(
+          (product) => product.id === rowSelectionID[i]
+        );
 
-          const formattedProduct = formatting(productData);
-          console.log("Formatted warehouse product:", formattedProduct);
-
-          if (formattedProduct && formattedProduct.id) {
-            console.log(
-              "Adding formatted warehouse product to selectedProducts:",
-              formattedProduct
-            );
-            setSelectedProducts((prev) => [...prev, formattedProduct]);
-          } else {
-            console.error(
-              "Failed to format warehouse product or missing ID:",
-              productData,
-              formattedProduct
-            );
-          }
-        } else if (isBranchToWarehouse) {
-          // Branch to Warehouse: fetch from branch endpoint to get branch-specific quantity
-          // The rowSelectionID[i] is the branch product ID from the table
-          endpoint = `/branches/products/${rowSelectionID[i]}?branch=${selectedSource}`;
-          console.log("Fetching branch product details from:", endpoint);
-          response = await axiosPrivate.get(endpoint);
-
-          // Branch endpoint returns paginated response, extract the first result
-          const branchProductData = response?.data?.results?.[0];
-          console.log("Branch product data:", branchProductData);
-
-          if (branchProductData) {
-            const formattedProduct = formatting(branchProductData);
-            console.log("Formatted branch product:", formattedProduct);
-
-            if (formattedProduct && formattedProduct.id) {
-              console.log(
-                "Adding formatted branch product to selectedProducts:",
-                formattedProduct
-              );
-              setSelectedProducts((prev) => [...prev, formattedProduct]);
-            } else {
-              console.error(
-                "Failed to format branch product or missing ID:",
-                branchProductData,
-                formattedProduct
-              );
-            }
-          } else {
-            console.error(
-              "No branch product data found in response:",
-              response?.data
-            );
-          }
-        } else if (isBranchToBranch) {
-          // Branch to Branch: fetch from source branch endpoint to get branch-specific quantity
-          endpoint = `/branches/products/${rowSelectionID[i]}?branch=${selectedSource}`;
-          console.log(
-            "Fetching branch product details for branch-to-branch from:",
-            endpoint
-          );
-          response = await axiosPrivate.get(endpoint);
-
-          // Branch endpoint returns paginated response, extract the first result
-          const branchProductData = response?.data?.results?.[0];
-          console.log(
-            "Branch product data for branch-to-branch:",
-            branchProductData
-          );
-
-          if (branchProductData) {
-            const formattedProduct = formatting(branchProductData);
-            console.log(
-              "Formatted branch product for branch-to-branch:",
-              formattedProduct
-            );
-
-            if (formattedProduct && formattedProduct.id) {
-              console.log(
-                "Adding formatted branch product to selectedProducts for branch-to-branch:",
-                formattedProduct
-              );
-              setSelectedProducts((prev) => [...prev, formattedProduct]);
-            } else {
-              console.error(
-                "Failed to format branch product or missing ID for branch-to-branch:",
-                branchProductData,
-                formattedProduct
-              );
-            }
-          } else {
-            console.error(
-              "No branch product data found in response for branch-to-branch:",
-              response?.data
-            );
-          }
+        if (foundProduct) {
+          console.log("✅ Found product in cached data:", foundProduct);
+          // Add sendQuantity field and map quantity to totalQuantity for the selected products table
+          const productWithSendQuantity = {
+            ...foundProduct,
+            sendQuantity: 0, // Initialize send quantity to 0
+            totalQuantity: foundProduct.quantity || 0, // Map quantity to totalQuantity
+          };
+          newSelectedProducts.push(productWithSendQuantity);
         } else {
-          // Fallback: fetch from warehouse endpoint
-          endpoint = `/products/variants/${rowSelectionID[i]}`;
-          console.log("Fetching product details from:", endpoint);
-          response = await axiosPrivate.get(endpoint);
-          // Warehouse endpoint returns direct product data
-          const productData = response?.data;
-          console.log("Branch-to-branch product data:", productData);
-
-          const formattedProduct = formatting(productData);
-          console.log("Formatted branch-to-branch product:", formattedProduct);
-
-          if (formattedProduct && formattedProduct.id) {
-            console.log(
-              "Adding formatted branch-to-branch product to selectedProducts:",
-              formattedProduct
-            );
-            setSelectedProducts((prev) => [...prev, formattedProduct]);
-          } else {
-            console.error(
-              "Failed to format branch-to-branch product or missing ID:",
-              productData,
-              formattedProduct
-            );
-          }
+          console.log(
+            "❌ Product not found in cached data for ID:",
+            rowSelectionID[i]
+          );
+          console.log(
+            "Available product IDs:",
+            allProducts.map((p) => p.id)
+          );
         }
       }
+
+      console.log("\n=== FINAL SELECTED PRODUCTS SUMMARY ===");
+      console.log(
+        "✅ Successfully processed",
+        newSelectedProducts.length,
+        "selected products"
+      );
+      console.log("📦 Selected products:", newSelectedProducts);
+      console.log("==========================================");
+
+      setSelectedProducts(newSelectedProducts);
     } catch (error) {
-      console.log(error);
+      console.error("❌ Error in getSelectedProducts:", error);
       setErrorProducts(error);
     } finally {
       setLoadingProducts(false);
@@ -333,6 +235,9 @@ function SendProducts() {
   };
 
   const ShowSelectedProducts = () => {
+    console.log(
+      "🔄 ShowSelectedProducts called - clearing and refetching products"
+    );
     setSelectedProducts([]);
     getSelectedProducts();
   };
@@ -677,6 +582,24 @@ function SendProducts() {
     setSelectedProducts([]);
   }, [isWarehouseToBranch, isBranchToWarehouse, selectedSource]);
 
+  // Monitor selectedProducts state changes
+  useEffect(() => {
+    console.log("🔄 selectedProducts state changed:");
+    console.log("📦 Current selectedProducts:", selectedProducts);
+    console.log("📦 Number of products:", selectedProducts.length);
+    if (selectedProducts.length > 0) {
+      console.log("📦 Product details:");
+      selectedProducts.forEach((product, index) => {
+        console.log(
+          `  ${index + 1}. ID: ${product.id}, Name: ${
+            product.productName
+          }, Quantity: ${product.quantity}`
+        );
+      });
+    }
+    console.log("=====================================");
+  }, [selectedProducts]);
+
   return (
     <main className="flex flex-col items-center justify-between w-full h-full flex-grow gap-4">
       <Title text={"إرسال منتجات:"} />
@@ -984,6 +907,7 @@ function SendProducts() {
                     rowSelectionID={rowSelectionID}
                     columns={columns}
                     link="/products/variants"
+                    onProductsFetched={handleProductsFetched}
                   />
                 );
               } else if (isBranchToWarehouse) {
@@ -1003,6 +927,7 @@ function SendProducts() {
                     rowSelectionID={rowSelectionID}
                     columns={columns}
                     link={branchLink}
+                    onProductsFetched={handleProductsFetched}
                   />
                 );
               } else if (isBranchToBranch) {
@@ -1021,6 +946,7 @@ function SendProducts() {
                     rowSelectionID={rowSelectionID}
                     columns={columns}
                     link={branchLink}
+                    onProductsFetched={handleProductsFetched}
                   />
                 );
               } else if (
@@ -1039,6 +965,7 @@ function SendProducts() {
                     rowSelectionID={rowSelectionID}
                     columns={columns}
                     link="/products/variants"
+                    onProductsFetched={handleProductsFetched}
                   />
                 );
               } else {
@@ -1050,6 +977,7 @@ function SendProducts() {
                     rowSelectionID={rowSelectionID}
                     columns={columns}
                     link="/products/variants"
+                    onProductsFetched={handleProductsFetched}
                   />
                 );
               }
