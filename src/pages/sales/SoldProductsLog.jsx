@@ -110,7 +110,7 @@ function SoldProductsLog({ customerRecords = false }) {
 
   const handleFilterClick = () => {
     let orderingTypeFilter =
-      state.orderingType == 1 || state.orderingType == "" ? "" : "-";
+      state.orderingType === 1 || state.orderingType === "" ? "" : "-";
     let orderingFilter = state.ordering
       ? `&ordering=${orderingTypeFilter}${state.ordering}`
       : "";

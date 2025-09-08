@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useState, useCallback } from "react";
 import Title from "../../components/titles/Title";
 import ButtonComponent from "../../components/buttons/ButtonComponent";
 import DataTable from "../../components/table/DataTable";
@@ -16,8 +16,8 @@ import FilterDropDown from "../../components/inputs/FilterDropDown";
 const formatting = (unFormattedData) => {
   const rowsData = unFormattedData.map((row) => ({
     id: row.id,
-    fullName: `${row.first_name} ${row.middle_name} ${row.last_name}`,
-    phone: row.phone,
+    fullName: `${row.first_name} ${row.last_name}`,
+    phone: row.phone_number,
     options: <ButtonComponent />,
   }));
   return rowsData;
@@ -71,7 +71,7 @@ function Customers() {
 
   const handleFilterClick = () => {
     let orderingTypeFilter =
-      state.orderingType == 1 || state.orderingType == "" ? "" : "-";
+      state.orderingType === 1 || state.orderingType === "" ? "" : "-";
     let orderingFilter = state.ordering
       ? `&ordering=${orderingTypeFilter}${state.ordering}`
       : "";
@@ -116,28 +116,48 @@ function Customers() {
     }, 300);
   };
 
-  const getCustomers = async (link = "/sales/customers") => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await axiosPrivate.get(link);
-      const data = formatting(response.data.results);
-      setCustomers(data);
-      setPaginationSettings({
-        count: response.data.count,
-        next: response.data.next,
-        previous: response.data.previous,
-      });
-    } catch (e) {
-      setError(e);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const getCustomers = useCallback(
+    async (link = "/sales/customers") => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await axiosPrivate.get(link);
+        console.log("API Response:", response.data);
+
+        // Handle both array response and paginated response
+        const customersData = Array.isArray(response.data)
+          ? response.data
+          : response.data.results;
+        const data = formatting(customersData);
+        setCustomers(data);
+
+        // Handle pagination if it exists
+        if (response.data.count !== undefined) {
+          setPaginationSettings({
+            count: response.data.count,
+            next: response.data.next,
+            previous: response.data.previous,
+          });
+        } else {
+          setPaginationSettings({
+            count: customersData.length,
+            next: null,
+            previous: null,
+          });
+        }
+      } catch (e) {
+        console.error("Error fetching customers:", e);
+        setError(e);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [axiosPrivate]
+  );
 
   useEffect(() => {
     getCustomers();
-  }, []);
+  }, [getCustomers]);
 
   const handleGetBranchById = async (branchId) => {
     try {

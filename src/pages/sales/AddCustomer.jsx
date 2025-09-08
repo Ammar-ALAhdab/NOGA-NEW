@@ -17,9 +17,8 @@ const dropDownGenderData = [
 const initialState = {
   national_number: "",
   first_name: "",
-  middle_name: "",
   last_name: "",
-  phone: "",
+  phone_number: "",
   gender: null,
 };
 
@@ -54,7 +53,17 @@ function AddCustomer() {
 
   const handleAddCustomer = async () => {
     try {
-      await axiosPrivate.post("/sales/customers", JSON.stringify(customerInfo));
+      // Transform the data to match API expectations
+      const apiData = {
+        national_number: customerInfo.national_number,
+        first_name: customerInfo.first_name,
+        last_name: customerInfo.last_name,
+        phone_number: customerInfo.phone_number,
+        gender: customerInfo.gender, // This should be true/false from the dropdown
+      };
+
+      console.log("Sending data to API:", apiData);
+      await axiosPrivate.post("/sales/customers", JSON.stringify(apiData));
       Toast.fire({
         icon: "success",
         title: "تمت عملية الإضافة بنجاح",
@@ -64,10 +73,15 @@ function AddCustomer() {
       }, 3000);
     } catch (error) {
       console.log(error);
-      if (error.response.status == 400) {
+      if (error.response?.status === 400) {
         Toast.fire({
           icon: "error",
           title: "عذراً، لايمكنك ترك الحقول فارغة",
+        });
+      } else {
+        Toast.fire({
+          icon: "error",
+          title: "حدث خطأ أثناء إضافة العميل",
         });
       }
     }
@@ -87,11 +101,11 @@ function AddCustomer() {
               value={customerInfo.national_number}
             />
             <TextInputComponent
-              id={"phone"}
+              id={"phone_number"}
               label={"رقم الهاتف:"}
               placeholder="0912345678"
               dir="ltr"
-              value={customerInfo.phone}
+              value={customerInfo.phone_number}
               onChangeEvent={handleChange}
             />
             <DropDownComponent
@@ -111,12 +125,6 @@ function AddCustomer() {
               label={"الاسم:"}
               onChangeEvent={handleChange}
               value={customerInfo.first_name}
-            />
-            <TextInputComponent
-              id={"middle_name"}
-              label={"اسم الأب:"}
-              onChangeEvent={handleChange}
-              value={customerInfo.middle_name}
             />
             <TextInputComponent
               id={"last_name"}

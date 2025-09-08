@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Title from "../../components/titles/Title";
 import useLocationState from "../../hooks/useLocationState";
 import currencyFormatting from "../../util/currencyFormatting";
@@ -23,13 +23,18 @@ const formatting = (unFormattedData) => {
   const rowsData = {
     id: unFormattedData.product.id,
     profilePhoto:
-      unFormattedData.product.category_name == "Phone" ? phone : accessor,
+      unFormattedData.product.category_name?.toLowerCase() === "phone"
+        ? phone
+        : accessor,
     barcode: unFormattedData.product.qr_code
       ? unFormattedData.product.qr_code
       : "لايوجد",
     productName: unFormattedData.product.product_name,
     type:
-      unFormattedData.product.category_name == "Phone" ? "موبايل" : "إكسسوار",
+      unFormattedData.product.category_name?.toLowerCase() === "phone"
+        ? "موبايل"
+        : "إكسسوار",
+    wholesalePrice: currencyFormatting(unFormattedData.product.wholesale_price),
     sellingPrice: currencyFormatting(unFormattedData.product.selling_price),
     quantity: unFormattedData.quantity,
     wantedQuantity: "",
@@ -50,6 +55,17 @@ function MakeSale() {
     return false;
   });
   const productIDs = useLocationState("productsIDs");
+
+  // Debug logging
+  console.log("🔍 MakeSale Debug Info:");
+  console.log("📦 productIDs from navigation state:", productIDs);
+  console.log("🛒 selectedProducts from context:", selectedProducts);
+  console.log("✨ uniqueSelectedProducts:", uniqueSelectedProducts);
+  console.log("🔢 selectedProducts length:", selectedProducts.length);
+  console.log(
+    "🔢 uniqueSelectedProducts length:",
+    uniqueSelectedProducts.length
+  );
   const [customer, setCustomer] = useState(true);
   const [loadingCustomer, setLoadingCustomer] = useState(true);
   const [errorCustomer, setErrorCustomer] = useState(false);
@@ -79,10 +95,12 @@ function MakeSale() {
   const calculateTotalPrice = (rows) => {
     let total = 0;
     rows?.forEach((row) => {
-      const quantity = row?.wantedQuantity == "" ? 0 : row?.wantedQuantity;
-      total += parseFloat(
-        quantity * row?.sellingPrice?.match(/[\d,]+/)[0]?.replace(/,/g, "")
-      );
+      const quantity = row?.wantedQuantity === "" ? 0 : row?.wantedQuantity;
+      const priceMatch = row?.sellingPrice?.match(/[\d,]+/);
+      if (priceMatch && priceMatch[0]) {
+        const price = parseFloat(priceMatch[0].replace(/,/g, ""));
+        total += quantity * price;
+      }
     });
     return total;
   };
@@ -93,46 +111,84 @@ function MakeSale() {
       setErrorCustomer(false);
       setCustomer({});
       const response = await axiosPrivate.get(link);
-      console.log(response.data);
-      if (response.data.results[0]) {
-        const { first_name, middle_name, last_name, national_number, id } =
-          response.data.results[0];
+      console.log("MakeSale API Response:", response.data);
+
+      // Handle both array response and paginated response
+      const customersData = Array.isArray(response.data)
+        ? response.data
+        : response.data.results;
+
+      if (customersData && customersData.length > 0) {
+        const { first_name, last_name, national_number, id } = customersData[0];
         const customer = {
-          fullName: `${first_name} ${middle_name} ${last_name}`,
+          fullName: `${first_name} ${last_name}`,
           id: id,
           nationalNumber: national_number,
         };
         setCustomer(customer);
-      } else if (response.data.results.length == 0) {
+      } else if (customersData.length === 0) {
         setErrorCustomer(true);
       }
     } catch (e) {
-      console.log(e);
+      console.log("Error in MakeSale getCustomers:", e);
     } finally {
       setLoadingCustomer(false);
     }
   };
 
-  const getProducts = async () => {
+  const getProducts = useCallback(async () => {
+    console.log("🚀 getProducts called with productIDs:", productIDs);
+    console.log("🏢 branchID:", branchID);
+
     try {
       setLoadingProducts(true);
       setErrorProducts(null);
 
+      if (!productIDs || productIDs.length === 0) {
+        console.log("⚠️ No productIDs provided, skipping fetch");
+        setLoadingProducts(false);
+        return;
+      }
+
+      // Clear existing selected products before fetching new ones
+      setSelectedProducts([]);
+
       for (let i = 0; i < productIDs?.length; i++) {
+        console.log(
+          `📡 Fetching product ${i + 1}/${productIDs.length}:`,
+          productIDs[i]
+        );
         const response = await axiosPrivate.get(
           `/branches/products?branch=${branchID}&product__id=${productIDs[i]}`
         );
+        console.log(
+          `📦 API Response for product ${productIDs[i]}:`,
+          response.data
+        );
+
         const p = response.data?.results;
-        const formattedProduct = formatting(...p);
-        setSelectedProducts((prev) => [...prev, formattedProduct]);
+        if (p && p.length > 0) {
+          console.log(`✅ Found product data:`, p[0]);
+          const formattedProduct = formatting(p[0]);
+          console.log(`🎨 Formatted product:`, formattedProduct);
+
+          setSelectedProducts((prev) => {
+            const newProducts = [...prev, formattedProduct];
+            console.log(`🔄 Updated selectedProducts:`, newProducts);
+            return newProducts;
+          });
+        } else {
+          console.log(`❌ No product data found for ID:`, productIDs[i]);
+        }
       }
     } catch (error) {
-      console.log(error);
+      console.log("💥 Error in getProducts:", error);
       setErrorProducts(error);
     } finally {
       setLoadingProducts(false);
+      console.log("🏁 getProducts completed");
     }
-  };
+  }, [productIDs, branchID, axiosPrivate, setSelectedProducts]);
 
   const handleMakeSale = () => {
     const saleProcess = {
@@ -213,8 +269,18 @@ function MakeSale() {
       width: 150,
     },
     {
+      field: "type",
+      headerName: "النوع",
+      flex: 1,
+    },
+    {
+      field: "wholesalePrice",
+      headerName: "سعر التكلفة",
+      width: 150,
+    },
+    {
       field: "sellingPrice",
-      headerName: "السعر",
+      headerName: "سعر المبيع",
       width: 150,
     },
     {
@@ -240,6 +306,19 @@ function MakeSale() {
         );
       },
     },
+    {
+      field: "options",
+      headerName: "خيارات",
+      width: 150,
+      sortable: false,
+      renderCell: () => {
+        return (
+          <div className="flex items-center justify-center gap-2 h-full">
+            <ButtonComponent variant={"show"} small={true} />
+          </div>
+        );
+      },
+    },
   ];
 
   useEffect(() => {
@@ -247,8 +326,17 @@ function MakeSale() {
   }, [uniqueSelectedProducts]);
 
   useEffect(() => {
-    getProducts();
-  }, []);
+    console.log("🔄 useEffect triggered - calling getProducts");
+    console.log("📋 Current productIDs:", productIDs);
+
+    // Only call getProducts if we have productIDs
+    if (productIDs && productIDs.length > 0) {
+      getProducts();
+    } else {
+      console.log("⚠️ No productIDs, skipping getProducts call");
+      setLoadingProducts(false);
+    }
+  }, [getProducts, productIDs]);
 
   const handlePrintBill = () => {
     // Create a new window
