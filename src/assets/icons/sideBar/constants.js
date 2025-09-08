@@ -53,6 +53,11 @@ const navData = {
     role: "موظف المبيعات فرع:",
     links: {
       المنتجات: [salesProducts, salesProductsHover, "products"],
+      "ايجاد المنتج في اقرب فرع": [
+        salesProducts,
+        salesProductsHover,
+        "nearest-branch",
+      ],
       الزبائن: [salesCustomers, salesCustomersHover, "customers"],
       "إنشاء سجل زبون": [
         salesAddCustomer,
@@ -75,10 +80,10 @@ const navData = {
         manageEmployeesHover,
         "manageEmployees",
       ],
-      "جداول الأعمال": [ , , "workSchedules"],
-      "الاجازات": [ , , "vecations"],
-      "الحضور": [ , , "attendances"],
-      "الرواتب": [ , , "salaries"],
+      "جداول الأعمال": [, , "workSchedules"],
+      "الاجازات": [, , "vecations"],
+      "الحضور": [, , "attendances"],
+      "الرواتب": [, , "salaries"],
       الإعدادات: [adminSettings, adminSettingsHover, "settings"],
       "تسجيل الخروج": [logout, logoutHover, "logout"],
     },
@@ -86,6 +91,7 @@ const navData = {
   warehouseAdmin: {
     role: "مسؤول المستودع:",
     links: {
+      "احصائيات": [, , "statistics"],
       "إدارة المنتجات": [salesProducts, salesProductsHover, "products"],
       "إدارة خصائص المنتجات": [
         warehouseAdminAttributes,
@@ -118,7 +124,20 @@ const navData = {
         warehouseAdminProductsLogHover,
         "requestsLog",
       ],
-
+      "الخصومات": [
+        warehouseAdminProductsLog,
+        warehouseAdminProductsLogHover,
+        "discounts",
+      ],
+      "الكوبونات": [
+        warehouseAdminProductsLog,
+        warehouseAdminProductsLogHover,
+        "coupons",
+      ],"عمليات الشراء": [
+        warehouseAdminProductsLog,
+        warehouseAdminProductsLogHover,
+        "purchases",
+      ],
       // الإعدادات: [adminSettings, adminSettingsHover, "settings"],
 
       "تسجيل الخروج": [logout, logoutHover, "logout"],

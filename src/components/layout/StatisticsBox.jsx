@@ -36,6 +36,12 @@ const variant = {
     text: "جميع العائدات",
     icon: income,
   },
+  totalVisitors: {
+    color:
+      "linear-gradient(120deg, rgb(88, 236, 130) 29%, rgb(45, 189, 91) 69%)",
+    text: "عدد الزوار",
+    icon: income,
+  },
 };
 
 function StatisticsBox({ type, value }) {

@@ -10,7 +10,7 @@ import {
   Text,
 } from "recharts";
 
-const BarChartComponent = ({ data, Yvalue, dataKey, fill, hoverFill , title }) => {
+const BarChartComponent = ({ data, Yvalue , Xvalue,XdataKey, dataKey, fill, hoverFill , title  }) => {
   return (
     <div className="flex flex-col items-center justify-center gap-2 w-full">
       <Text
@@ -30,8 +30,8 @@ const BarChartComponent = ({ data, Yvalue, dataKey, fill, hoverFill , title }) =
           margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
         >
           <XAxis
-            dataKey="branch_name"
-            label={{ value: "الأفرع", position: "insideBottom", offset: -10 }}
+            dataKey={XdataKey ? XdataKey :"branch_name"}
+            label={{ value: Xvalue ? Xvalue : "الأفرع", position: "insideBottom", offset: -10 }}
           />
           <YAxis
             label={{

@@ -160,14 +160,14 @@ function AddBranch() {
 
           <div className="relative w-full flex flex-col items-start justify-end py-5">
             <p className="relative text-end w-full py-5">:الموقع</p>
-            <PositionOnMapComponent value={branchInfo.location.split(',').map(Number).every(item => typeof item === 'number' && isFinite(item)) ? branchInfo.location.split(',').map(Number).every(item => typeof item === 'number' && isFinite(item)) : [34.713016581849445, 36.70711612702235]} onChange={(value) => {
-              console.log(value);
-
-              setBranchInfo(prev => ({
-                ...prev,
-                location: value.join(',')
-              }))
-            }} />
+            <PositionOnMapComponent value={branchInfo.location.split(',').map(Number).every(item => typeof item === 'number' && isFinite(item)) ? branchInfo.location : [34.713016581849445, 36.70711612702235]} onChange={(value) => {
+                console.log(value);
+  
+                setBranchInfo(prev => ({
+                  ...prev,
+                  location: value
+                }))
+              }} />
           </div>
         </form>
         <div className="flex items-center justify-end gap-4 w-full">

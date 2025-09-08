@@ -20,6 +20,7 @@ function ManagerStatistics() {
   const [branchIncomings, setBranchIncomings] = useState({
     total_income: 0,
   });
+  const [branchVisitors, setBranchesVisitors] = useState({ total_visitors: 0 });
   const [periodTime, setPeriodTime] = useState("year");
   const [dateTime, setDateTime] = useState(`${dayjs().format("YYYY-MM-DD")}`);
   const branchID =
@@ -43,6 +44,14 @@ function ManagerStatistics() {
     try {
       const response = await axiosPrivate.get(link);
       setBranchIncomings(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getBrachVisitors = async (link) => {
+    try {
+      const response = await axiosPrivate.get(link);
+      setBranchesVisitors(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -74,14 +83,17 @@ function ManagerStatistics() {
 
   const showStatistics = () => {
     getBranchEarnings(
-      `/earnings/branches/${branchID}?${periodTime}=${dateTime}`
+      `sales/earnings/branches/${branchID}?${periodTime}=${dateTime}`
     );
     getBranchIncomings(
-      `/income/branches/${branchID}?${periodTime}=${dateTime}`
+      `sales/income/branches/${branchID}?${periodTime}=${dateTime}`
     );
     getPurchacedproducts(
-      `/purchaced-products-quantities/branches/${branchID}?${periodTime}=${dateTime}`
+      `sales/purchaced-products-quantities/branches/${branchID}?${periodTime}=${dateTime}`
     );
+    getBrachVisitors(
+      `branches/total-branch-visitors/${branchID}?${periodTime}=${dateTime}`
+    )
   };
 
   useEffect(() => {
@@ -129,7 +141,12 @@ function ManagerStatistics() {
             type={"PopularProduct"}
             value={purchacedproducts.popularProduct}
           />
+          <StatisticsBox
+            type={"totalVisitors"}
+            value={`+${branchVisitors.total_visitors}`}
+          />
         </div>
+
       </section>
     </main>
   );

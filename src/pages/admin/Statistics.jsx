@@ -20,9 +20,13 @@ function Statistics() {
   const [newCustomersCounter, setNewCustomersCounter] = useState({
     customers_number: 0,
   });
+  const [totalBranchesVisitors, setTotalBranchesVisitors] = useState({
+    total_visitors: 0,
+  });
   const [purchacedproducts, setPurchacedproducts] = useState({});
   const [branchesEarnings, setBranchesEarnings] = useState([]);
   const [branchesIncomings, setBranchesIncomings] = useState([]);
+  const [branchVisitors, setBranchesVisitors] = useState([]);
   const [periodTime, setPeriodTime] = useState("year");
   const [dateTime, setDateTime] = useState(`${dayjs().format("YYYY-MM-DD")}`);
 
@@ -47,6 +51,25 @@ function Statistics() {
     }
   };
 
+  const getTotalBrachVisitors = async (link) => {
+    try {
+      const response = await axiosPrivate.get(link);
+      setTotalBranchesVisitors(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  const getBrachVisitors = async (link) => {
+    try {
+      const response = await axiosPrivate.get(link);
+      setBranchesVisitors(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   const getBranchesIncomings = async (link) => {
     try {
       const response = await axiosPrivate.get(link);
@@ -91,13 +114,19 @@ function Statistics() {
   };
 
   const showStatistics = () => {
-    getTotalEarnings(`/earnings?${periodTime}=${dateTime}`);
-    getBranchesEarnings(`/earnings/branches?${periodTime}=${dateTime}`);
-    getBranchesIncomings(`/income/branches?${periodTime}=${dateTime}`);
-    getNewCustomersCounter(`/customers/count?${periodTime}=${dateTime}`);
+    getTotalEarnings(`sales/earnings?${periodTime}=${dateTime}`);
+    getBranchesEarnings(`sales/earnings/branches?${periodTime}=${dateTime}`);
+    getBranchesIncomings(`sales/income/branches?${periodTime}=${dateTime}`);
+    getNewCustomersCounter(`sales/customers/count?${periodTime}=${dateTime}`);
     getPurchacedproducts(
-      `/purchaced-products-quantities?${periodTime}=${dateTime}`
+      `sales/purchaced-products-quantities?${periodTime}=${dateTime}`
     );
+    getTotalBrachVisitors(
+      `branches/total-branch-visitors?${periodTime}=${dateTime}`
+    )
+    getBrachVisitors(
+      `branches/branch-visitors?${periodTime}=${dateTime}`
+    )
   };
 
   useEffect(() => {
@@ -145,6 +174,10 @@ function Statistics() {
             type={"newCustomersCounter"}
             value={`+${newCustomersCounter?.customers_number}`}
           />
+           <StatisticsBox
+            type={"totalVisitors"}
+            value={`+${totalBranchesVisitors?.total_visitors}`}
+          />
         </div>
         <div className="flex flex-col items-center justify-center w-full gap-4">
           <SectionTitle text={"المخططات البيانية:"} />
@@ -169,7 +202,18 @@ function Statistics() {
                 title="العائدات للأفرع"
               />
             </div>
+            <div className="flex-1 flex items-center justify-center">
+              <BarChartComponent
+                data={branchVisitors}
+                fill="#7049A3"
+                hoverFill="#D9A322"
+                dataKey="total_visitors"
+                // Yvalue="الأرباح بالليرة السورية"
+                title="عدد الزوار للأفرع"
+              />
+            </div>
           </div>
+         
         </div>
       </section>
     </main>

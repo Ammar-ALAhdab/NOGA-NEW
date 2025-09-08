@@ -73,6 +73,16 @@ import Cameras from "./pages/admin/cameras/Cameras.jsx";
 import AddCamera from "./pages/admin/cameras/AddCamera.jsx";
 import Camera from "./pages/admin/cameras/Camera.jsx";
 import WatchCamera from "./pages/admin/cameras/WatchCamera.jsx";
+import AssociationRulesStatistics from "./pages/warehouse/AssociationRulesStatistics";
+import NearestBranch from "./pages/sales/NearestBranch.jsx";
+import SearchProductsForNearestBranch from "./pages/sales/SearchProductsForNearestBranch.jsx";
+import Coupons from "./pages/warehouse/purchase/coupons/Coupons.jsx";
+import Discounts from "./pages/warehouse/purchase/discounts/Discounts.jsx";
+import AddCoupon from "./pages/warehouse/purchase/coupons/AddCoupon.jsx";
+import Coupon from "./pages/warehouse/purchase/coupons/Coupon.jsx";
+import Purchases from "./pages/warehouse/purchase/Purchase.jsx";
+import AddDiscount from "./pages/warehouse/purchase/discounts/AddDiscount.jsx";
+import Discount from "./pages/warehouse/purchase/discounts/Discount.jsx";
 export default function App() {
   return (
     <Routes>
@@ -208,6 +218,18 @@ export default function App() {
               {/* Redirect to Products by default */}
               <Route index element={<Navigate to="products" />} />
               {/* <Route path="products" element={<ProductsCopy />} /> */}
+
+              <Route path="coupons/addCoupon" element={<AddCoupon />} />
+              <Route path="coupons/:couponId" element={<Coupon/>} />
+              <Route path="coupons" element={<Coupons />} />
+
+              <Route path="discounts/addDiscount" element={<AddDiscount />} />
+              <Route path="discounts/:discountId" element={<Discount />} />
+              <Route path="discounts" element={<Discounts />} />
+
+              <Route path="purchases" element={<Purchases />} />
+
+              <Route path="statistics" element={<AssociationRulesStatistics />} />
               <Route path="products" element={<Products />} />
               <Route path="mainProducts" element={<MainProducts />} />
               <Route
@@ -290,6 +312,8 @@ export default function App() {
               {/* Redirect to products by default */}
               <Route index element={<Navigate to="products" />} />
               <Route path="products" element={<BranchProducts />} />
+              <Route path="nearest-branch" element={<SearchProductsForNearestBranch />} />
+              <Route path="nearest-branch/:productId" element={<NearestBranch />} />
               <Route
                 path="products/phone/:ProductId"
                 element={<PhoneDetails />}
