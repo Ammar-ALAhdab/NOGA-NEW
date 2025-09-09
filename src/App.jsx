@@ -36,7 +36,7 @@ import BranchProducts from "./pages/manager/BranchProducts.jsx";
 import SalesOfficer from "./pages/sales/SalesOfficer.jsx";
 import WareHouseSettings from "./pages/warehouse/WareHouseSettings.jsx";
 import PhoneProductDetails from "./pages/warehouse/PhoneProductDetails.jsx";
-import AccessoryProductDetails from "./pages/warehouse/AccessoryProductDetails.jsx";
+// import AccessoryProductDetails from "./pages/warehouse/AccessoryProductDetails.jsx";
 import VariantDetails from "./pages/warehouse/VariantDetails.jsx";
 import EditProducts from "./pages/warehouse/EditProducts.jsx";
 import RequestsLog from "./pages/warehouse/RequestsLog.jsx";
