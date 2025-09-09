@@ -123,14 +123,14 @@ function ProductsRequestLog() {
     let filter = orderingFilter;
     setFilterTerms(filter);
     setPage(1);
-    getProductsRequests(`/products/requests?branch_id=${branchID}${filter}`);
+    getProductsRequests(`/products/requests?branch=${branchID}${filter}`);
     handleCloseFilter();
   };
 
   const handleChangePage = (event, value) => {
     setPage(value);
     getProductsRequests(
-      `/products/requests?branch_id=${branchID}&page=${value}${
+      `/products/requests?branch=${branchID}&page=${value}${
         searchQuery ? `&search=${searchQuery}` : ""
       }${state.filter ? `${filterTerms}` : ""}`
     );
@@ -146,7 +146,7 @@ function ProductsRequestLog() {
   const handleSearchClick = () => {
     setPage(1);
 
-    getProductsRequests(`/products/requests?branch_id=${branchID}&search=${searchQuery}`);
+    getProductsRequests(`/products/requests?branch=${branchID}&search=${searchQuery}`);
   };
 
   const formatting = (unFormattedData) => {
@@ -182,7 +182,7 @@ function ProductsRequestLog() {
   };
 
   const getProductsRequests = async (
-    link = `/products/requests?branch_id=${branchID}`
+    link = `/products/requests?branch=${branchID}`
   ) => {
     try {
       setLoading(true);

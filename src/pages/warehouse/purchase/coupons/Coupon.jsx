@@ -195,7 +195,7 @@ function Coupon() {
                                         <DropDownComponent
                                             data={DISCOUNT_TYPES}
                                             label={"نوع الحسم"}
-                                            ButtonText={"الفرع"}
+                                            ButtonText={"نوع الحسم"}
                                             id={"destination"}
                                             dataValue="id"
                                             dataTitle="title"

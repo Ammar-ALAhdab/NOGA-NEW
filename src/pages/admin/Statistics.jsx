@@ -37,10 +37,9 @@ function Statistics() {
   const getBranchesEarnings = async (link) => {
     try {
       const response = await axiosPrivate.get(link);
-      const filter = response.data.filter((b) => b.branch_id != 1);
-      setBranchesEarnings(filter);
+      // const filter = response.data.filter((b) => b.branch_id != 1);
+      setBranchesEarnings(response.data);
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -49,7 +48,6 @@ function Statistics() {
       const response = await axiosPrivate.get(link);
       setTotalEarnings(response.data);
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -58,7 +56,6 @@ function Statistics() {
       const response = await axiosPrivate.get(link);
       setTotalBranchesVisitors(response.data);
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -68,18 +65,16 @@ function Statistics() {
       const response = await axiosPrivate.get(link);
       setBranchesVisitors(response.data);
     } catch (error) {
-      console.log(error);
     }
   };
 
   const getBranchesIncomings = async (link) => {
     try {
       const response = await axiosPrivate.get(link);
-      const filter = response.data.filter((b) => b.branch_id != 1);
+      // const filter = response.data.filter((b) => b.branch_id != 1);
 
-      setBranchesIncomings(filter);
+      setBranchesIncomings(response.data);
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -88,7 +83,6 @@ function Statistics() {
       const response = await axiosPrivate.get(link);
       setNewCustomersCounter(response.data);
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -113,7 +107,6 @@ function Statistics() {
         total: total.toString(),
       });
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -140,6 +133,8 @@ function Statistics() {
   useEffect(() => {
     showStatistics();
   }, [periodTime, dateTime]);
+console.log(branchesIncomings);
+console.log(branchesEarnings);
 
   return (
     <main className="flex flex-col items-center justify-between w-full h-full flex-grow gap-4">

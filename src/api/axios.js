@@ -1,10 +1,10 @@
 import axios from "axios";
 
 // FOR LOCAL
-// const BASE_URL = "http://127.0.0.1:8000";
+const BASE_URL = "http://127.0.0.1:8000";
 
 // FOR SERVER
-const BASE_URL = "https://noga-r0ln.onrender.com";
+// const BASE_URL = "https://noga-r0ln.onrender.com";
 
 export default axios.create({
   baseURL: BASE_URL,

@@ -160,7 +160,6 @@ function Camera() {
     
     return (
         <main className="relative w-full flex flex-col items-center justify-center w-full h-full flex-grow gap-4 ">
-            <Title text="الاجازات:" />
             <section className="relative w-full flex items-center justify-center flex-col gap-16 w-full bg-white rounded-[30px] py-8 px-4 my-box-shadow">
                 {/* <SectionTitle text="تعديل قائمة المسميات الوظيفية:" /> */}
 
