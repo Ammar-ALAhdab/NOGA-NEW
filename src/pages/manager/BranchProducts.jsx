@@ -5,17 +5,36 @@ import ButtonComponent from "../../components/buttons/ButtonComponent";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Swal from "sweetalert2";
-import PropTypes from "prop-types";
-
-function BranchProducts({ manager = false }) {
+function BranchProducts() {
   const [rowSelectionID, setRowSelectionID] = useState([]);
+  const [selectedProductsData, setSelectedProductsData] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
   const branchID = JSON.parse(localStorage.getItem("branchID"));
   const branchName = JSON.parse(localStorage.getItem("branchName"));
 
   const handleSelectProduct = (newRowSelectionModel) => {
+    console.log("🔄 BranchProducts: Product selection changed");
+    console.log("📦 Previous selection:", rowSelectionID);
+    console.log("📦 New selection:", newRowSelectionModel);
+    console.log("📦 Selection count:", newRowSelectionModel.length);
+
     setRowSelectionID(newRowSelectionModel);
+
+    // Find and store the complete product data for selected products
+    const selectedProducts = allProducts.filter((product) =>
+      newRowSelectionModel.includes(product.id)
+    );
+
+    console.log("🛒 Selected products with full data:", selectedProducts);
+    setSelectedProductsData(selectedProducts);
+  };
+
+  // Function to handle when ProductsTable fetches products
+  const handleProductsFetched = (products) => {
+    console.log("📦 BranchProducts: Products fetched from API:", products);
+    setAllProducts(products);
   };
 
   const handleShowProductDetails = async (variantId) => {
@@ -200,15 +219,58 @@ function BranchProducts({ manager = false }) {
     <main className="flex flex-col items-center justify-between w-full h-full flex-grow">
       <Title text={`قائمة منتجات فرع ${branchName}:`} />
       <div className="w-full flex items-center flex-row-reverse gap-2 mb-4">
-
         {rowSelectionID.length > 0 && (
           <ButtonComponent
             textButton="إجراء عملية بيع"
             variant={"purchases"}
             onClick={() => {
-              navigate("/salesOfficer/makeSale", {
-                state: { productsIDs: rowSelectionID },
+              console.log("🛒 BranchProducts: Starting sale process");
+              console.log("📦 Selected product IDs:", rowSelectionID);
+              console.log("📦 Selected products data:", selectedProductsData);
+              console.log(
+                "📦 Selected products count:",
+                selectedProductsData.length
+              );
+
+              // Print detailed information about selected products
+              selectedProductsData.forEach((product, index) => {
+                console.log(`📋 Product ${index + 1} for sale:`, {
+                  id: product.id,
+                  productName: product.productName,
+                  type: product.type,
+                  wholesalePrice: product.wholesalePrice,
+                  sellingPrice: product.sellingPrice,
+                  quantity: product.quantity,
+                  profilePhoto: product.profilePhoto,
+                });
               });
+
+              // Clean products data - remove unnecessary fields like options
+              const cleanedProducts = selectedProductsData.map((product) => ({
+                id: product.id,
+                productName: product.productName,
+                type: product.type,
+                wholesalePrice: product.wholesalePrice,
+                sellingPrice: product.sellingPrice,
+                quantity: product.quantity,
+                profilePhoto: product.profilePhoto,
+                // Remove: barcode, sku, isPhone, sellingPriceNumber, wholesalePriceNumber, options
+              }));
+
+              console.log("🚀 BranchProducts: About to navigate to MakeSale");
+              console.log(
+                "📦 Cleaned products being passed to MakeSale:",
+                cleanedProducts
+              );
+
+              // Navigate to MakeSale with cleaned product data (no unnecessary fields)
+              navigate("/salesOfficer/makeSale", {
+                state: {
+                  selectedProducts: cleanedProducts,
+                },
+              });
+
+              console.log("✅ BranchProducts: Navigation completed");
             }}
           />
         )}
@@ -219,14 +281,11 @@ function BranchProducts({ manager = false }) {
           rowSelectionID={rowSelectionID}
           columns={columns}
           link={`/branches/products?branch=${branchID}`}
+          onProductsFetched={handleProductsFetched}
         />
       </section>
     </main>
   );
 }
-
-BranchProducts.propTypes = {
-  manager: PropTypes.bool,
-};
 
 export default BranchProducts;

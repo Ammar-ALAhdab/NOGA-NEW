@@ -35,6 +35,7 @@ function DataTableEditRow({
   pagination = false,
   lastColumn = {},
   requestColumns = false,
+  showActions = true,
 }) {
   const [visualRows, setVisualRows] = useState(rows);
   const [rowModesModel, setRowModesModel] = useState({});
@@ -45,60 +46,66 @@ function DataTableEditRow({
 
   const visualColumns = [
     ...columns,
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "خيارات",
-      width: 100,
-      cellClassName: "actions",
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+    // Conditionally add actions column
+    ...(showActions
+      ? [
+          {
+            field: "actions",
+            type: "actions",
+            headerName: "خيارات",
+            width: 100,
+            cellClassName: "actions",
+            getActions: ({ id }) => {
+              const isInEditMode =
+                rowModesModel[id]?.mode === GridRowModes.Edit;
 
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              key={"save"}
-              icon={<SaveIcon />}
-              label="Save"
-              sx={{
-                color: "#7049A3",
-              }}
-              onClick={handleSaveClick(id)}
-            />,
-            <GridActionsCellItem
-              key={"Cancel"}
-              icon={<CancelIcon />}
-              label="Cancel"
-              sx={{
-                color: "#E76D3B",
-              }}
-              onClick={handleCancelClick(id)}
-            />,
-          ];
-        }
+              if (isInEditMode) {
+                return [
+                  <GridActionsCellItem
+                    key={"save"}
+                    icon={<SaveIcon />}
+                    label="Save"
+                    sx={{
+                      color: "#7049A3",
+                    }}
+                    onClick={handleSaveClick(id)}
+                  />,
+                  <GridActionsCellItem
+                    key={"Cancel"}
+                    icon={<CancelIcon />}
+                    label="Cancel"
+                    sx={{
+                      color: "#E76D3B",
+                    }}
+                    onClick={handleCancelClick(id)}
+                  />,
+                ];
+              }
 
-        return [
-          <GridActionsCellItem
-            key={"Edit"}
-            icon={<EditIcon />}
-            label="Edit"
-            sx={{
-              color: "#D9A322",
-            }}
-            onClick={handleEditClick(id)}
-          />,
-          <GridActionsCellItem
-            key={"Delete"}
-            icon={<DeleteIcon />}
-            label="Delete"
-            sx={{
-              color: "#E76D3B",
-            }}
-            onClick={handleDeleteClick(id)}
-          />,
-        ];
-      },
-    },
+              return [
+                <GridActionsCellItem
+                  key={"Edit"}
+                  icon={<EditIcon />}
+                  label="Edit"
+                  sx={{
+                    color: "#D9A322",
+                  }}
+                  onClick={handleEditClick(id)}
+                />,
+                <GridActionsCellItem
+                  key={"Delete"}
+                  icon={<DeleteIcon />}
+                  label="Delete"
+                  sx={{
+                    color: "#E76D3B",
+                  }}
+                  onClick={handleDeleteClick(id)}
+                />,
+              ];
+            },
+          },
+        ]
+      : []),
   ];
 
   if (requestColumns == true) {
@@ -251,6 +258,7 @@ DataTableEditRow.propTypes = {
   link: PropTypes.string,
   dir: PropTypes.string,
   lastColumn: PropTypes.object,
+  showActions: PropTypes.bool,
 };
 
 export default DataTableEditRow;
