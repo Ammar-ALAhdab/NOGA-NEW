@@ -49,6 +49,7 @@ import Customers from "./pages/sales/Customers.jsx";
 import AddCustomer from "./pages/sales/AddCustomer.jsx";
 import CustomerDetails from "./pages/sales/CustomerDetails.jsx";
 import MakeSale from "./pages/sales/MakeSale.jsx";
+import PurchaseSuccess from "./pages/sales/PurchaseSuccess.jsx";
 import ManagerStatistics from "./pages/manager/ManagerStatistics.jsx";
 import ProductsRequestLog from "./pages/manager/ProductsRequestLog.jsx";
 import SoldProductsLog from "./pages/sales/SoldProductsLog.jsx";
@@ -358,6 +359,7 @@ export default function App() {
               />
               <Route path="addCustomer" element={<AddCustomer />} />
               <Route path="makeSale" element={<MakeSale />} />
+              <Route path="purchaseSuccess" element={<PurchaseSuccess />} />
               <Route path="soldProductsLog" element={<SoldProductsLog />} />
               <Route
                 path="customers/customerSoldProductsLog/:customerID"

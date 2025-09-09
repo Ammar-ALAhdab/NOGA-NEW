@@ -119,13 +119,13 @@ function MakeSale() {
   );
 
   // Search customers
-  const handleSearchClick = () => {
-    if (searchQuery.trim()) {
-      getCustomers(`/sales/customers?search=${searchQuery}`);
-    } else {
-      getCustomers();
-    }
-  };
+  // const handleSearchClick = () => {
+  //   if (searchQuery.trim()) {
+  //     getCustomers(`/sales/customers?search=${searchQuery}`);
+  //   } else {
+  //     getCustomers();
+  //   }
+  // };
 
   // Handle customer selection
   const handleSelectCustomer = (customer) => {
@@ -196,18 +196,34 @@ function MakeSale() {
 
     axiosPrivate
       .post("/sales/purchases", JSON.stringify(saleProcess))
-      .then(() => {
+      .then((response) => {
+        console.log("✅ Sale completed successfully!");
+        console.log("📦 Server response:", response);
+        console.log("📦 Response data:", response.data);
+        console.log("📦 Response status:", response.status);
+        console.log("📦 Response headers:", response.headers);
+
         Swal.fire({
           title: "تمت العملية بنجاح!",
           text: "تم إجراء عملية البيع بنجاح",
           icon: "success",
           confirmButtonText: "حسناً",
         }).then(() => {
-          navigate("/salesOfficer");
+          // Navigate to success page after 1500ms with purchase data
+          setTimeout(() => {
+            navigate("/salesOfficer/purchaseSuccess", {
+              state: { purchaseData: response.data },
+            });
+          }, 1500);
         });
       })
       .catch((error) => {
         console.error("❌ Error making sale:", error);
+        console.error("❌ Error response:", error.response);
+        console.error("❌ Error data:", error.response?.data);
+        console.error("❌ Error status:", error.response?.status);
+        console.error("❌ Error message:", error.message);
+
         Swal.fire({
           title: "خطأ!",
           text: "حدث خطأ أثناء إجراء عملية البيع",
@@ -373,7 +389,7 @@ function MakeSale() {
             onChange={setSearchQuery}
             placeholder="ابحث عن الزبون..."
           />
-          <ButtonComponent variant={"search"} onClick={handleSearchClick} />
+          {/* <ButtonComponent variant={"search"} onClick={handleSearchClick} /> */}
         </div>
 
         {/* Customer Table */}
@@ -449,7 +465,7 @@ function MakeSale() {
         <div className="flex items-center justify-end gap-4 w-full">
           <ButtonComponent variant={"back"} onClick={handleClickBack} />
           {selectedProducts.length > 0 && (
-            <ButtonComponent variant={"print"} onClick={handlePrintBill} />
+            null
           )}
           <ButtonComponent
             variant={"procedure"}
