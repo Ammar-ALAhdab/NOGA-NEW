@@ -16,44 +16,22 @@ import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 
 const columns = [
-  { field: "id", headerName: "", width: 50 },
-  {
-    field: "idOfOrder",
-    headerName: "معرف الفاتورة",
-    flex: 1,
-    valueGetter: (value, row) => `#${row.id}`,
-  },
-  { field: "customerName", headerName: "اسم المشتري", width: 200 },
-  { field: "branch", headerName: "الفرع", flex: 1 },
-  { field: "address", headerName: "العنوان", flex: 1 },
-  { field: "date", headerName: "التاريخ", flex: 1 },
-  { field: "productCount", headerName: "عدد المنتجات", flex: 1 },
+  { field: "id", headerName: "معرف الفاتورة", width: 120 },
+  { field: "customer_name", headerName: "اسم المشتري", width: 200 },
+  { field: "branch_name", headerName: "الفرع", width: 150 },
+  { field: "status", headerName: "الحالة", width: 100 },
+  { field: "date_of_purchase", headerName: "تاريخ الشراء", width: 180 },
+  { field: "total_price", headerName: "المبلغ الإجمالي", width: 150 },
+  { field: "productCount", headerName: "عدد المنتجات", width: 120 },
 ];
 
 const detailColumns = [
   { field: "id", headerName: "#", width: 50 },
-  { field: "product_name", headerName: "اسم المنتج", flex: 1 },
-  {
-    field: "category_name",
-    headerName: "النوع",
-    align: "center",
-    flex: 1,
-  },
-  {
-    field: "purchased_quantity",
-    headerName: "الكمية",
-    flex: 1,
-  },
-  {
-    field: "price",
-    headerName: "السعر",
-    flex: 1,
-  },
-  {
-    field: "totalPrice",
-    headerName: "المبلغ الإجمالي",
-    flex: 1,
-  },
+  { field: "product_name", headerName: "اسم المنتج", width: 200 },
+  { field: "quantity", headerName: "الكمية", width: 100 },
+  { field: "wholesale_price", headerName: "سعر التكلفة", width: 150 },
+  { field: "selling_price", headerName: "سعر المبيع", width: 150 },
+  { field: "total_price", headerName: "المبلغ الإجمالي", width: 150 },
 ];
 
 const initialFilterState = {
@@ -97,10 +75,10 @@ function SoldProductsLog({ customerRecords = false }) {
   const branchName = JSON.parse(localStorage.getItem("branchName"));
   const { customerID } = useParams();
   const LINK = customerRecords
-    ? `customer_id=${customerID}`
-    : `branch_id=${branchID}`;
+    ? `customer=${customerID}`
+    : `branch=${branchID}`;
   const TITLE = customerRecords
-    ? `سجل مشتريات الزبون: ${productsSoldLog[0]?.customerName}`
+    ? `سجل مشتريات الزبون: ${productsSoldLog[0]?.customer_name}`
     : `سجل المشتريات فرع ${branchName}: `;
 
   const handleFilterTerms = (e) => {
@@ -146,23 +124,21 @@ function SoldProductsLog({ customerRecords = false }) {
   const formatting = (unFormattedData) => {
     const rowsData = unFormattedData?.map((row) => {
       return {
-        id: row.purchase_id,
-        idOfOrder: row.purchase_id,
-        date: row.date_of_purchase,
-        branch: row.branch_name,
-        address: row.address,
-        customerName: row.customer_name,
-        productCount: row?.products?.length,
-        purchasedProducts: row.products?.map((p) => {
+        id: row.id,
+        customer_name: row.customer_name,
+        branch_name: row.branch_name,
+        status: row.status,
+        date_of_purchase: row.date_of_purchase,
+        total_price: currencyFormatting(row.total_price),
+        productCount: row?.purchased_products?.length,
+        purchasedProducts: row.purchased_products?.map((p) => {
           return {
-            id: p.product_id,
-            price: currencyFormatting(p.selling_price),
-            totalPrice: currencyFormatting(
-              Number(p.selling_price) * Number(p.purchased_quantity)
-            ),
-            purchased_quantity: p.purchased_quantity,
-            product_name: p?.product_name,
-            category_name: p?.category_type,
+            id: p.id,
+            product_name: p.product_name,
+            quantity: p.quantity,
+            wholesale_price: currencyFormatting(p.wholesale_price),
+            selling_price: currencyFormatting(p.selling_price),
+            total_price: currencyFormatting(p.total_price),
           };
         }),
       };

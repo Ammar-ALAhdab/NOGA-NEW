@@ -12,6 +12,8 @@ import reject from "../../assets/icons/Buttons/x.svg";
 import cart from "../../assets/icons/Buttons/cart.svg";
 import send from "../../assets/icons/sideBar/warehouseAdmin/warehouse_admin_send_products.svg";
 import salesSale from "../../assets/icons/sideBar/sales/sales_sale.svg";
+import receive from "../../assets/icons/Buttons/correct.svg";
+import confirm from "../../assets/icons/Buttons/correct.svg";
 
 const buttonVariants = {
   add: {
@@ -80,26 +82,25 @@ const buttonVariants = {
     backgroundColor: "#2DBDA8",
   },
   sale: {
-    text:"إجراء عملية بيع",
+    text: "إجراء عملية بيع",
     icon: salesSale,
     backgroundColor: "#2DBDA8",
   },
   transport: {
-    text:"إجراء عملية نقل",
-    icon: null,
+    text: "إجراء عملية نقل",
+    icon: send,
     backgroundColor: "#3457D5",
   },
   receive: {
-    text:"استلام",
-    icon: null,
+    text: "استلام",
+    icon: receive,
     backgroundColor: "#3457D5",
   },
   confirm: {
-    text:"تأكيد",
-    icon: null,
+    text: "تأكيد",
+    icon: confirm,
     backgroundColor: "#3457D5",
   },
-
 };
 
 const ButtonComponent = ({
@@ -139,7 +140,7 @@ const ButtonComponent = ({
       onClick={onClick}
       disabled={disabled}
     >
-      <img src={icon} alt={icon} width={18} height={18} />
+      {icon && <img src={icon} alt={text} width={18} height={18} />}
       {textButton ? textButton : text}
     </button>
   );

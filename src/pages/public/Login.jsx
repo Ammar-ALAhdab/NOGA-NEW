@@ -206,7 +206,7 @@ function Login() {
               />
             </form>
           </div>
-          <p className="text-[#aaa] text-sm">NOGA Software © 2024</p>
+          <p className="text-[#aaa] text-sm">NOGA Software © 2025</p>
         </div>
       </main>
     </>
