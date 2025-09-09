@@ -16,15 +16,16 @@ import TextShowBlue from "../../components/inputs/TextShowBlue";
 import PositionOnMapComponentNearestBranch from "../../components/inputs/PositionOnMapComponentNearestBranch";
 
 function SearchProductsForNearestBranch() {
-  const [branches, setBranches] = useState([]);
+  const [branche, setBranche] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState(null)
-  const [selectedCurrentBranch, setSelectedCurrentBranch] = useState()
   const [rowSelectionID, setRowSelectionID] = useState([]);
   const [nearestBranch, setNearestBranch] = useState()
   const [loadingNearrestBranch, setLoadingNearestBranch] = useState()
   const [errorNearrestBranch, setErrorNearestBranch] = useState()
   const navigate = useNavigate();
+  const branchID = JSON.parse(localStorage.getItem("branchID"));
+
   const axiosPrivate = useAxiosPrivate();
   const getNearestBranch = async (url) => {
     try {
@@ -46,8 +47,8 @@ function SearchProductsForNearestBranch() {
     }
   }
   useEffect(() => {
-    if (product && quantity && selectedCurrentBranch) {
-      getNearestBranch(`/branches/find_nearest_branch?current_branch=${selectedCurrentBranch}&product=${product}&quantity=${quantity}`)
+    if (product && quantity && branche) {
+      getNearestBranch(`/branches/find_nearest_branch?current_branch=${branchID}&product=${product}&quantity=${quantity}`)
     } else {
 
     }
@@ -131,22 +132,20 @@ function SearchProductsForNearestBranch() {
     return data;
   };
 
-  const getBranches = async (url = "/branches") => {
+  const getBranche = async (url = `/branches/${branchID}`) => {
     try {
       const response = await axiosPrivate.get(url);
-      const formattedData = formatBranches(response.data.results);
-      setBranches((prev) => [...prev, ...formattedData]);
-      if (response.data.next) {
-        getBranches(response.data.next);
-      }
+      const formattedData = formatBranches([response.data]);
+      setBranche(formattedData[0]);
+     
     } catch (error) {
       console.error(error);
     }
   };
-  const handleDestinationSelect = (e) => {
-    const { value } = e;
-    setSelectedCurrentBranch(value);
-  };
+  // const handleDestinationSelect = (e) => {
+  //   const { value } = e;
+  //   setSelectedCurrentBranch(value);
+  // };
 
   const handleProductQuantity = (e) => {
     const { value } = e;
@@ -156,9 +155,9 @@ function SearchProductsForNearestBranch() {
   console.log("nearestBranch : \n\n\n\n\n" , nearestBranch);
 
   useEffect(() => {
-    getBranches()
+    getBranche()
   }, [])
-  console.log("selectedCurrentBranch" ,  branches.filter(b => b.id == selectedCurrentBranch)[0]?.location);
+  console.log("selectedCurrentBranch" ,  branche?.location);
 
   return (
     product ?
@@ -205,7 +204,7 @@ function SearchProductsForNearestBranch() {
                         nearestBranch.nearest_branch.location
                       }
                       value2={
-                        branches.filter(b => b.id == selectedCurrentBranch)[0].location
+                        branche?.location
                       }
                     />
                   </div>
@@ -222,18 +221,6 @@ function SearchProductsForNearestBranch() {
         <Title text={" قائمة منتجات المستودع المركزي:"} />
         <section className="flex flex-col items-center justify-center w-full bg-white rounded-[30px] p-4 my-box-shadow gap-8">
           <div className="w-full flex items-center flex-row-reverse gap-2 mb-4">
-            <div className="flex items-start justify-center p-5">
-
-              <DropDownComponent
-                data={branches}
-                label={"الفرع الحالي:"}
-                ButtonText={"الفرع"}
-                id={"destination"}
-                dataValue="id"
-                dataTitle="title"
-                onSelectEvent={handleDestinationSelect}
-              />
-            </div>
             <div className="flex items-start justify-center p-5">
               <NumberInputComponent
                 label={"الكمية:"}
