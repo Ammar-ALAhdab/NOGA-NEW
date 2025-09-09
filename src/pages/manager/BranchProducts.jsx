@@ -200,13 +200,7 @@ function BranchProducts({ manager = false }) {
     <main className="flex flex-col items-center justify-between w-full h-full flex-grow">
       <Title text={`قائمة منتجات فرع ${branchName}:`} />
       <div className="w-full flex items-center flex-row-reverse gap-2 mb-4">
-        {!manager && (
-          <ButtonComponent
-            textButton="عرض المنتجات الرئيسية"
-            variant={"show"}
-            onClick={() => navigate("/warehouseAdmin/mainProducts")}
-          />
-        )}
+
         {rowSelectionID.length > 0 && (
           <ButtonComponent
             textButton="إجراء عملية بيع"
